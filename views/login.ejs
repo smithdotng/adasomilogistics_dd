@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Care Management System</title>
+    
+    <!-- favicons Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicons/favicon-16x16.png" />
+    <link rel="manifest" href="/assets/images/favicons/site.webmanifest" />
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS Links -->
+    <link rel="stylesheet" href="/assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/animate/animate.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/sominx-icons/style.css">
+
+    <!-- template styles -->
+    <link rel="stylesheet" href="/assets/css/sominx.css" />
+
+    <!-- Custom Login Styles -->
+    <style>
+        :root {
+            --thm-primary: #fe1f07;
+            --thm-secondary: #1e1e1e;
+        }
+
+        body {
+            font-family: 'Jost', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .login-wrapper {
+            width: 100%;
+            padding: 30px 0;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .login-left {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 60px 40px;
+            color: white;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login-left h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .login-left p {
+            font-size: 16px;
+            line-height: 1.6;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .feature-list li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .feature-list li i {
+            width: 30px;
+            height: 30px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            margin-right: 15px;
+        }
+
+        .login-right {
+            padding: 60px 50px;
+            background: white;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-header img {
+            max-width: 180px;
+            margin-bottom: 20px;
+        }
+
+        .login-header h3 {
+            font-size: 28px;
+            color: var(--thm-secondary);
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: #6c6c6c;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--thm-secondary);
+        }
+
+        .form-control {
+            height: 55px;
+            border: 2px solid #f0f0f0;
+            border-radius: 10px;
+            padding: 0 20px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--thm-primary);
+            box-shadow: none;
+            outline: none;
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 20px;
+            top: 45px;
+            color: #b0b0b0;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 20px;
+            top: 45px;
+            cursor: pointer;
+            color: #b0b0b0;
+        }
+
+        .password-toggle:hover {
+            color: var(--thm-primary);
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+        }
+
+        .remember-me input {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+        }
+
+        .forgot-link {
+            color: var(--thm-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        .login-btn {
+            width: 100%;
+            height: 55px;
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            margin-bottom: 20px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102,126,234,0.4);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background: #f0f0f0;
+        }
+
+        .divider::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background: #f0f0f0;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 15px;
+            color: #6c6c6c;
+            font-size: 14px;
+        }
+
+        .social-login {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #f0f0f0;
+            color: #6c6c6c;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn:hover {
+            border-color: var(--thm-primary);
+            color: var(--thm-primary);
+            transform: translateY(-3px);
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+            color: #6c6c6c;
+        }
+
+        .register-link a {
+            color: var(--thm-primary);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .role-badges {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .role-badge {
+            padding: 4px 12px;
+            background: rgba(254,31,7,0.1);
+            color: var(--thm-primary);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .alert {
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            border: none;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        @media (max-width: 767px) {
+            .login-left {
+                display: none;
+            }
+            
+            .login-right {
+                padding: 40px 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-wrapper">
+        <div class="container">
+            <div class="login-card">
+                <div class="row g-0">
+                    <!-- Left Side - Branding -->
+                    <div class="col-lg-6">
+                        <div class="login-left">
+                            <h2>Welcome Back to<br>Care System</h2>
+                            <p>Your complete care management solution trusted by hundreds of UK care providers.</p>
+                            
+                            <ul class="feature-list">
+                                <li>
+                                    <i class="fas fa-check"></i>
+                                    <span>CQC compliant documentation</span>
+                                </li>
+                                <li>
+                                    <i class="fas fa-check"></i>
+                                    <span>Real-time care logging</span>
+                                </li>
+                                <li>
+                                    <i class="fas fa-check"></i>
+                                    <span>Staff scheduling & management</span>
+                                </li>
+                                <li>
+                                    <i class="fas fa-check"></i>
+                                    <span>Family/Guardian portal</span>
+                                </li>
+                                <li>
+                                    <i class="fas fa-check"></i>
+                                    <span>24/7 technical support</span>
+                                </li>
+                            </ul>
+
+                            <div class="role-badges mt-4">
+                                <span class="role-badge">Care Providers</span>
+                                <span class="role-badge">Operators</span>
+                                <span class="role-badge">Clients</span>
+                                <span class="role-badge">Guardians</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Side - Login Form -->
+                    <div class="col-lg-6">
+                        <div class="login-right">
+                            <div class="login-header">
+                                <img src="/assets/images/resources/care-logo.png" alt="Care System">
+                                <h3>Sign In</h3>
+                                <p>Access your care management dashboard</p>
+                            </div>
+
+                            <!-- Flash Messages -->
+                            <% if (success && success.length > 0) { %>
+                                <div class="alert alert-success">
+                                    <%= success %>
+                                </div>
+                            <% } %>
+                            
+                            <% if (error && error.length > 0) { %>
+                                <div class="alert alert-danger">
+                                    <%= error %>
+                                </div>
+                            <% } %>
+
+                            <form action="/login" method="POST" id="loginForm">
+                                <div class="form-group">
+                                    <label for="email">Email Address</label>
+                                    <input type="email" class="form-control" id="email" name="email" 
+                                           placeholder="Enter your email" required autofocus>
+                                    <i class="fas fa-envelope input-icon"></i>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input type="password" class="form-control" id="password" name="password" 
+                                           placeholder="Enter your password" required>
+                                    <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+                                </div>
+
+                                <div class="remember-forgot">
+                                    <label class="remember-me">
+                                        <input type="checkbox" name="remember"> Remember me
+                                    </label>
+                                    <a href="/forgot-password" class="forgot-link">Forgot Password?</a>
+                                </div>
+
+                                <button type="submit" class="login-btn">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                                </button>
+                            </form>
+
+                            <div class="divider">
+                                <span>Or sign in with</span>
+                            </div>
+
+                            <div class="social-login">
+                                <a href="#" class="social-btn"><i class="fab fa-google"></i></a>
+                                <a href="#" class="social-btn"><i class="fab fa-microsoft"></i></a>
+                                <a href="#" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
+                            </div>
+
+                            <div class="register-link">
+                                Don't have an account? <a href="/register">Start Free Trial</a>
+                            </div>
+
+                            <div class="text-center mt-3">
+                                <small class="text-muted">
+                                    <i class="fas fa-shield-alt me-1"></i>Secure SSL Encrypted
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Demo Credentials (for testing) -->
+            <div class="text-center mt-4">
+                <div class="alert alert-info" style="background: rgba(255,255,255,0.2); border: none; color: white;">
+                    <strong>Demo Credentials:</strong><br>
+                    Provider: provider@demo.com / password123<br>
+                    Operator: operator@demo.com / password123<br>
+                    Client: client@demo.com / password123<br>
+                    Guardian: guardian@demo.com / password123
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Password visibility toggle
+        const togglePassword = document.getElementById('togglePassword');
+        const password = document.getElementById('password');
+
+        togglePassword.addEventListener('click', function() {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // Form validation
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if (!email || !password) {
+                e.preventDefault();
+                alert('Please fill in all fields');
+            }
+        });
+
+        // Auto-hide flash messages after 5 seconds
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                alert.style.transition = 'opacity 0.5s ease';
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 500);
+            });
+        }, 5000);
+    </script>
+
+    <!-- JavaScript Files -->
+    <script src="/assets/vendors/jquery/jquery-3.6.0.min.js"></script>
+    <script src="/assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

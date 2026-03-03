@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Log Visit || Care Management System</title>
+    
+    <!-- favicons Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicons/favicon-16x16.png" />
+    <link rel="manifest" href="/assets/images/favicons/site.webmanifest" />
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS Links -->
+    <link rel="stylesheet" href="/assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/sominx-icons/style.css">
+
+    <style>
+        /* Form styles */
+        .form-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #f0f0f0;
+            border-radius: 8px;
+        }
+
+        .form-control:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .client-summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header same as before -->
+    <header class="main-header">
+        <div class="container">
+            <div class="main-menu-wrapper">
+                <div class="main-menu-wrapper__logo">
+                    <a href="/operator/dashboard">
+                        <img src="/assets/images/resources/care-logo-white.png" alt="Care System">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>Log Visit</h1>
+        </div>
+    </section>
+
+    <section class="dashboard-content">
+        <div class="container">
+            <!-- Client Summary -->
+            <div class="client-summary">
+                <h2><%= client.firstName %> <%= client.lastName %></h2>
+                <p>NHS: <%= client.clientInfo?.nhsNumber || 'Not provided' %></p>
+            </div>
+
+            <!-- Form -->
+            <div class="form-card">
+                <form action="/operator/interactions" method="POST" id="interactionForm">
+                    <input type="hidden" name="clientId" value="<%= client._id %>">
+
+                    <div class="form-group">
+                        <label>Visit Type</label>
+                        <select name="type" class="form-control" required>
+                            <option value="">Select type</option>
+                            <option value="home_visit">Home Visit</option>
+                            <option value="phone_call">Phone Call</option>
+                            <option value="medication_administration">Medication Administration</option>
+                            <option value="personal_care">Personal Care</option>
+                            <option value="meal_preparation">Meal Preparation</option>
+                            <option value="companionship">Companionship</option>
+                            <option value="appointment_escort">Appointment Escort</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" name="title" class="form-control" placeholder="Brief title for this visit">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="description" class="form-control" rows="3" placeholder="Describe the visit"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Start Time</label>
+                            <input type="datetime-local" name="actualStart" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>End Time</label>
+                            <input type="datetime-local" name="actualEnd" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <h4 class="mt-4">Wellbeing Observations</h4>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Mood</label>
+                            <select name="mood" class="form-control">
+                                <option value="">Select</option>
+                                <option value="happy">Happy</option>
+                                <option value="content">Content</option>
+                                <option value="anxious">Anxious</option>
+                                <option value="sad">Sad</option>
+                                <option value="distressed">Distressed</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Appetite</label>
+                            <select name="appetite" class="form-control">
+                                <option value="">Select</option>
+                                <option value="good">Good</option>
+                                <option value="moderate">Moderate</option>
+                                <option value="poor">Poor</option>
+                                <option value="none">None</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Energy</label>
+                            <select name="energy" class="form-control">
+                                <option value="">Select</option>
+                                <option value="high">High</option>
+                                <option value="normal">Normal</option>
+                                <option value="low">Low</option>
+                                <option value="very_low">Very Low</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Pain Level (0-10)</label>
+                            <input type="number" name="pain" class="form-control" min="0" max="10" value="0">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Notes</label>
+                        <textarea name="notes" class="form-control" rows="4" placeholder="Any additional observations or notes"></textarea>
+                    </div>
+
+                    <div class="button-group">
+                        <a href="/operator/clients/<%= client._id %>" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Log Visit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Set default times to now
+        document.addEventListener('DOMContentLoaded', function() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            
+            const defaultTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+            
+            document.querySelector('input[name="actualStart"]').value = defaultTime;
+            
+            const endTime = new Date(now.getTime() + 60 * 60 * 1000); // +1 hour
+            const endYear = endTime.getFullYear();
+            const endMonth = String(endTime.getMonth() + 1).padStart(2, '0');
+            const endDay = String(endTime.getDate()).padStart(2, '0');
+            const endHours = String(endTime.getHours()).padStart(2, '0');
+            const endMinutes = String(endTime.getMinutes()).padStart(2, '0');
+            
+            document.querySelector('input[name="actualEnd"]').value = `${endYear}-${endMonth}-${endDay}T${endHours}:${endMinutes}`;
+        });
+    </script>
+</body>
+</html>

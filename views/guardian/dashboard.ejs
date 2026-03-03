@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Guardian Dashboard || Care System</title>
+    
+    <!-- favicons Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicons/favicon-16x16.png" />
+    <link rel="manifest" href="/assets/images/favicons/site.webmanifest" />
+    <meta name="description" content="Care System Guardian Dashboard" />
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <!-- CSS libraries -->
+    <link rel="stylesheet" href="/assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/animate/animate.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/animate/custom-animate.css" />
+    <link rel="stylesheet" href="/assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/jarallax/jarallax.css" />
+    <link rel="stylesheet" href="/assets/vendors/jquery-magnific-popup/jquery.magnific-popup.css" />
+    <link rel="stylesheet" href="/assets/vendors/nouislider/nouislider.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/nouislider/nouislider.pips.css" />
+    <link rel="stylesheet" href="/assets/vendors/odometer/odometer.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/swiper/swiper.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/sominx-icons/style.css">
+    <link rel="stylesheet" href="/assets/vendors/tiny-slider/tiny-slider.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/reey-font/stylesheet.css" />
+    <link rel="stylesheet" href="/assets/vendors/owl-carousel/owl.carousel.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/owl-carousel/owl.theme.default.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/twentytwenty/twentytwenty.css" />
+    <link rel="stylesheet" href="/assets/vendors/bxslider/jquery.bxslider.css" />
+    <link rel="stylesheet" href="/assets/vendors/bootstrap-select/css/bootstrap-select.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/vegas/vegas.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/jquery-ui/jquery-ui.css" />
+    <link rel="stylesheet" href="/assets/vendors/timepicker/timePicker.css" />
+
+    <!-- template styles -->
+    <link rel="stylesheet" href="/assets/css/sominx.css" />
+    <link rel="stylesheet" href="/assets/css/sominx-responsive.css" />
+    
+    <!-- Custom Guardian Dashboard Styles -->
+    <style>
+        :root {
+            --guardian-primary: #4a8b8f; /* Soft teal */
+            --guardian-secondary: #f5a623; /* Warm orange */
+            --guardian-accent: #7b68ee; /* Soft purple */
+            --guardian-success: #5cb85c; /* Soft green */
+            --guardian-info: #5bc0de; /* Soft blue */
+            --guardian-warning: #f0ad4e; /* Soft orange */
+            --guardian-danger: #d9534f; /* Soft red */
+        }
+        
+        .dashboard-stats-box {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 10px 60px 0px rgba(0, 0, 0, 0.07);
+            margin-bottom: 30px;
+            transition: all 0.4s ease;
+            border-left: 4px solid;
+            height: 100%;
+        }
+        
+        .dashboard-stats-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 20px 80px 0px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dashboard-stats-box.client-info {
+            border-left-color: var(--guardian-primary);
+        }
+        
+        .dashboard-stats-box.care-level {
+            border-left-color: var(--guardian-success);
+        }
+        
+        .dashboard-stats-box.recent-interactions {
+            border-left-color: var(--guardian-info);
+        }
+        
+        .dashboard-stats-box.operator-assigned {
+            border-left-color: var(--guardian-warning);
+        }
+        
+        .stats-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .stats-icon.client-info {
+            background: linear-gradient(45deg, var(--guardian-primary) 0%, #6bc4c9 100%);
+            color: white;
+        }
+        
+        .stats-icon.care-level {
+            background: linear-gradient(45deg, var(--guardian-success) 0%, #7dce7d 100%);
+            color: white;
+        }
+        
+        .stats-icon.recent-interactions {
+            background: linear-gradient(45deg, var(--guardian-info) 0%, #7fd1f0 100%);
+            color: white;
+        }
+        
+        .stats-icon.operator-assigned {
+            background: linear-gradient(45deg, var(--guardian-warning) 0%, #f8c471 100%);
+            color: white;
+        }
+        
+        .stats-number {
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 10px;
+            color: #213360;
+        }
+        
+        .stats-label {
+            font-size: 16px;
+            color: #808080;
+            margin-bottom: 5px;
+        }
+        
+        .stats-subtext {
+            font-size: 14px;
+            color: #a0a0a0;
+        }
+        
+        .quick-action-card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 10px 60px 0px rgba(0, 0, 0, 0.07);
+            text-align: center;
+            transition: all 0.4s ease;
+            height: 100%;
+            display: block;
+            color: #213360;
+            text-decoration: none;
+        }
+        
+        .quick-action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 20px 80px 0px rgba(0, 0, 0, 0.1);
+            color: #213360;
+        }
+        
+        .quick-action-card .action-icon {
+            width: 80px;
+            height: 80px;
+            background: #f4f6fc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin: 0 auto 20px;
+            color: var(--guardian-primary);
+            transition: all 0.4s ease;
+        }
+        
+        .quick-action-card:hover .action-icon {
+            background: linear-gradient(45deg, var(--guardian-primary) 0%, #6bc4c9 100%);
+            color: white;
+        }
+        
+        .recent-activities-card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 10px 60px 0px rgba(0, 0, 0, 0.07);
+            overflow: hidden;
+            height: 100%;
+        }
+        
+        .activity-item {
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: all 0.3s ease;
+        }
+        
+        .activity-item:hover {
+            background: #f9f9f9;
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-right: 15px;
+        }
+        
+        .activity-icon.visit { background: linear-gradient(45deg, var(--guardian-primary) 0%, #6bc4c9 100%); color: white; }
+        .activity-icon.phone { background: linear-gradient(45deg, var(--guardian-success) 0%, #7dce7d 100%); color: white; }
+        .activity-icon.emergency { background: linear-gradient(45deg, var(--guardian-danger) 0%, #e57373 100%); color: white; }
+        .activity-icon.medication { background: linear-gradient(45deg, var(--guardian-warning) 0%, #f8c471 100%); color: white; }
+        .activity-icon.review { background: linear-gradient(45deg, var(--guardian-accent) 0%, #9d8af1 100%); color: white; }
+        
+        .activity-content h5 {
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: #213360;
+        }
+        
+        .activity-content p {
+            font-size: 14px;
+            color: #808080;
+            margin-bottom: 0;
+        }
+        
+        .activity-time {
+            font-size: 12px;
+            color: #a0a0a0;
+        }
+        
+        .client-info-card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 10px 60px 0px rgba(0, 0, 0, 0.07);
+            padding: 30px;
+            height: 100%;
+        }
+        
+        .info-item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .info-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .info-item h6 {
+            font-size: 14px;
+            color: #213360;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .info-item p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 0;
+        }
+        
+        .info-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .badge-care {
+            background: rgba(90, 200, 250, 0.1);
+            color: #5ac8fa;
+        }
+        
+        .badge-medical {
+            background: rgba(255, 59, 48, 0.1);
+            color: #ff3b30;
+        }
+        
+        .badge-activity {
+            background: rgba(52, 199, 89, 0.1);
+            color: #34c759;
+        }
+        
+        .badge-dietary {
+            background: rgba(255, 149, 0, 0.1);
+            color: #ff9500;
+        }
+        
+        .emergency-contact-card {
+            background: linear-gradient(45deg, #fff5f5 0%, #fff 100%);
+            border-left: 4px solid var(--guardian-danger);
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .emergency-contact-card h5 {
+            color: var(--guardian-danger);
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        .contact-detail {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .contact-detail:last-child {
+            margin-bottom: 0;
+        }
+        
+        .contact-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(217, 83, 79, 0.1);
+            color: var(--guardian-danger);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        
+        .contact-info h6 {
+            font-size: 14px;
+            margin-bottom: 2px;
+            color: #213360;
+        }
+        
+        .contact-info p {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 0;
+        }
+        
+        .dashboard-section-title {
+            margin-bottom: 30px;
+        }
+        
+        .dashboard-section-title h2 {
+            font-size: 30px;
+            color: #213360;
+            margin-bottom: 10px;
+        }
+        
+        .dashboard-section-title p {
+            color: #808080;
+            margin-bottom: 0;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .empty-state i {
+            font-size: 60px;
+            color: #e0e0e0;
+            margin-bottom: 20px;
+        }
+        
+        .empty-state p {
+            color: #a0a0a0;
+            margin-bottom: 0;
+        }
+        
+        .welcome-user {
+            background: linear-gradient(45deg, var(--guardian-primary) 0%, #6bc4c9 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .welcome-user h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .welcome-user p {
+            opacity: 0.9;
+            margin-bottom: 0;
+        }
+        
+        .user-role-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        .client-name-display {
+            font-size: 32px;
+            font-weight: 700;
+            color: #213360;
+            margin-bottom: 10px;
+        }
+        
+        .client-relationship {
+            color: var(--guardian-primary);
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        /* Status colors for client status */
+        .status-badge {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-active {
+            background: rgba(92, 184, 92, 0.1);
+            color: var(--guardian-success);
+        }
+        
+        .status-pending {
+            background: rgba(240, 173, 78, 0.1);
+            color: var(--guardian-warning);
+        }
+        
+        .status-inactive {
+            background: rgba(217, 83, 79, 0.1);
+            color: var(--guardian-danger);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="preloader">
+        <img class="preloader__image" width="60" src="/assets/images/loader.png" alt="" />
+    </div>
+    <!-- /.preloader -->
+    
+    <div class="page-wrapper">
+        <!-- Header Start -->
+        <header class="main-header clearfix">
+            <nav class="main-menu clearfix">
+                <div class="main-menu-wrapper clearfix">
+                    <div class="main-menu-wrapper-inner clearfix">
+                        <div class="main-menu-wrapper__left clearfix">
+                            <div class="main-menu-wrapper__logo">
+                                <a href="/"><img src="/assets/images/resources/logo-1.jpg" alt="Care System"></a>
+                            </div>
+                            <div class="main-menu-wrapper__main-menu">
+                                <a href="#" class="mobile-nav__toggler"><i class="fa fa-bars"></i></a>
+                                <ul class="main-menu__list">
+                                    <li class="current"><a href="/guardian/dashboard">Dashboard</a></li>
+                                    <li><a href="/guardian/client">Client Information</a></li>
+                                    <li><a href="/guardian/interactions">Interactions</a></li>
+                                    <li><a href="/guardian/documents">Documents</a></li>
+                                    <li><a href="/guardian/change-password">Settings</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="main-menu-wrapper__right">
+                            <div class="main-menu-wrapper__call">
+                                <div class="main-menu-wrapper__call-icon">
+                                    <span class="icon-user-check"></span>
+                                </div>
+                                <div class="main-menu-wrapper__call-number">
+                                    <p>Welcome back</p>
+                                    <a href="/guardian/change-password"><%= user.fullName %></a>
+                                </div>
+                            </div>
+                            <div class="main-menu-wrapper__search-box">
+                                <a href="/logout" class="main-menu-wrapper__logout" title="Logout">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <!-- Header End -->
+
+        <div class="stricky-header stricked-menu main-menu">
+            <div class="sticky-header__content"></div>
+        </div>
+
+        <!-- Dashboard Content Start -->
+        <section class="dashboard-content pt-80 pb-120">
+            <div class="container">
+                <!-- Welcome Message -->
+                <div class="welcome-user">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h3>Welcome back, <%= user.fullName %></h3>
+                            <p>You are the <%= user.role === 'guardian' && user.guardianInfo && user.guardianInfo.relationship ? user.guardianInfo.relationship.toLowerCase() : 'guardian' %> of <%= client.firstName %> <%= client.lastName %></p>
+                            <div class="user-role-badge">
+                                <i class="fas fa-user-shield me-2"></i>GUARDIAN
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <p><i class="fas fa-calendar-alt me-2"></i><%= moment().format('dddd, MMMM D, YYYY') %></p>
+                            <p><i class="fas fa-clock me-2"></i><%= moment().format('h:mm A') %></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Client Overview -->
+                <div class="row mb-5">
+                    <div class="col-12">
+                        <div class="client-name-display">
+                            <%= client.firstName %> <%= client.lastName %>
+                        </div>
+                        <div class="client-relationship">
+                            <i class="fas fa-user-friends me-2"></i>
+                            <%= user.role === 'guardian' && user.guardianInfo && user.guardianInfo.relationship ? 
+                               user.guardianInfo.relationship.charAt(0).toUpperCase() + user.guardianInfo.relationship.slice(1) : 
+                               'Guardian' %>
+                            <span class="mx-3">•</span>
+                            <span class="status-badge status-<%= client.status %>">
+                                <i class="fas fa-circle me-1" style="font-size: 8px;"></i>
+                                <%= client.status %>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics Cards -->
+                <div class="row mb-5">
+                    <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="100ms">
+                        <div class="dashboard-stats-box client-info">
+                            <div class="stats-icon client-info">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <h3 class="stats-number"><%= client.age %></h3>
+                            <p class="stats-label">Client Age</p>
+                            <p class="stats-subtext">
+                                <i class="fas fa-birthday-cake me-1"></i> 
+                                <%= moment(client.dateOfBirth).format('MMM D, YYYY') %>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="200ms">
+                        <div class="dashboard-stats-box care-level">
+                            <div class="stats-icon care-level">
+                                <i class="fas fa-heartbeat"></i>
+                            </div>
+                            <h3 class="stats-number text-capitalize"><%= client.careInfo.careLevel %></h3>
+                            <p class="stats-label">Care Level</p>
+                            <p class="stats-subtext">
+                                <i class="fas fa-stethoscope me-1"></i> 
+                                <%= client.careInfo.careType || 'Standard Care' %>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="300ms">
+                        <div class="dashboard-stats-box recent-interactions">
+                            <div class="stats-icon recent-interactions">
+                                <i class="fas fa-history"></i>
+                            </div>
+                            <h3 class="stats-number"><%= interactions.length %></h3>
+                            <p class="stats-label">Recent Interactions</p>
+                            <p class="stats-subtext">
+                                <i class="fas fa-clock me-1"></i> 
+                                Last: <%= interactions.length > 0 ? moment(interactions[0].startTime).format('MMM D') : 'None' %>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="400ms">
+                        <div class="dashboard-stats-box operator-assigned">
+                            <div class="stats-icon operator-assigned">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                            <h3 class="stats-number">
+                                <% if (client.assignedOperator && client.assignedOperator.firstName) { %>
+                                    <%= client.assignedOperator.firstName.charAt(0) %><%= client.assignedOperator.lastName.charAt(0) %>
+                                <% } else { %>
+                                    --
+                                <% } %>
+                            </h3>
+                            <p class="stats-label">Assigned Operator</p>
+                            <p class="stats-subtext">
+                                <i class="fas fa-headset me-1"></i> 
+                                <% if (client.assignedOperator) { %>
+                                    <%= client.assignedOperator.firstName %> <%= client.assignedOperator.lastName %>
+                                <% } else { %>
+                                    Not assigned
+                                <% } %>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="row mb-5">
+                    <div class="col-12">
+                        <div class="dashboard-section-title">
+                            <h2>Quick Actions</h2>
+                            <p>Common tasks for managing your client</p>
+                        </div>
+                        
+                        <div class="row g-4">
+                            <div class="col-xl-2 col-lg-4 col-md-6">
+                                <a href="/guardian/interactions/create?clientId=<%= client._id %>" class="quick-action-card wow fadeInUp" data-wow-delay="100ms">
+                                
+                                    <div class="action-icon">
+                                        <i class="fas fa-plus-circle"></i>
+                                    </div>
+                                    <h5>Log Interaction</h5>
+                                    <p>Record client activity</p>
+                                </a>
+                            </div>
+
+                            <div class="col-xl-2 col-lg-4 col-md-6">
+                                <a href="/guardian/client" class="quick-action-card wow fadeInUp" data-wow-delay="200ms">
+                                    <div class="action-icon">
+                                        <i class="fas fa-user-circle"></i>
+                                    </div>
+                                    <h5>Client Details</h5>
+                                    <p>View full information</p>
+                                </a>
+                            </div>
+
+                            <div class="col-xl-2 col-lg-4 col-md-6">
+                                <a href="/guardian/interactions" class="quick-action-card wow fadeInUp" data-wow-delay="300ms">
+                                    <div class="action-icon">
+                                        <i class="fas fa-history"></i>
+                                    </div>
+                                    <h5>All Interactions</h5>
+                                    <p>View activity history</p>
+                                </a>
+                            </div>
+
+                            <div class="col-xl-2 col-lg-4 col-md-6">
+                                <a href="/guardian/documents" class="quick-action-card wow fadeInUp" data-wow-delay="400ms">
+                                    <div class="action-icon">
+                                        <i class="fas fa-file-alt"></i>
+                                    </div>
+                                    <h5>Documents</h5>
+                                    <p>View client files</p>
+                                </a>
+                            </div>
+
+                            <div class="col-xl-2 col-lg-4 col-md-6">
+                                <a href="#" class="quick-action-card wow fadeInUp" data-wow-delay="500ms">
+                                    <div class="action-icon">
+                                        <i class="fas fa-comment-medical"></i>
+                                    </div>
+                                    <h5>Messages</h5>
+                                    <p>Contact care team</p>
+                                </a>
+                            </div>
+
+                            <div class="col-xl-2 col-lg-4 col-md-6">
+                                <a href="/guardian/change-password" class="quick-action-card wow fadeInUp" data-wow-delay="600ms">
+                                    <div class="action-icon">
+                                        <i class="fas fa-cog"></i>
+                                    </div>
+                                    <h5>Settings</h5>
+                                    <p>Account preferences</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content Area -->
+                <div class="row g-4">
+                    <!-- Recent Activities -->
+                    <div class="col-xl-8">
+                        <div class="recent-activities-card wow fadeInUp" data-wow-delay="100ms">
+                            <div class="dashboard-section-title" style="padding: 30px 30px 0;">
+                                <h2>Recent Activities</h2>
+                                <p>Latest interactions with <%= client.firstName %></p>
+                            </div>
+                            
+                            <div class="activities-list">
+                                <% if (interactions.length > 0) { %>
+                                    <% interactions.forEach(interaction => { %>
+                                    <div class="activity-item">
+                                        <div class="d-flex align-items-center">
+                                            <div class="activity-icon <%= 
+                                                interaction.interactionType === 'home_visit' ? 'visit' : 
+                                                interaction.interactionType === 'phone_call' ? 'phone' :
+                                                interaction.interactionType === 'emergency' ? 'emergency' :
+                                                interaction.interactionType === 'medication' ? 'medication' : 'review'
+                                            %>">
+                                                <i class="fas fa-<%= 
+                                                    interaction.interactionType === 'home_visit' ? 'home' : 
+                                                    interaction.interactionType === 'phone_call' ? 'phone' :
+                                                    interaction.interactionType === 'emergency' ? 'exclamation-triangle' : 
+                                                    interaction.interactionType === 'medication' ? 'pills' : 'clipboard-check' 
+                                                %>"></i>
+                                            </div>
+                                            <div class="activity-content flex-grow-1">
+                                                <h5>
+                                                    <%= interaction.interactionType === 'home_visit' ? 'Home Visit' : 
+                                                       interaction.interactionType === 'phone_call' ? 'Phone Call' :
+                                                       interaction.interactionType === 'emergency' ? 'Emergency Visit' : 
+                                                       interaction.interactionType === 'medication' ? 'Medication Review' : 
+                                                       interaction.interactionType.charAt(0).toUpperCase() + interaction.interactionType.slice(1).replace('_', ' ') %>
+                                                </h5>
+                                                <p>
+                                                    <% if (interaction.notes && interaction.notes.length > 100) { %>
+                                                        <%= interaction.notes.substring(0, 100) %>...
+                                                    <% } else { %>
+                                                        <%= interaction.notes || 'No notes provided' %>
+                                                    <% } %>
+                                                </p>
+                                            </div>
+                                            <div class="activity-time text-end">
+                                                <div><%= moment(interaction.startTime).format('MMM D, YYYY') %></div>
+                                                <div><%= moment(interaction.startTime).format('h:mm A') %></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <% }); %>
+                                <% } else { %>
+                                    <div class="empty-state">
+                                        <i class="fas fa-clipboard-list"></i>
+                                        <p>No recent activities recorded</p>
+                                        <a href="/guardian/interactions/create?clientId=<%= client._id %>" class="thm-btn mt-3">Log First Interaction</a>
+                                    </div>
+                                <% } %>
+                            </div>
+                            
+                            <% if (interactions.length > 0) { %>
+                            <div class="text-center p-3" style="border-top: 1px solid #f0f0f0;">
+                                <a href="/guardian/interactions" class="thm-btn">View All Activities</a>
+                            </div>
+                            <% } %>
+                        </div>
+                    </div>
+
+                    <!-- Client Information Sidebar -->
+                    <div class="col-xl-4">
+                        <!-- Client Information Card -->
+                        <div class="client-info-card wow fadeInUp" data-wow-delay="200ms">
+                            <div class="dashboard-section-title" style="padding: 0; margin-bottom: 20px;">
+                                <h2>Client Information</h2>
+                            </div>
+                            
+                            <div class="info-item">
+                                <h6>Medical Information</h6>
+                                <p><%= client.medicalInfo.conditions || 'No conditions specified' %></p>
+                                <% if (client.medicalInfo.allergies) { %>
+                                    <div class="info-badge badge-medical">
+                                        <i class="fas fa-allergies me-1"></i> Allergies
+                                    </div>
+                                <% } %>
+                                <% if (client.medicalInfo.disabilities && client.medicalInfo.disabilities.length > 0) { %>
+                                    <div class="info-badge badge-medical">
+                                        <i class="fas fa-wheelchair me-1"></i> Special Needs
+                                    </div>
+                                <% } %>
+                            </div>
+                            
+                            <div class="info-item">
+                                <h6>Care Plan</h6>
+                                <p><%= client.careInfo.carePlan || 'Standard care plan' %></p>
+                                <% if (client.careInfo.careLevel) { %>
+                                    <div class="info-badge badge-care">
+                                        <i class="fas fa-heartbeat me-1"></i> <%= client.careInfo.careLevel %> Care
+                                    </div>
+                                <% } %>
+                            </div>
+                            
+                            <div class="info-item">
+                                <h6>Daily Routine & Activities</h6>
+                                <p><%= client.careInfo.dailyRoutine || 'Routine not specified' %></p>
+                                <% if (client.careInfo.preferredActivities && client.careInfo.preferredActivities.length > 0) { %>
+                                    <% client.careInfo.preferredActivities.slice(0, 3).forEach(activity => { %>
+                                        <div class="info-badge badge-activity">
+                                            <i class="fas fa-running me-1"></i> <%= activity %>
+                                        </div>
+                                    <% }); %>
+                                <% } %>
+                            </div>
+                            
+                            <div class="info-item">
+                                <h6>Dietary Restrictions</h6>
+                                <% if (client.careInfo.dietaryRestrictions && client.careInfo.dietaryRestrictions.length > 0) { %>
+                                    <% client.careInfo.dietaryRestrictions.forEach(restriction => { %>
+                                        <div class="info-badge badge-dietary">
+                                            <i class="fas fa-utensils me-1"></i> <%= restriction %>
+                                        </div>
+                                    <% }); %>
+                                <% } else { %>
+                                    <p>No dietary restrictions</p>
+                                <% } %>
+                            </div>
+
+                            <!-- Emergency Contact -->
+                            <% if (client.contact.emergencyContact && client.contact.emergencyContact.name) { %>
+                            <div class="emergency-contact-card">
+                                <h5><i class="fas fa-exclamation-triangle me-2"></i>Emergency Contact</h5>
+                                <div class="contact-detail">
+                                    <div class="contact-icon">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div class="contact-info">
+                                        <h6><%= client.contact.emergencyContact.name %></h6>
+                                        <p><%= client.contact.emergencyContact.relationship %></p>
+                                    </div>
+                                </div>
+                                <div class="contact-detail">
+                                    <div class="contact-icon">
+                                        <i class="fas fa-phone"></i>
+                                    </div>
+                                    <div class="contact-info">
+                                        <h6><%= client.contact.emergencyContact.phone %></h6>
+                                        <p>Phone Number</p>
+                                    </div>
+                                </div>
+                                <% if (client.contact.emergencyContact.email) { %>
+                                <div class="contact-detail">
+                                    <div class="contact-icon">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                    <div class="contact-info">
+                                        <h6><%= client.contact.emergencyContact.email %></h6>
+                                        <p>Email Address</p>
+                                    </div>
+                                </div>
+                                <% } %>
+                            </div>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Information -->
+                <div class="row mt-5">
+                    <div class="col-12">
+                        <div class="client-info-card wow fadeInUp" data-wow-delay="400ms">
+                            <div class="dashboard-section-title" style="padding: 0; margin-bottom: 30px;">
+                                <h2>Care Team Information</h2>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <h6>Assigned Operator</h6>
+                                        <% if (client.assignedOperator) { %>
+                                            <p><strong><%= client.assignedOperator.firstName %> <%= client.assignedOperator.lastName %></strong></p>
+                                            <% if (client.assignedOperator.email) { %>
+                                                <p><i class="fas fa-envelope me-2"></i><%= client.assignedOperator.email %></p>
+                                            <% } %>
+                                            <% if (client.assignedOperator.phone) { %>
+                                                <p><i class="fas fa-phone me-2"></i><%= client.assignedOperator.phone %></p>
+                                            <% } %>
+                                        <% } else { %>
+                                            <p>No operator assigned yet</p>
+                                            <p class="text-muted small">Contact administration to assign an operator</p>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <h6>Additional Guardians</h6>
+                                        <% if (client.guardians && client.guardians.length > 0) { %>
+                                            <% let otherGuardians = client.guardians.filter(g => g.email !== user.email); %>
+                                            <% if (otherGuardians.length > 0) { %>
+                                                <% otherGuardians.slice(0, 2).forEach(guardian => { %>
+                                                    <p>
+                                                        <strong><%= guardian.name %></strong> 
+                                                        <span class="text-muted">(<%= guardian.relationship %>)</span>
+                                                    </p>
+                                                <% }); %>
+                                                <% if (otherGuardians.length > 2) { %>
+                                                    <p class="text-muted small">+ <%= otherGuardians.length - 2 %> more guardians</p>
+                                                <% } %>
+                                            <% } else { %>
+                                                <p>No other guardians listed</p>
+                                            <% } %>
+                                        <% } else { %>
+                                            <p>No additional guardians listed</p>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Dashboard Content End -->
+
+        <!--Footer Start-->
+        <footer class="site-footer">
+            <div class="site-footer-bg" style="background-image: url(/assets/images/backgrounds/site-footer-bg.jpg)"></div>
+            <div class="site-footer-bg-overly"></div>
+            <div class="container">
+                <div class="site-footer__top">
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-2">
+                            <div class="site-footer__top-logo">
+                                <a href="/"><img src="/assets/images/resources/footer-logo-1.jpg" alt="Care System"></a>
+                            </div>
+                        </div>
+                        <div class="col-xl-8 col-lg-10">
+                            <div class="site-footer__top-right">
+                                <div class="site-footer__call-and-social">
+                                    <div class="site-footer__call">
+                                        <p>Guardian Portal <a href="tel:<%= client.contact.emergencyContact.phone || '123-456-7890' %>">Emergency: <%= client.contact.emergencyContact.phone || '123-456-7890' %></a></p>
+                                    </div>
+                                    <div class="site-footer__social">
+                                        <a href="mailto:<%= client.assignedOperator ? client.assignedOperator.email : 'support@caresystem.com' %>" title="Email Care Team"><i class="fas fa-envelope"></i></a>
+                                        <a href="tel:<%= client.assignedOperator ? client.assignedOperator.phone : '' %>" title="Call Care Team"><i class="fas fa-phone"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="site-footer__bottom">
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="100ms">
+                            <div class="footer-widget__column footer-widget__contact">
+                                <h3 class="footer-widget__title">Contact Care Team</h3>
+                                <p class="footer-widget__contact-text">
+                                    <% if (client.assignedOperator) { %>
+                                        <%= client.assignedOperator.firstName %> <%= client.assignedOperator.lastName %><br>
+                                        Assigned Care Operator
+                                    <% } else { %>
+                                        Care System Support Team<br>
+                                        123 Health Street, NY, USA
+                                    <% } %>
+                                </p>
+                                <h5 class="footer-widget__contact-phone-and-email">
+                                    <% if (client.assignedOperator && client.assignedOperator.email) { %>
+                                        <a href="mailto:<%= client.assignedOperator.email %>" class="footer-widget__contact-email"><%= client.assignedOperator.email %></a><br>
+                                    <% } else { %>
+                                        <a href="mailto:support@caresystem.com" class="footer-widget__contact-email">support@caresystem.com</a><br>
+                                    <% } %>
+                                    <% if (client.assignedOperator && client.assignedOperator.phone) { %>
+                                        <a href="tel:<%= client.assignedOperator.phone %>" class="footer-widget__contact-phone"><%= client.assignedOperator.phone %></a>
+                                    <% } else { %>
+                                        <a href="tel:+1234567890" class="footer-widget__contact-phone">+1 234 567 890</a>
+                                    <% } %>
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="200ms">
+                            <div class="footer-widget__column footer-widget__links clearfix">
+                                <h3 class="footer-widget__title">Quick Links</h3>
+                                <ul class="footer-widget__links-list list-unstyled">
+                                    <li><a href="/guardian/dashboard">Dashboard</a></li>
+                                    <li><a href="/guardian/client">Client Information</a></li>
+                                    <li><a href="/guardian/interactions">Interactions</a></li>
+                                    <li><a href="/guardian/documents">Documents</a></li>
+                                    <li><a href="/guardian/change-password">Settings</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="300ms">
+                            <div class="footer-widget__column footer-widget__newsletter">
+                                <h3 class="footer-widget__title">Client Status</h3>
+                                <div class="system-status">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Client Status</span>
+                                        <span class="text-<%= client.status === 'active' ? 'success' : 'warning' %> text-capitalize">
+                                            <%= client.status %>
+                                        </span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Care Level</span>
+                                        <span class="text-capitalize"><%= client.careInfo.careLevel %></span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Last Interaction</span>
+                                        <span>
+                                            <% if (interactions.length > 0) { %>
+                                                <%= moment(interactions[0].startTime).format('MMM D') %>
+                                            <% } else { %>
+                                                Never
+                                            <% } %>
+                                        </span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Last Updated</span>
+                                        <span><%= moment().format('MMM D, h:mm A') %></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="site-footer__copy-right">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="site-footer__copy-right-inner">
+                                <p class="site-footer__copy-right-text">© <%= new Date().getFullYear() %> Care System. All rights reserved.</p>
+                                <p class="site-footer__copy-right-text small mt-2">
+                                    Guardian access for: <%= client.firstName %> <%= client.lastName %>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!--Footer End-->
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav__wrapper">
+        <div class="mobile-nav__overlay mobile-nav__toggler"></div>
+        <div class="mobile-nav__content">
+            <span class="mobile-nav__close mobile-nav__toggler"><i class="fa fa-times"></i></span>
+            <div class="logo-box">
+                <a href="/" aria-label="logo image"><img src="/assets/images/resources/logo-3.png" width="155" alt="" /></a>
+            </div>
+            <div class="mobile-nav__container"></div>
+            <ul class="mobile-nav__contact list-unstyled">
+                <li>
+                    <i class="fa fa-envelope"></i>
+                    <a href="mailto:<%= client.assignedOperator ? client.assignedOperator.email : 'support@caresystem.com' %>">
+                        <%= client.assignedOperator ? client.assignedOperator.email : 'support@caresystem.com' %>
+                    </a>
+                </li>
+                <li>
+                    <i class="fa fa-phone-alt"></i>
+                    <a href="tel:<%= client.contact.emergencyContact.phone || '123-456-7890' %>">
+                        <%= client.contact.emergencyContact.phone || '123-456-7890' %>
+                    </a>
+                </li>
+            </ul>
+            <div class="mobile-nav__top">
+                <div class="mobile-nav__social">
+                    <a href="mailto:<%= client.assignedOperator ? client.assignedOperator.email : 'support@caresystem.com' %>" class="fas fa-envelope" title="Email"></a>
+                    <a href="tel:<%= client.contact.emergencyContact.phone || '123-456-7890' %>" class="fas fa-phone" title="Call"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Popup -->
+    <div class="search-popup">
+        <div class="search-popup__overlay search-toggler"></div>
+        <div class="search-popup__content">
+            <form action="#">
+                <label for="search" class="sr-only">search here</label>
+                <input type="text" id="search" placeholder="Search Here..." />
+                <button type="submit" aria-label="search submit" class="thm-btn">
+                    <i class="icon-magnifying-glass"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <a href="#" data-target="html" class="scroll-to-target scroll-to-top"><i class="fa fa-angle-up"></i></a>
+
+    <!-- JavaScript -->
+    <script src="/assets/vendors/jquery/jquery-3.6.0.min.js"></script>
+    <script src="/assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/vendors/jarallax/jarallax.min.js"></script>
+    <script src="/assets/vendors/jquery-ajaxchimp/jquery.ajaxchimp.min.js"></script>
+    <script src="/assets/vendors/jquery-appear/jquery.appear.min.js"></script>
+    <script src="/assets/vendors/jquery-circle-progress/jquery.circle-progress.min.js"></script>
+    <script src="/assets/vendors/jquery-magnific-popup/jquery.magnific-popup.min.js"></script>
+    <script src="/assets/vendors/jquery-validate/jquery.validate.min.js"></script>
+    <script src="/assets/vendors/nouislider/nouislider.min.js"></script>
+    <script src="/assets/vendors/odometer/odometer.min.js"></script>
+    <script src="/assets/vendors/swiper/swiper.min.js"></script>
+    <script src="/assets/vendors/tiny-slider/tiny-slider.min.js"></script>
+    <script src="/assets/vendors/wnumb/wNumb.min.js"></script>
+    <script src="/assets/vendors/wow/wow.js"></script>
+    <script src="/assets/vendors/isotope/isotope.js"></script>
+    <script src="/assets/vendors/countdown/countdown.min.js"></script>
+    <script src="/assets/vendors/owl-carousel/owl.carousel.min.js"></script>
+    <script src="/assets/vendors/twentytwenty/twentytwenty.js"></script>
+    <script src="/assets/vendors/twentytwenty/jquery.event.move.js"></script>
+    <script src="/assets/vendors/bxslider/jquery.bxslider.min.js"></script>
+    <script src="/assets/vendors/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="/assets/vendors/vegas/vegas.min.js"></script>
+    <script src="/assets/vendors/jquery-ui/jquery-ui.js"></script>
+    <script src="/assets/vendors/timepicker/timePicker.js"></script>
+    
+    <!-- template js -->
+    <script src="/assets/js/sominx.js"></script>
+    
+    <!-- Custom Dashboard Scripts -->
+    <script>
+        $(document).ready(function() {
+            // Initialize WOW.js
+            if ($('.wow').length) {
+                var wow = new WOW({
+                    boxClass: 'wow',
+                    animateClass: 'animated',
+                    offset: 0,
+                    mobile: true,
+                    live: true
+                });
+                wow.init();
+            }
+            
+            // Handle logout
+            $('.main-menu-wrapper__logout').on('click', function(e) {
+                if (!confirm('Are you sure you want to logout?')) {
+                    e.preventDefault();
+                }
+            });
+            
+            // Add click handler for quick action cards
+            $('.quick-action-card').on('click', function(e) {
+                var href = $(this).attr('href');
+                if (href === '#' || !href) {
+                    e.preventDefault();
+                    alert('This feature is coming soon!');
+                }
+            });
+            
+            // Update status badge colors
+            $('.status-active').addClass('status-active');
+            $('.status-pending').addClass('status-pending');
+            $('.status-inactive').addClass('status-inactive');
+            
+            // Auto-refresh dashboard every 5 minutes
+            setTimeout(function() {
+                location.reload();
+            }, 300000); // 5 minutes
+        });
+    </script>
+</body>
+</html>

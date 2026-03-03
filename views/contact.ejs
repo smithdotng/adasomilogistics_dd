@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <meta name="description" content="Get in touch with the Care System team. We're here to answer your questions and help you transform your care operations." />
+    
+    <!-- favicons Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicons/favicon-16x16.png" />
+    <link rel="manifest" href="/assets/images/favicons/site.webmanifest" />
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS Links -->
+    <link rel="stylesheet" href="/assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/animate/animate.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/sominx-icons/style.css">
+
+    <style>
+        /* Same header and footer styles as previous pages */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Jost', sans-serif;
+            color: #1e1e1e;
+            overflow-x: hidden;
+        }
+
+        /* Header Styles - Copy from about page */
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: transparent;
+            padding: 20px 0;
+            z-index: 1000;
+            transition: all 0.4s ease;
+        }
+
+        .main-header.scrolled {
+            background: white;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            padding: 10px 0;
+        }
+
+        .main-header.scrolled .main-menu__list > li > a {
+            color: #333;
+        }
+
+        .main-header.scrolled .btn-outline {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .main-header.scrolled .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .main-menu-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .main-menu-wrapper__logo img {
+            height: 40px;
+            transition: all 0.3s ease;
+        }
+
+        .main-header.scrolled .main-menu-wrapper__logo img {
+            filter: brightness(0.2);
+        }
+
+        .main-menu__list {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 30px;
+        }
+
+        .main-menu__list > li > a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .main-menu__list > li > a:hover,
+        .main-menu__list > li > a.active {
+            color: #ffd700;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-outline {
+            padding: 10px 25px;
+            border: 2px solid white;
+            border-radius: 30px;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-solid {
+            padding: 10px 25px;
+            background: white;
+            border: 2px solid white;
+            border-radius: 30px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-solid:hover {
+            background: transparent;
+            color: white;
+        }
+
+        .mobile-nav__toggler {
+            display: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .main-header.scrolled .mobile-nav__toggler {
+            color: #333;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 150px 0 80px;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+
+        .page-header::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: -100px;
+            width: 300px;
+            height: 300px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+
+        .page-header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .page-header p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.9;
+            position: relative;
+        }
+
+        .breadcrumb {
+            background: transparent;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .breadcrumb a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+        }
+
+        .breadcrumb .active {
+            color: white;
+        }
+
+        /* Contact Info Section */
+        .contact-info-section {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .info-card {
+            text-align: center;
+            padding: 40px;
+            background: #f8f9fa;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .info-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(102,126,234,0.1);
+        }
+
+        .info-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 32px;
+            color: white;
+        }
+
+        .info-card h4 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #1e1e1e;
+        }
+
+        .info-card p {
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .info-card a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .info-card a:hover {
+            text-decoration: underline;
+        }
+
+        /* Contact Form Section */
+        .contact-form-section {
+            padding: 60px 0;
+            background: #f8f9fa;
+        }
+
+        .contact-form {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #1e1e1e;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #f0f0f0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 40px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(102,126,234,0.3);
+        }
+
+        /* Map Section */
+        .map-section {
+            padding: 0;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 450px;
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Alert Styles */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Footer */
+        .site-footer {
+            background: #1e1e1e;
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-widget {
+            margin-bottom: 30px;
+        }
+
+        .footer-logo {
+            max-width: 150px;
+            margin-bottom: 20px;
+        }
+
+        .footer-widget p {
+            color: rgba(255,255,255,0.7);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .footer-social a:hover {
+            background: #667eea;
+            transform: translateY(-3px);
+        }
+
+        .footer-widget h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-contact {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-contact li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 15px;
+        }
+
+        .footer-contact i {
+            width: 30px;
+            color: #667eea;
+        }
+
+        .footer-bottom {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            color: rgba(255,255,255,0.5);
+            font-size: 14px;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 300px;
+            height: 100vh;
+            background: white;
+            z-index: 10000;
+            padding: 40px 20px;
+            transition: left 0.4s ease;
+            box-shadow: 2px 0 20px rgba(0,0,0,0.1);
+        }
+
+        .mobile-menu.open {
+            left: 0;
+        }
+
+        .mobile-menu-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .mobile-menu-logo {
+            margin-bottom: 40px;
+        }
+
+        .mobile-menu-logo img {
+            max-width: 150px;
+        }
+
+        .mobile-menu-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .mobile-menu-links li {
+            margin-bottom: 15px;
+        }
+
+        .mobile-menu-links a {
+            color: #333;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            display: block;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-links a:hover {
+            background: #f0f0f0;
+            padding-left: 20px;
+        }
+
+        .mobile-menu-buttons {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .mobile-menu-buttons .btn-outline {
+            border-color: #667eea;
+            color: #667eea;
+            text-align: center;
+        }
+
+        .mobile-menu-buttons .btn-solid {
+            background: #667eea;
+            color: white;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 991px) {
+            .main-menu__list {
+                display: none;
+            }
+
+            .header-buttons {
+                display: none;
+            }
+
+            .mobile-nav__toggler {
+                display: block;
+            }
+
+            .page-header h1 {
+                font-size: 36px;
+            }
+
+            .contact-form {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="main-header" id="mainHeader">
+        <div class="container">
+            <div class="main-menu-wrapper">
+                <div class="main-menu-wrapper__logo">
+                    <a href="/">
+                        <img src="/assets/images/resources/care-logo-white.png" alt="Care System">
+                    </a>
+                </div>
+                <div class="main-menu-wrapper__main-menu">
+                    <ul class="main-menu__list">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/how-it-works">How It Works</a></li>
+                        <li><a href="/features">Features</a></li>
+                        <li><a href="/pricing">Pricing</a></li>
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="/contact" class="active">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="header-buttons">
+                    <a href="/login" class="btn-outline">Login</a>
+                    <a href="/register" class="btn-solid">Start Free Trial</a>
+                </div>
+                <a href="#" class="mobile-nav__toggler" id="mobileToggler">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <span class="mobile-menu-close" id="mobileClose"><i class="fa fa-times"></i></span>
+        <div class="mobile-menu-logo">
+            <img src="/assets/images/resources/care-logo.png" alt="Care System">
+        </div>
+        <ul class="mobile-menu-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/how-it-works">How It Works</a></li>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/contact">Contact</a></li>
+        </ul>
+        <div class="mobile-menu-buttons">
+            <a href="/login" class="btn-outline">Login</a>
+            <a href="/register" class="btn-solid">Start Free Trial</a>
+        </div>
+    </div>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Get in Touch</h1>
+            <p>We're here to answer your questions and help you transform your care operations.</p>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Contact</li>
+                </ol>
+            </nav>
+        </div>
+    </section>
+
+    <!-- Contact Info Section -->
+    <section class="contact-info-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <h4>Call Us</h4>
+                        <p>Sales: <a href="tel:+447526801286">+44 7526 801286</a></p>
+                        <p>Support: <a href="tel:+447526801286">+44 7526 801286</a></p>
+                        <p class="text-muted">Mon-Fri, 9am-6pm</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h4>Email Us</h4>
+                        <p>General: <a href="mailto:hello@careshed.co.uk">hello@careshed.co.uk</a></p>
+                        <p>Support: <a href="mailto:support@careshed.co.uk">support@careshed.co.uk</a></p>
+                        <p>Sales: <a href="mailto:sales@careshed.co.uk">sales@careshed.co.uk</a></p>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Form Section -->
+    <section class="contact-form-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="contact-form">
+                        <h2 class="text-center mb-4">Send Us a Message</h2>
+                        
+                        <% if (success && success.length > 0) { %>
+                            <div class="alert alert-success">
+                                <i class="fas fa-check-circle me-2"></i><%= success %>
+                            </div>
+                        <% } %>
+                        
+                        <% if (error && error.length > 0) { %>
+                            <div class="alert alert-danger">
+                                <i class="fas fa-exclamation-circle me-2"></i><%= error %>
+                            </div>
+                        <% } %>
+
+                        <form action="/contact" method="POST" id="contactForm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="name">Full Name *</label>
+                                        <input type="text" class="form-control" id="name" name="name" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="email">Email Address *</label>
+                                        <input type="email" class="form-control" id="email" name="email" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="phone">Phone Number</label>
+                                        <input type="tel" class="form-control" id="phone" name="phone">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="company">Company Name</label>
+                                        <input type="text" class="form-control" id="company" name="company">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="message">Message *</label>
+                                <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                            </div>
+
+                            <div class="text-center">
+                                <button type="submit" class="btn-submit">
+                                    <i class="fas fa-paper-plane me-2"></i>Send Message
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <!-- <section class="map-section">
+        <div class="map-container">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2483.546366122872!2d-0.106584284229705!3d51.514417479637!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x487604ce3b5e1b3b%3A0x8f8f0b0c0c0c0c0c!2sLondon!5e0!3m2!1sen!2suk!4v1620000000000!5m2!1sen!2suk" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+    </section> -->
+
+    <!-- Footer -->
+    <footer id="contact" class="site-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-widget">
+                        <img src="/assets/images/resources/care-logo-white.png" alt="CareShed" class="footer-logo">
+                        <p>Complete care management platform for UK care providers. CQC compliant, secure, and easy to use.</p>
+                        
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <div class="footer-widget">
+                        <h4>Quick Links</h4>
+                        <ul class="footer-links">
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/how-it-works">How It Works</a></li>
+                            <li><a href="/features">Features</a></li>
+                            <li><a href="/pricing">Pricing</a></li>
+                            <li><a href="/about">About Us</a></li>
+                            <li><a href="/contact">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-widget">
+                        <h4>Legal</h4>
+                        <ul class="footer-links">
+                            <li><a href="/privacy">Privacy Policy</a></li>
+                            <li><a href="/terms">Terms of Use</a></li>
+                            <li><a href="/cookies">Cookie Policy</a></li>
+                            <li><a href="/compliance">CQC Compliance</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-widget">
+                        <h4>Contact Us</h4>
+                        <ul class="footer-contact">
+                            
+                            <li><i class="fas fa-envelope"></i> hello@careshed.co.uk</li>
+                        </ul>
+                        <div class="footer-social">
+                            <a href="https://www.facebook.com/careshed"><i class="fab fa-facebook"></i></a>
+                            
+                            <a href="https://linkedin.com/company/careshed"><i class="fab fa-linkedin"></i></a>
+                            <a href="https://instagram.com/careshed"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© <%= new Date().getFullYear() %> CareShed. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="/assets/vendors/jquery/jquery-3.6.0.min.js"></script>
+    <script src="/assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Header scroll effect
+            $(window).scroll(function() {
+                if ($(this).scrollTop() > 100) {
+                    $('#mainHeader').addClass('scrolled');
+                } else {
+                    $('#mainHeader').removeClass('scrolled');
+                }
+            });
+
+            // Mobile menu toggle
+            $('#mobileToggler').click(function(e) {
+                e.preventDefault();
+                $('#mobileMenu').addClass('open');
+            });
+
+            $('#mobileClose').click(function(e) {
+                e.preventDefault();
+                $('#mobileMenu').removeClass('open');
+            });
+
+            // Close mobile menu when clicking a link
+            $('.mobile-menu-links a').click(function() {
+                $('#mobileMenu').removeClass('open');
+            });
+
+            // Form validation
+            $('#contactForm').submit(function(e) {
+                const name = $('#name').val().trim();
+                const email = $('#email').val().trim();
+                const message = $('#message').val().trim();
+                
+                if (!name || !email || !message) {
+                    e.preventDefault();
+                    alert('Please fill in all required fields');
+                }
+            });
+
+            // Auto-hide flash messages
+            setTimeout(() => {
+                $('.alert').fadeOut('slow');
+            }, 5000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Features - Complete Care Management Platform</title>
+    <meta name="description" content="Explore the comprehensive features of Care System - from staff management to CQC compliance, all in one place." />
+    
+    <!-- favicons Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicons/favicon-16x16.png" />
+    <link rel="manifest" href="/assets/images/favicons/site.webmanifest" />
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS Links -->
+    <link rel="stylesheet" href="/assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/animate/animate.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/sominx-icons/style.css">
+
+    <style>
+        /* Same header and footer styles as how-it-works page */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Jost', sans-serif;
+            color: #1e1e1e;
+            overflow-x: hidden;
+        }
+
+        /* Header Styles - Copy from how-it-works */
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: transparent;
+            padding: 20px 0;
+            z-index: 1000;
+            transition: all 0.4s ease;
+        }
+
+        .main-header.scrolled {
+            background: white;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            padding: 10px 0;
+        }
+
+        .main-header.scrolled .main-menu__list > li > a {
+            color: #333;
+        }
+
+        .main-header.scrolled .btn-outline {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .main-header.scrolled .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .main-menu-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .main-menu-wrapper__logo img {
+            height: 40px;
+            transition: all 0.3s ease;
+        }
+
+        .main-header.scrolled .main-menu-wrapper__logo img {
+            filter: brightness(0.2);
+        }
+
+        .main-menu__list {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 30px;
+        }
+
+        .main-menu__list > li > a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .main-menu__list > li > a:hover,
+        .main-menu__list > li > a.active {
+            color: #ffd700;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-outline {
+            padding: 10px 25px;
+            border: 2px solid white;
+            border-radius: 30px;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-solid {
+            padding: 10px 25px;
+            background: white;
+            border: 2px solid white;
+            border-radius: 30px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-solid:hover {
+            background: transparent;
+            color: white;
+        }
+
+        .mobile-nav__toggler {
+            display: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .main-header.scrolled .mobile-nav__toggler {
+            color: #333;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 150px 0 80px;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+
+        .page-header::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: -100px;
+            width: 300px;
+            height: 300px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+
+        .page-header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .page-header p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.9;
+            position: relative;
+        }
+
+        .breadcrumb {
+            background: transparent;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .breadcrumb a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+        }
+
+        .breadcrumb .active {
+            color: white;
+        }
+
+        /* Features Grid */
+        .features-grid-section {
+            padding: 100px 0;
+            background: white;
+        }
+
+        .feature-item {
+            margin-bottom: 60px;
+        }
+
+        .feature-icon-large {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .feature-content h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1e1e1e;
+        }
+
+        .feature-content p {
+            font-size: 18px;
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #555;
+        }
+
+        .feature-list li i {
+            color: #28a745;
+        }
+
+        .feature-image {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.1);
+        }
+
+        .feature-image img {
+            width: 100%;
+            height: auto;
+            transition: transform 0.5s ease;
+        }
+
+        .feature-image:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 300px;
+            height: 100vh;
+            background: white;
+            z-index: 10000;
+            padding: 40px 20px;
+            transition: left 0.4s ease;
+            box-shadow: 2px 0 20px rgba(0,0,0,0.1);
+        }
+
+        .mobile-menu.open {
+            left: 0;
+        }
+
+        .mobile-menu-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .mobile-menu-logo {
+            margin-bottom: 40px;
+        }
+
+        .mobile-menu-logo img {
+            max-width: 150px;
+        }
+
+        .mobile-menu-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .mobile-menu-links li {
+            margin-bottom: 15px;
+        }
+
+        .mobile-menu-links a {
+            color: #333;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            display: block;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-links a:hover {
+            background: #f0f0f0;
+            padding-left: 20px;
+        }
+
+        .mobile-menu-buttons {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .mobile-menu-buttons .btn-outline {
+            border-color: #667eea;
+            color: #667eea;
+            text-align: center;
+        }
+
+        .mobile-menu-buttons .btn-solid {
+            background: #667eea;
+            color: white;
+            text-align: center;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .btn-cta-primary {
+            padding: 15px 40px;
+            background: #ffd700;
+            border: none;
+            border-radius: 40px;
+            color: #333;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cta-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-cta-secondary {
+            padding: 15px 40px;
+            background: transparent;
+            border: 2px solid white;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cta-secondary:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        /* Footer */
+        .site-footer {
+            background: #1e1e1e;
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-widget {
+            margin-bottom: 30px;
+        }
+
+        .footer-logo {
+            max-width: 150px;
+            margin-bottom: 20px;
+        }
+
+        .footer-widget p {
+            color: rgba(255,255,255,0.7);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .footer-social a:hover {
+            background: #667eea;
+            transform: translateY(-3px);
+        }
+
+        .footer-widget h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-contact {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-contact li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 15px;
+        }
+
+        .footer-contact i {
+            width: 30px;
+            color: #667eea;
+        }
+
+        .footer-bottom {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            color: rgba(255,255,255,0.5);
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 991px) {
+            .main-menu__list {
+                display: none;
+            }
+
+            .header-buttons {
+                display: none;
+            }
+
+            .mobile-nav__toggler {
+                display: block;
+            }
+
+            .page-header h1 {
+                font-size: 36px;
+            }
+
+            .feature-list {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="main-header" id="mainHeader">
+        <div class="container">
+            <div class="main-menu-wrapper">
+                <div class="main-menu-wrapper__logo">
+                    <a href="/">
+                        <img src="/assets/images/resources/care-logo-white.png" alt="Care System">
+                    </a>
+                </div>
+                <div class="main-menu-wrapper__main-menu">
+                    <ul class="main-menu__list">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/how-it-works">How It Works</a></li>
+                        <li><a href="/features" class="active">Features</a></li>
+                        <li><a href="/pricing">Pricing</a></li>
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="header-buttons">
+                    <a href="/login" class="btn-outline">Login</a>
+                    <a href="/register" class="btn-solid">Start Free Trial</a>
+                </div>
+                <a href="#" class="mobile-nav__toggler" id="mobileToggler">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <span class="mobile-menu-close" id="mobileClose"><i class="fa fa-times"></i></span>
+        <div class="mobile-menu-logo">
+            <img src="/assets/images/resources/care-logo.png" alt="Care System">
+        </div>
+        <ul class="mobile-menu-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/how-it-works">How It Works</a></li>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/contact">Contact</a></li>
+        </ul>
+        <div class="mobile-menu-buttons">
+            <a href="/login" class="btn-outline">Login</a>
+            <a href="/register" class="btn-solid">Start Free Trial</a>
+        </div>
+    </div>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Powerful Features for Modern Care</h1>
+            <p>Everything you need to manage your care business efficiently, from staff scheduling to CQC compliance.</p>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Features</li>
+                </ol>
+            </nav>
+        </div>
+    </section>
+
+    <!-- Features Grid -->
+    <section class="features-grid-section">
+        <div class="container">
+            <!-- Feature 1 -->
+            <div class="feature-item row align-items-center">
+                <div class="col-lg-6">
+                    <div class="feature-icon-large">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h2>Multi-Provider Management</h2>
+                        <p>Manage multiple care locations and services from a single, unified dashboard. Perfect for growing care groups and franchises.</p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Multiple locations</li>
+                            <li><i class="fas fa-check"></i> Centralised control</li>
+                            <li><i class="fas fa-check"></i> Role-based access</li>
+                            <li><i class="fas fa-check"></i> Cross-location reporting</li>
+                            <li><i class="fas fa-check"></i> Scalable architecture</li>
+                            <li><i class="fas fa-check"></i> Brand customisation</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="feature-image">
+                        <img src="/assets/images/feature-multi-provider.jpg" alt="Multi-Provider Management" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="feature-item row align-items-center flex-row-reverse">
+                <div class="col-lg-6">
+                    <div class="feature-icon-large">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h2>Staff Management</h2>
+                        <p>Comprehensive workforce management with qualification tracking, DBS monitoring, and skills matching.</p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Staff profiles</li>
+                            <li><i class="fas fa-check"></i> Qualification tracking</li>
+                            <li><i class="fas fa-check"></i> DBS monitoring</li>
+                            <li><i class="fas fa-check"></i> Skills matrix</li>
+                            <li><i class="fas fa-check"></i> Training records</li>
+                            <li><i class="fas fa-check"></i> Availability calendar</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="feature-image">
+                        <img src="/assets/images/feature-staff.jpg" alt="Staff Management" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="feature-item row align-items-center">
+                <div class="col-lg-6">
+                    <div class="feature-icon-large">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h2>Intelligent Scheduling</h2>
+                        <p>Smart scheduling that matches the right carer to each client based on skills, location, and availability.</p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Automated rostering</li>
+                            <li><i class="fas fa-check"></i> Skills matching</li>
+                            <li><i class="fas fa-check"></i> Location optimisation</li>
+                            <li><i class="fas fa-check"></i> Recurring visits</li>
+                            <li><i class="fas fa-check"></i> Real-time updates</li>
+                            <li><i class="fas fa-check"></i> Conflict prevention</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="feature-image">
+                        <img src="/assets/images/feature-scheduling.jpg" alt="Intelligent Scheduling" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="feature-item row align-items-center flex-row-reverse">
+                <div class="col-lg-6">
+                    <div class="feature-icon-large">
+                        <i class="fas fa-file-medical"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h2>Digital Care Plans</h2>
+                        <p>Create and manage comprehensive digital care plans with medication tracking, risk assessments, and progress notes.</p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Personalised care plans</li>
+                            <li><i class="fas fa-check"></i> Medication management</li>
+                            <li><i class="fas fa-check"></i> Risk assessments</li>
+                            <li><i class="fas fa-check"></i> Goal tracking</li>
+                            <li><i class="fas fa-check"></i> Progress notes</li>
+                            <li><i class="fas fa-check"></i> Review scheduling</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="feature-image">
+                        <img src="/assets/images/feature-care-plans.jpg" alt="Digital Care Plans" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 5 -->
+            <div class="feature-item row align-items-center">
+                <div class="col-lg-6">
+                    <div class="feature-icon-large">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h2>Mobile Interaction Logging</h2>
+                        <p>Staff can log visits, observations, and tasks in real-time from any device. Offline capability included.</p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Real-time logging</li>
+                            <li><i class="fas fa-check"></i> Offline mode</li>
+                            <li><i class="fas fa-check"></i> Photo attachments</li>
+                            <li><i class="fas fa-check"></i> Digital signatures</li>
+                            <li><i class="fas fa-check"></i> Voice notes</li>
+                            <li><i class="fas fa-check"></i> Visit verification</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="feature-image">
+                        <img src="/assets/images/feature-mobile.jpg" alt="Mobile Interaction Logging" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 6 -->
+            <div class="feature-item row align-items-center flex-row-reverse">
+                <div class="col-lg-6">
+                    <div class="feature-icon-large">
+                        <i class="fas fa-pound-sign"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h2>Payroll Management</h2>
+                        <p>Automated timesheets, tax calculations, and payment processing. Track hours and generate payslips.</p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Automated timesheets</li>
+                            <li><i class="fas fa-check"></i> HMRC tax calculations</li>
+                            <li><i class="fas fa-check"></i> Pension contributions</li>
+                            <li><i class="fas fa-check"></i> Payslip generation</li>
+                            <li><i class="fas fa-check"></i> BACS file export</li>
+                            <li><i class="fas fa-check"></i> Payment history</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="feature-image">
+                        <img src="/assets/images/feature-payroll.jpg" alt="Payroll Management" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to Transform Your Care Service?</h2>
+            <p>Join hundreds of UK care providers who trust us to streamline their operations and deliver better care.</p>
+            <div class="cta-buttons">
+                <a href="/register" class="btn-cta-primary">Start Your Free Trial</a>
+                <a href="/contact" class="btn-cta-secondary">Schedule Demo</a>
+            </div>
+            <p class="mt-4"><small>No credit card required • Cancel anytime</small></p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="site-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-widget">
+                        <img src="/assets/images/resources/care-logo-white.png" alt="CareShed" class="footer-logo">
+                        <p>Complete care management platform for UK care providers. CQC compliant, secure, and easy to use.</p>
+                        
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <div class="footer-widget">
+                        <h4>Quick Links</h4>
+                        <ul class="footer-links">
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/how-it-works">How It Works</a></li>
+                            <li><a href="/features">Features</a></li>
+                            <li><a href="/pricing">Pricing</a></li>
+                            <li><a href="/about">About Us</a></li>
+                            <li><a href="/contact">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-widget">
+                        <h4>Legal</h4>
+                        <ul class="footer-links">
+                            <li><a href="/privacy">Privacy Policy</a></li>
+                            <li><a href="/terms">Terms of Use</a></li>
+                            <li><a href="/cookies">Cookie Policy</a></li>
+                            <li><a href="/compliance">CQC Compliance</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-widget">
+                        <h4>Contact Us</h4>
+                        <ul class="footer-contact">
+                            
+                            <li><i class="fas fa-envelope"></i> hello@careshed.co.uk</li>
+                        </ul>
+                        <div class="footer-social">
+                            <a href="https://www.facebook.com/careshed"><i class="fab fa-facebook"></i></a>
+                            
+                            <a href="https://linkedin.com/company/careshed"><i class="fab fa-linkedin"></i></a>
+                            <a href="https://instagram.com/careshed"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© <%= new Date().getFullYear() %> CareShed. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="/assets/vendors/jquery/jquery-3.6.0.min.js"></script>
+    <script src="/assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Header scroll effect
+            $(window).scroll(function() {
+                if ($(this).scrollTop() > 100) {
+                    $('#mainHeader').addClass('scrolled');
+                } else {
+                    $('#mainHeader').removeClass('scrolled');
+                }
+            });
+
+            // Mobile menu toggle
+            $('#mobileToggler').click(function(e) {
+                e.preventDefault();
+                $('#mobileMenu').addClass('open');
+            });
+
+            $('#mobileClose').click(function(e) {
+                e.preventDefault();
+                $('#mobileMenu').removeClass('open');
+            });
+
+            // Close mobile menu when clicking a link
+            $('.mobile-menu-links a').click(function() {
+                $('#mobileMenu').removeClass('open');
+            });
+        });
+    </script>
+</body>
+</html>

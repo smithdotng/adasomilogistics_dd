@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <meta name="description" content="Learn about CareShed - our mission to transform UK care management through innovative technology and unwavering commitment to quality care." />
+    
+    <!-- favicons Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicons/favicon-16x16.png" />
+    <link rel="manifest" href="/assets/images/favicons/site.webmanifest" />
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS Links -->
+    <link rel="stylesheet" href="/assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/animate/animate.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/sominx-icons/style.css">
+
+    <style>
+        /* Same header and footer styles as previous pages */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Jost', sans-serif;
+            color: #1e1e1e;
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: transparent;
+            padding: 20px 0;
+            z-index: 1000;
+            transition: all 0.4s ease;
+        }
+
+        .main-header.scrolled {
+            background: white;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            padding: 10px 0;
+        }
+
+        .main-header.scrolled .main-menu__list > li > a {
+            color: #333;
+        }
+
+        .main-header.scrolled .btn-outline {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .main-header.scrolled .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .main-menu-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .main-menu-wrapper__logo img {
+            height: 40px;
+            transition: all 0.3s ease;
+        }
+
+        .main-header.scrolled .main-menu-wrapper__logo img {
+            filter: brightness(0.2);
+        }
+
+        .main-menu__list {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 30px;
+        }
+
+        .main-menu__list > li > a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .main-menu__list > li > a:hover,
+        .main-menu__list > li > a.active {
+            color: #ffd700;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-outline {
+            padding: 10px 25px;
+            border: 2px solid white;
+            border-radius: 30px;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-solid {
+            padding: 10px 25px;
+            background: white;
+            border: 2px solid white;
+            border-radius: 30px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-solid:hover {
+            background: transparent;
+            color: white;
+        }
+
+        .mobile-nav__toggler {
+            display: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .main-header.scrolled .mobile-nav__toggler {
+            color: #333;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 150px 0 80px;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+
+        .page-header::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: -100px;
+            width: 300px;
+            height: 300px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+
+        .page-header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .page-header p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.9;
+            position: relative;
+        }
+
+        .breadcrumb {
+            background: transparent;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .breadcrumb a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+        }
+
+        .breadcrumb .active {
+            color: white;
+        }
+
+        /* About Section */
+        .about-section {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .about-content h2 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #1e1e1e;
+        }
+
+        .about-content p {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .mission-vision {
+            margin: 50px 0;
+        }
+
+        .mission-box, .vision-box {
+            padding: 40px;
+            border-radius: 20px;
+            height: 100%;
+        }
+
+        .mission-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .vision-box {
+            background: #f8f9fa;
+        }
+
+        .mission-box h3, .vision-box h3 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .mission-box p, .vision-box p {
+            font-size: 16px;
+            line-height: 1.8;
+            margin: 0;
+        }
+
+        .vision-box p {
+            color: #666;
+        }
+
+        /* Values Section */
+        .values-section {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+
+        .value-card {
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .value-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(102,126,234,0.1);
+        }
+
+        .value-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 32px;
+            color: white;
+        }
+
+        .value-card h4 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #1e1e1e;
+        }
+
+        .value-card p {
+            color: #666;
+            line-height: 1.8;
+            margin: 0;
+        }
+
+        /* Team Section */
+        .team-section {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .team-member {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .member-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .member-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .member-info h4 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #1e1e1e;
+        }
+
+        .member-info p {
+            color: #667eea;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .member-social {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .member-social a {
+            width: 40px;
+            height: 40px;
+            background: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .member-social a:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 60px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 80px 0;
+            background: white;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1e1e1e;
+        }
+
+        .cta-section p {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .btn-cta {
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 40px;
+            font-weight: 600;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(102,126,234,0.3);
+        }
+
+        /* Footer */
+        .site-footer {
+            background: #1e1e1e;
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-widget {
+            margin-bottom: 30px;
+        }
+
+        .footer-logo {
+            max-width: 150px;
+            margin-bottom: 20px;
+        }
+
+        .footer-widget p {
+            color: rgba(255,255,255,0.7);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .footer-social a:hover {
+            background: #667eea;
+            transform: translateY(-3px);
+        }
+
+        .footer-widget h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-contact {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-contact li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 15px;
+        }
+
+        .footer-contact i {
+            width: 30px;
+            color: #667eea;
+        }
+
+        .footer-bottom {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            color: rgba(255,255,255,0.5);
+            font-size: 14px;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 300px;
+            height: 100vh;
+            background: white;
+            z-index: 10000;
+            padding: 40px 20px;
+            transition: left 0.4s ease;
+            box-shadow: 2px 0 20px rgba(0,0,0,0.1);
+        }
+
+        .mobile-menu.open {
+            left: 0;
+        }
+
+        .mobile-menu-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .mobile-menu-logo {
+            margin-bottom: 40px;
+        }
+
+        .mobile-menu-logo img {
+            max-width: 150px;
+        }
+
+        .mobile-menu-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .mobile-menu-links li {
+            margin-bottom: 15px;
+        }
+
+        .mobile-menu-links a {
+            color: #333;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            display: block;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-links a:hover {
+            background: #f0f0f0;
+            padding-left: 20px;
+        }
+
+        .mobile-menu-buttons {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .mobile-menu-buttons .btn-outline {
+            border-color: #667eea;
+            color: #667eea;
+            text-align: center;
+        }
+
+        .mobile-menu-buttons .btn-solid {
+            background: #667eea;
+            color: white;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 991px) {
+            .main-menu__list {
+                display: none;
+            }
+
+            .header-buttons {
+                display: none;
+            }
+
+            .mobile-nav__toggler {
+                display: block;
+            }
+
+            .page-header h1 {
+                font-size: 36px;
+            }
+
+            .stat-number {
+                font-size: 36px;
+            }
+
+            .mission-box, .vision-box {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="main-header" id="mainHeader">
+        <div class="container">
+            <div class="main-menu-wrapper">
+                <div class="main-menu-wrapper__logo">
+                    <a href="/">
+                        <img src="/assets/images/resources/care-logo-white.png" alt="CareShed">
+                    </a>
+                </div>
+                <div class="main-menu-wrapper__main-menu">
+                    <ul class="main-menu__list">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/how-it-works">How It Works</a></li>
+                        <li><a href="/features">Features</a></li>
+                        <li><a href="/pricing">Pricing</a></li>
+                        <li><a href="/about" class="active">About Us</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="header-buttons">
+                    <a href="/login" class="btn-outline">Login</a>
+                    <a href="/register" class="btn-solid">Start Free Trial</a>
+                </div>
+                <a href="#" class="mobile-nav__toggler" id="mobileToggler">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <span class="mobile-menu-close" id="mobileClose"><i class="fa fa-times"></i></span>
+        <div class="mobile-menu-logo">
+            <img src="/assets/images/resources/careshed-logo.png" alt="CareShed">
+        </div>
+        <ul class="mobile-menu-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/how-it-works">How It Works</a></li>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/contact">Contact</a></li>
+        </ul>
+        <div class="mobile-menu-buttons">
+            <a href="/login" class="btn-outline">Login</a>
+            <a href="/register" class="btn-solid">Start Free Trial</a>
+        </div>
+    </div>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>About CareShed</h1>
+            <p>We're on a mission to transform UK care management through innovative technology and unwavering commitment to quality care.</p>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">About Us</li>
+                </ol>
+            </nav>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="about-content">
+                        <h2>Our Story</h2>
+                        <p>CareShed was born from a simple yet powerful observation: care providers were spending too much time on paperwork and not enough on what truly matters – delivering exceptional care.</p>
+                        <p>As the UK care sector faces unprecedented challenges with an aging population and increasing demand, we saw an opportunity to make a real difference. Our founders, with decades of combined experience in healthcare and technology, set out to create a platform that would streamline operations, reduce administrative burden, and ultimately help care providers deliver better care to more people.</p>
+                        <p>Today, CareShed is proud to be part of the solution to the UK's growing care challenges. We're building technology that puts care first, every time.</p>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <img src="/assets/images/about-story.jpg" alt="Our Story" class="img-fluid rounded-4 shadow">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission & Vision -->
+    <section class="about-section" style="padding-top: 0;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mission-box">
+                        <h3>Our Mission</h3>
+                        <p>To empower UK care providers with intuitive technology that simplifies operations, ensures CQC compliance, and frees up more time for what matters most – delivering exceptional, person-centered care to those who need it.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="vision-box">
+                        <h3>Our Vision</h3>
+                        <p>A future where every care provider in the UK has access to powerful, intuitive technology that enables them to scale their services while maintaining the highest standards of care quality and regulatory compliance.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section - Updated with UK Care Statistics -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 col-6">
+                    <div class="stat-item">
+                        <div class="stat-number counter" data-target="1.6">0</div>
+                        <div class="stat-label">Million Care Workers</div>
+                        <small>in the UK</small>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-item">
+                        <div class="stat-number counter" data-target="840">0</div>
+                        <div class="stat-label">Thousand People</div>
+                        <small>receiving care</small>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-item">
+                        <div class="stat-number counter" data-target="46.2">0</div>
+                        <div class="stat-label">Billion Sector Value</div>
+                        <small>annual</small>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-item">
+                        <div class="stat-number counter" data-target="23">0</div>
+                        <div class="stat-label">% Increase in Demand</div>
+                        <small>by 2030</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="values-section">
+        <div class="container">
+            <div class="section-title text-center mb-5">
+                <span class="section-subtitle">OUR VALUES</span>
+                <h2>What Drives Us</h2>
+                <p>The principles that guide everything we do at CareShed.</p>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h4>Care First</h4>
+                        <p>Every decision we make starts with one question: how does this improve care delivery and outcomes?</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h4>Integrity</h4>
+                        <p>We're committed to honesty, transparency, and doing the right thing for our clients and their clients.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h4>Innovation</h4>
+                        <p>We continuously evolve our platform to meet the changing needs of the UK care sector.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <h4>Partnership</h4>
+                        <p>We succeed when our customers succeed. We're in this together, building better care for all.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team-section">
+        <div class="container">
+            <div class="section-title text-center mb-5">
+                <span class="section-subtitle">OUR TEAM</span>
+                <h2>Meet the People Behind CareShed</h2>
+                <p>Passionate experts dedicated to transforming care management.</p>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="team-member">
+                        <div class="member-image">
+                            <img src="/assets/images/team/team-1.jpg" alt="Sarah Mitchell">
+                        </div>
+                        <div class="member-info">
+                            <h4>Sarah Mitchell</h4>
+                            <p>CEO & Co-Founder</p>
+                            <div class="member-social">
+                                <a href="#"><i class="fab fa-linkedin"></i></a>
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="team-member">
+                        <div class="member-image">
+                            <img src="/assets/images/team/team-2.jpg" alt="James Okonkwo">
+                        </div>
+                        <div class="member-info">
+                            <h4>James Okonkwo</h4>
+                            <p>CTO & Co-Founder</p>
+                            <div class="member-social">
+                                <a href="#"><i class="fab fa-linkedin"></i></a>
+                                <a href="#"><i class="fab fa-github"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="team-member">
+                        <div class="member-image">
+                            <img src="/assets/images/team/team-3.jpg" alt="Dr. Emily Watson">
+                        </div>
+                        <div class="member-info">
+                            <h4>Dr. Emily Watson</h4>
+                            <p>Clinical Director</p>
+                            <div class="member-social">
+                                <a href="#"><i class="fab fa-linkedin"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="team-member">
+                        <div class="member-image">
+                            <img src="/assets/images/team/team-4.jpg" alt="Michael Chen">
+                        </div>
+                        <div class="member-info">
+                            <h4>Michael Chen</h4>
+                            <p>Head of Product</p>
+                            <div class="member-social">
+                                <a href="#"><i class="fab fa-linkedin"></i></a>
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Join Us in Transforming Care</h2>
+            <p>Be part of the movement to modernize UK care management with CareShed.</p>
+            <a href="/register" class="btn-cta">Start Your Free Trial</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="site-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-widget">
+                        <img src="/assets/images/resources/care-logo-white.png" alt="CareShed" class="footer-logo">
+                        <p>Complete care management platform for UK care providers. CQC compliant, secure, and easy to use.</p>
+                        
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <div class="footer-widget">
+                        <h4>Quick Links</h4>
+                        <ul class="footer-links">
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/how-it-works">How It Works</a></li>
+                            <li><a href="/features">Features</a></li>
+                            <li><a href="/pricing">Pricing</a></li>
+                            <li><a href="/about">About Us</a></li>
+                            <li><a href="/contact">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-widget">
+                        <h4>Legal</h4>
+                        <ul class="footer-links">
+                            <li><a href="/privacy">Privacy Policy</a></li>
+                            <li><a href="/terms">Terms of Use</a></li>
+                            <li><a href="/cookies">Cookie Policy</a></li>
+                            <li><a href="/compliance">CQC Compliance</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-widget">
+                        <h4>Contact Us</h4>
+                        <ul class="footer-contact">
+                            
+                            <li><i class="fas fa-envelope"></i> hello@careshed.co.uk</li>
+                        </ul>
+                        <div class="footer-social">
+                            <a href="https://www.facebook.com/careshed"><i class="fab fa-facebook"></i></a>
+                            
+                            <a href="https://linkedin.com/company/careshed"><i class="fab fa-linkedin"></i></a>
+                            <a href="https://instagram.com/careshed"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© <%= new Date().getFullYear() %> CareShed. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="/assets/vendors/jquery/jquery-3.6.0.min.js"></script>
+    <script src="/assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Header scroll effect
+            $(window).scroll(function() {
+                if ($(this).scrollTop() > 100) {
+                    $('#mainHeader').addClass('scrolled');
+                } else {
+                    $('#mainHeader').removeClass('scrolled');
+                }
+            });
+
+            // Mobile menu toggle
+            $('#mobileToggler').click(function(e) {
+                e.preventDefault();
+                $('#mobileMenu').addClass('open');
+            });
+
+            $('#mobileClose').click(function(e) {
+                e.preventDefault();
+                $('#mobileMenu').removeClass('open');
+            });
+
+            // Close mobile menu when clicking a link
+            $('.mobile-menu-links a').click(function() {
+                $('#mobileMenu').removeClass('open');
+            });
+
+            // Counter animation
+            function animateCounter() {
+                $('.counter').each(function() {
+                    const $this = $(this);
+                    const target = parseInt($this.data('target'));
+                    
+                    $({ count: 0 }).animate({ count: target }, {
+                        duration: 2000,
+                        easing: 'swing',
+                        step: function() {
+                            const num = Math.floor(this.count);
+                            $this.text(num.toLocaleString());
+                        },
+                        complete: function() {
+                            $this.text(target.toLocaleString() + (target === 46.2 ? 'B' : target === 23 ? '%' : ''));
+                        }
+                    });
+                });
+            }
+
+            // Trigger counter animation when element is in viewport
+            const statsSection = document.querySelector('.stats-section');
+            let animated = false;
+
+            function isElementInViewport(el) {
+                const rect = el.getBoundingClientRect();
+                return (
+                    rect.top >= 0 &&
+                    rect.left >= 0 &&
+                    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+                );
+            }
+
+            function checkStats() {
+                if (!animated && isElementInViewport(statsSection)) {
+                    animateCounter();
+                    animated = true;
+                }
+            }
+
+            $(window).on('scroll', checkStats);
+            checkStats(); // Check on page load
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Schedule || Care Management System</title>
+    
+    <!-- favicons Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicons/favicon-16x16.png" />
+    <link rel="manifest" href="/assets/images/favicons/site.webmanifest" />
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS Links -->
+    <link rel="stylesheet" href="/assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/sominx-icons/style.css">
+
+    <!-- Custom Styles -->
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Jost', sans-serif;
+            background: #f5f7fb;
+        }
+
+        /* Header Styles */
+        .main-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 0;
+            position: relative;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .main-menu-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .main-menu-wrapper__left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .main-menu-wrapper__logo img {
+            height: 40px;
+        }
+
+        /* Desktop Menu */
+        .main-menu__list {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 20px;
+        }
+
+        .main-menu__list > li {
+            position: relative;
+        }
+
+        .main-menu__list > li > a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 5px 0;
+        }
+
+        .main-menu__list .dropdown ul {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            min-width: 200px;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: none;
+            padding: 10px 0;
+        }
+
+        .main-menu__list .dropdown:hover ul {
+            display: block;
+        }
+
+        .main-menu__list .dropdown ul li {
+            padding: 8px 20px;
+        }
+
+        .main-menu__list .dropdown ul li a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        /* Right Section */
+        .main-menu-wrapper__right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .main-menu-wrapper__call {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+        }
+
+        .provider-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .subscription-badge {
+            background: #28a745;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+
+        .main-menu-wrapper__logout {
+            color: white;
+            font-size: 18px;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-nav__toggler {
+            display: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Mobile Menu */
+        .mobile-nav__wrapper {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 300px;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: 9999;
+            transition: left 0.3s ease;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+            overflow-y: auto;
+        }
+
+        .mobile-nav__wrapper.open {
+            left: 0;
+        }
+
+        .mobile-nav__overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9998;
+            display: none;
+        }
+
+        .mobile-nav__overlay.open {
+            display: block;
+        }
+
+        .mobile-nav__content {
+            padding: 30px 20px;
+        }
+
+        .mobile-nav__close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-box {
+            text-align: center;
+            margin: 40px 0 30px;
+        }
+
+        .logo-box img {
+            max-width: 150px;
+        }
+
+        .mobile-nav__container ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .mobile-nav__container ul li a {
+            display: block;
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px 0;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .page-header .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin: 10px 0 0;
+        }
+
+        .page-header .breadcrumb a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+        }
+
+        .page-header .breadcrumb .active {
+            color: white;
+        }
+
+        /* Form Styles */
+        .form-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .form-card h3 {
+            margin: 0 0 20px;
+            font-size: 20px;
+            color: #333;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group label .required {
+            color: #dc3545;
+            margin-left: 4px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #f0f0f0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        .form-control.error {
+            border-color: #dc3545;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        /* Radio and Checkbox Styles */
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+        }
+
+        .radio-option input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            accent-color: #667eea;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            accent-color: #667eea;
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+
+        .info-box p {
+            margin: 0;
+            color: #666;
+        }
+
+        /* Footer */
+        .site-footer {
+            background: #333;
+            color: white;
+            padding: 30px 0;
+            margin-top: 40px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 991px) {
+            .main-menu__list {
+                display: none;
+            }
+            
+            .main-menu-wrapper__right {
+                display: none;
+            }
+            
+            .mobile-nav__toggler {
+                display: flex;
+            }
+            
+            .main-menu-wrapper__left {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container">
+            <div class="main-menu-wrapper">
+                <div class="main-menu-wrapper__left">
+                    <div class="main-menu-wrapper__logo">
+                        <a href="/provider/dashboard">
+                            <img src="/assets/images/resources/care-logo-white.png" alt="Care System">
+                        </a>
+                    </div>
+                    <div class="main-menu-wrapper__main-menu">
+                        <a href="#" class="mobile-nav__toggler" id="mobileNavToggler">
+                            <i class="fa fa-bars"></i>
+                        </a>
+                        <ul class="main-menu__list">
+                            <li><a href="/provider/dashboard">Dashboard</a></li>
+                            <li class="dropdown">
+                                <a href="#">Operators</a>
+                                <ul>
+                                    <li><a href="/provider/operators">All Operators</a></li>
+                                    <li><a href="/provider/operators/create">Add Operator</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#">Clients</a>
+                                <ul>
+                                    <li><a href="/provider/clients">All Clients</a></li>
+                                    <li><a href="/provider/clients/create">Add Client</a></li>
+                                </ul>
+                            </li>
+                            <li class="current"><a href="/provider/schedule">Schedule</a></li>
+                            <li><a href="/provider/reports">Reports</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="main-menu-wrapper__right">
+                    <div class="main-menu-wrapper__call">
+                        <div class="main-menu-wrapper__call-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="main-menu-wrapper__call-number">
+                            <span class="provider-badge"><%= user.role.replace('_', ' ') %></span>
+                            <span class="subscription-badge">
+                                <%= user.providerInfo.subscription.plan %>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="main-menu-wrapper__search-box">
+                        <a href="/logout" class="main-menu-wrapper__logout" onclick="return confirm('Logout?')">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-nav__overlay" id="mobileNavOverlay"></div>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-nav__wrapper" id="mobileNav">
+        <div class="mobile-nav__content">
+            <span class="mobile-nav__close" id="mobileNavClose"><i class="fa fa-times"></i></span>
+            <div class="logo-box">
+                <img src="/assets/images/resources/care-logo-white.png" alt="Care System">
+            </div>
+            <div class="mobile-nav__container">
+                <ul>
+                    <li><a href="/provider/dashboard">Dashboard</a></li>
+                    <li><a href="/provider/operators">All Operators</a></li>
+                    <li><a href="/provider/operators/create">Add Operator</a></li>
+                    <li><a href="/provider/clients">All Clients</a></li>
+                    <li><a href="/provider/clients/create">Add Client</a></li>
+                    <li><a href="/provider/schedule">Schedule</a></li>
+                    <li><a href="/provider/schedule/create">Create Schedule</a></li>
+                    <li><a href="/provider/reports">Reports</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Create New Schedule</h1>
+            <div class="breadcrumb">
+                <a href="/provider/dashboard">Dashboard</a> / 
+                <a href="/provider/schedule">Schedule</a> / 
+                <span class="active">Create New</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="dashboard-content">
+        <div class="container">
+            <!-- Flash Messages -->
+            <% if (success && success.length > 0) { %>
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle me-2"></i><%= success %>
+                </div>
+            <% } %>
+            
+            <% if (error && error.length > 0) { %>
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle me-2"></i><%= error %>
+                </div>
+            <% } %>
+
+            <!-- Info Box -->
+            <div class="info-box">
+                <p><i class="fas fa-info-circle me-2" style="color: #667eea;"></i>Create a new visit schedule. For recurring visits, select the recurrence pattern below.</p>
+            </div>
+
+            <!-- Create Form -->
+            <div class="form-card">
+                <form action="/provider/schedule" method="POST" id="scheduleForm">
+                    <h3>Schedule Details</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="clientId">Select Client <span class="required">*</span></label>
+                            <select class="form-control" id="clientId" name="clientId" required>
+                                <option value="">Choose a client...</option>
+                                <% if (clients && clients.length > 0) { %>
+                                    <% clients.forEach(client => { %>
+                                        <option value="<%= client._id %>">
+                                            <%= client.firstName %> <%= client.lastName %> - <%= client.clientInfo?.nhsNumber || 'No NHS number' %>
+                                        </option>
+                                    <% }); %>
+                                <% } %>
+                            </select>
+                            <div class="error-message" id="clientError">Please select a client</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="operatorId">Select Operator <span class="required">*</span></label>
+                            <select class="form-control" id="operatorId" name="operatorId" required>
+                                <option value="">Choose an operator...</option>
+                                <% if (operators && operators.length > 0) { %>
+                                    <% operators.forEach(operator => { %>
+                                        <option value="<%= operator._id %>">
+                                            <%= operator.firstName %> <%= operator.lastName %> 
+                                            <% if (operator.operatorInfo?.employeeId) { %>
+                                                - <%= operator.operatorInfo.employeeId %>
+                                            <% } %>
+                                        </option>
+                                    <% }); %>
+                                <% } %>
+                            </select>
+                            <div class="error-message" id="operatorError">Please select an operator</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="title">Visit Title</label>
+                        <input type="text" class="form-control" id="title" name="title" 
+                               placeholder="e.g., Morning Care Visit, Medication Round">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="type">Visit Type <span class="required">*</span></label>
+                        <select class="form-control" id="type" name="type" required>
+                            <option value="">Select visit type</option>
+                            <option value="regular_visit">Regular Visit</option>
+                            <option value="medication">Medication Administration</option>
+                            <option value="personal_care">Personal Care</option>
+                            <option value="meal">Meal Preparation</option>
+                            <option value="appointment">Medical Appointment</option>
+                            <option value="assessment">Assessment</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <div class="error-message" id="typeError">Please select visit type</div>
+                    </div>
+
+                    <h3 class="mt-4">Date & Time</h3>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="startDate">Start Date <span class="required">*</span></label>
+                            <input type="date" class="form-control" id="startDate" name="startDate" required>
+                            <div class="error-message" id="dateError">Start date is required</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="endDate">End Date (for recurring)</label>
+                            <input type="date" class="form-control" id="endDate" name="endDate">
+                            <small class="text-muted">Leave blank for no end date</small>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="startTime">Start Time <span class="required">*</span></label>
+                            <input type="time" class="form-control" id="startTime" name="startTime" required>
+                            <div class="error-message" id="startTimeError">Start time is required</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="endTime">End Time <span class="required">*</span></label>
+                            <input type="time" class="form-control" id="endTime" name="endTime" required>
+                            <div class="error-message" id="endTimeError">End time is required</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="duration">Duration (minutes)</label>
+                        <input type="number" class="form-control" id="duration" name="duration" 
+                               placeholder="e.g., 60" value="60" min="15" step="15">
+                    </div>
+
+                    <h3 class="mt-4">Recurrence</h3>
+
+                    <div class="form-group">
+                        <label for="recurrenceType">Repeat</label>
+                        <select class="form-control" id="recurrenceType" name="recurrenceType">
+                            <option value="once">Does not repeat</option>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="biweekly">Every 2 weeks</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
+                    </div>
+
+                    <div id="weeklyOptions" style="display: none;">
+                        <label>Repeat on:</label>
+                        <div class="form-row">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="mon" name="days[]" value="1">
+                                <label for="mon">Monday</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="tue" name="days[]" value="2">
+                                <label for="tue">Tuesday</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="wed" name="days[]" value="3">
+                                <label for="wed">Wednesday</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="thu" name="days[]" value="4">
+                                <label for="thu">Thursday</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="fri" name="days[]" value="5">
+                                <label for="fri">Friday</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="sat" name="days[]" value="6">
+                                <label for="sat">Saturday</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="sun" name="days[]" value="0">
+                                <label for="sun">Sunday</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="mt-4">Tasks & Notes</h3>
+
+                    <div class="form-group">
+                        <label for="tasks">Tasks (comma separated)</label>
+                        <input type="text" class="form-control" id="tasks" name="tasks" 
+                               placeholder="e.g., Medication check, Personal care, Meal preparation">
+                        <small class="text-muted">Enter tasks separated by commas</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes">Notes / Special Instructions</label>
+                        <textarea class="form-control" id="notes" name="notes" 
+                                  rows="4" placeholder="Enter any special instructions or notes for this visit"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="specialInstructions">Special Requirements</label>
+                        <input type="text" class="form-control" id="specialInstructions" name="specialInstructions" 
+                               placeholder="e.g., Door code, Allergies, Special equipment">
+                    </div>
+
+                    <div class="button-group">
+                        <a href="/provider/schedule" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Create Schedule
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container text-center">
+            <p>© <%= new Date().getFullYear() %> Care System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu functionality
+            const mobileNav = document.getElementById('mobileNav');
+            const mobileToggler = document.getElementById('mobileNavToggler');
+            const mobileOverlay = document.getElementById('mobileNavOverlay');
+            const mobileClose = document.getElementById('mobileNavClose');
+            
+            function toggleMenu(show) {
+                if (show) {
+                    mobileNav.classList.add('open');
+                    mobileOverlay.classList.add('open');
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    mobileNav.classList.remove('open');
+                    mobileOverlay.classList.remove('open');
+                    document.body.style.overflow = '';
+                }
+            }
+            
+            if (mobileToggler) {
+                mobileToggler.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    toggleMenu(true);
+                });
+            }
+            
+            if (mobileOverlay) {
+                mobileOverlay.addEventListener('click', function() {
+                    toggleMenu(false);
+                });
+            }
+            
+            if (mobileClose) {
+                mobileClose.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    toggleMenu(false);
+                });
+            }
+            
+            // Show/hide weekly options based on recurrence type
+            const recurrenceType = document.getElementById('recurrenceType');
+            const weeklyOptions = document.getElementById('weeklyOptions');
+            
+            recurrenceType.addEventListener('change', function() {
+                if (this.value === 'weekly' || this.value === 'biweekly') {
+                    weeklyOptions.style.display = 'block';
+                } else {
+                    weeklyOptions.style.display = 'none';
+                }
+            });
+            
+            // Form validation
+            const form = document.getElementById('scheduleForm');
+            
+            form.addEventListener('submit', function(e) {
+                let isValid = true;
+                
+                // Clear previous errors
+                document.querySelectorAll('.form-control').forEach(field => {
+                    field.classList.remove('error');
+                });
+                document.querySelectorAll('.error-message').forEach(msg => {
+                    msg.classList.remove('show');
+                });
+                
+                // Validate required fields
+                const clientId = document.getElementById('clientId');
+                if (!clientId.value) {
+                    clientId.classList.add('error');
+                    document.getElementById('clientError').classList.add('show');
+                    isValid = false;
+                }
+                
+                const operatorId = document.getElementById('operatorId');
+                if (!operatorId.value) {
+                    operatorId.classList.add('error');
+                    document.getElementById('operatorError').classList.add('show');
+                    isValid = false;
+                }
+                
+                const type = document.getElementById('type');
+                if (!type.value) {
+                    type.classList.add('error');
+                    document.getElementById('typeError').classList.add('show');
+                    isValid = false;
+                }
+                
+                const startDate = document.getElementById('startDate');
+                if (!startDate.value) {
+                    startDate.classList.add('error');
+                    document.getElementById('dateError').classList.add('show');
+                    isValid = false;
+                }
+                
+                const startTime = document.getElementById('startTime');
+                if (!startTime.value) {
+                    startTime.classList.add('error');
+                    document.getElementById('startTimeError').classList.add('show');
+                    isValid = false;
+                }
+                
+                const endTime = document.getElementById('endTime');
+                if (!endTime.value) {
+                    endTime.classList.add('error');
+                    document.getElementById('endTimeError').classList.add('show');
+                    isValid = false;
+                }
+                
+                // Validate that end time is after start time
+                if (startTime.value && endTime.value) {
+                    if (startTime.value >= endTime.value) {
+                        endTime.classList.add('error');
+                        alert('End time must be after start time');
+                        isValid = false;
+                    }
+                }
+                
+                if (!isValid) {
+                    e.preventDefault();
+                }
+            });
+            
+            // Auto-hide flash messages
+            setTimeout(() => {
+                document.querySelectorAll('.alert').forEach(alert => {
+                    alert.style.display = 'none';
+                });
+            }, 5000);
+        });
+    </script>
+</body>
+</html>

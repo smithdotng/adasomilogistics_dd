@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard || Care System</title>
+    
+    <!-- favicons Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicons/favicon-16x16.png" />
+    <link rel="manifest" href="/assets/images/favicons/site.webmanifest" />
+    <meta name="description" content="Care System Admin Dashboard" />
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <!-- CSS libraries -->
+    <link rel="stylesheet" href="/assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/animate/animate.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/animate/custom-animate.css" />
+    <link rel="stylesheet" href="/assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/jarallax/jarallax.css" />
+    <link rel="stylesheet" href="/assets/vendors/jquery-magnific-popup/jquery.magnific-popup.css" />
+    <link rel="stylesheet" href="/assets/vendors/nouislider/nouislider.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/nouislider/nouislider.pips.css" />
+    <link rel="stylesheet" href="/assets/vendors/odometer/odometer.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/swiper/swiper.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/sominx-icons/style.css">
+    <link rel="stylesheet" href="/assets/vendors/tiny-slider/tiny-slider.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/reey-font/stylesheet.css" />
+    <link rel="stylesheet" href="/assets/vendors/owl-carousel/owl.carousel.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/owl-carousel/owl.theme.default.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/twentytwenty/twentytwenty.css" />
+    <link rel="stylesheet" href="/assets/vendors/bxslider/jquery.bxslider.css" />
+    <link rel="stylesheet" href="/assets/vendors/bootstrap-select/css/bootstrap-select.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/vegas/vegas.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/jquery-ui/jquery-ui.css" />
+    <link rel="stylesheet" href="/assets/vendors/timepicker/timePicker.css" />
+
+    <!-- template styles -->
+    <link rel="stylesheet" href="/assets/css/sominx.css" />
+    <link rel="stylesheet" href="/assets/css/sominx-responsive.css" />
+    
+    <!-- Custom Dashboard Styles -->
+    <style>
+        .dashboard-stats-box {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 10px 60px 0px rgba(0, 0, 0, 0.07);
+            margin-bottom: 30px;
+            transition: all 0.4s ease;
+            border-left: 4px solid;
+            height: 100%;
+        }
+        
+        .dashboard-stats-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 20px 80px 0px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dashboard-stats-box.total-clients {
+            border-left-color: #667eea;
+        }
+        
+        .dashboard-stats-box.active-clients {
+            border-left-color: #28a745;
+        }
+        
+        .dashboard-stats-box.active-operators {
+            border-left-color: #17a2b8;
+        }
+        
+        .dashboard-stats-box.total-interactions {
+            border-left-color: #fd7e14;
+        }
+        
+        .stats-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .stats-icon.total-clients {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .stats-icon.active-clients {
+            background: linear-gradient(45deg, #28a745 0%, #34d058 100%);
+            color: white;
+        }
+        
+        .stats-icon.active-operators {
+            background: linear-gradient(45deg, #17a2b8 0%, #20c9d8 100%);
+            color: white;
+        }
+        
+        .stats-icon.total-interactions {
+            background: linear-gradient(45deg, #fd7e14 0%, #ff9d42 100%);
+            color: white;
+        }
+        
+        .stats-number {
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 10px;
+            color: #213360;
+        }
+        
+        .stats-label {
+            font-size: 16px;
+            color: #808080;
+            margin-bottom: 5px;
+        }
+        
+        .stats-subtext {
+            font-size: 14px;
+            color: #a0a0a0;
+        }
+        
+        .quick-action-card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 10px 60px 0px rgba(0, 0, 0, 0.07);
+            text-align: center;
+            transition: all 0.4s ease;
+            height: 100%;
+            display: block;
+            color: #213360;
+            text-decoration: none;
+        }
+        
+        .quick-action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 20px 80px 0px rgba(0, 0, 0, 0.1);
+            color: #213360;
+        }
+        
+        .quick-action-card .action-icon {
+            width: 80px;
+            height: 80px;
+            background: #f4f6fc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin: 0 auto 20px;
+            color: #667eea;
+            transition: all 0.4s ease;
+        }
+        
+        .quick-action-card:hover .action-icon {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .recent-activities-card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 10px 60px 0px rgba(0, 0, 0, 0.07);
+            overflow: hidden;
+            height: 100%;
+        }
+        
+        .activity-item {
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: all 0.3s ease;
+        }
+        
+        .activity-item:hover {
+            background: #f9f9f9;
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-right: 15px;
+        }
+        
+        .activity-icon.visit { background: linear-gradient(45deg, #667eea 0%, #764ba2 100%); color: white; }
+        .activity-icon.phone { background: linear-gradient(45deg, #28a745 0%, #34d058 100%); color: white; }
+        .activity-icon.emergency { background: linear-gradient(45deg, #dc3545 0%, #ff6b6b 100%); color: white; }
+        .activity-icon.medication { background: linear-gradient(45deg, #fd7e14 0%, #ff9d42 100%); color: white; }
+        
+        .activity-content h5 {
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: #213360;
+        }
+        
+        .activity-content p {
+            font-size: 14px;
+            color: #808080;
+            margin-bottom: 0;
+        }
+        
+        .activity-time {
+            font-size: 12px;
+            color: #a0a0a0;
+        }
+        
+        .statistics-card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 10px 60px 0px rgba(0, 0, 0, 0.07);
+            padding: 30px;
+            height: 100%;
+        }
+        
+        .statistics-item {
+            margin-bottom: 25px;
+        }
+        
+        .statistics-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .statistics-item h6 {
+            font-size: 14px;
+            color: #213360;
+            margin-bottom: 10px;
+        }
+        
+        .statistics-item p {
+            font-size: 12px;
+            color: #808080;
+            margin-bottom: 5px;
+        }
+        
+        .progress {
+            height: 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .operator-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .operator-item:last-child {
+            border-bottom: none;
+        }
+        
+        .operator-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 15px;
+        }
+        
+        .operator-info h6 {
+            font-size: 14px;
+            margin-bottom: 2px;
+            color: #213360;
+        }
+        
+        .operator-info p {
+            font-size: 12px;
+            color: #808080;
+            margin-bottom: 0;
+        }
+        
+        .operator-stats {
+            margin-left: auto;
+            font-weight: 600;
+            color: #667eea;
+        }
+        
+        .dashboard-section-title {
+            margin-bottom: 30px;
+        }
+        
+        .dashboard-section-title h2 {
+            font-size: 30px;
+            color: #213360;
+            margin-bottom: 10px;
+        }
+        
+        .dashboard-section-title p {
+            color: #808080;
+            margin-bottom: 0;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .empty-state i {
+            font-size: 60px;
+            color: #e0e0e0;
+            margin-bottom: 20px;
+        }
+        
+        .empty-state p {
+            color: #a0a0a0;
+            margin-bottom: 0;
+        }
+        
+        .welcome-user {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .welcome-user h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .welcome-user p {
+            opacity: 0.9;
+            margin-bottom: 0;
+        }
+        
+        .user-role-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="preloader">
+        <img class="preloader__image" width="60" src="/assets/images/loader.png" alt="" />
+    </div>
+    <!-- /.preloader -->
+    
+    <div class="page-wrapper">
+        <!-- Header Start -->
+        <header class="main-header clearfix">
+            <nav class="main-menu clearfix">
+                <div class="main-menu-wrapper clearfix">
+                    <div class="main-menu-wrapper-inner clearfix">
+                        <div class="main-menu-wrapper__left clearfix">
+                            <div class="main-menu-wrapper__logo">
+                                <a href="/"><img src="/assets/images/resources/logo-1.jpg" alt="Care System"></a>
+                            </div>
+                            <div class="main-menu-wrapper__main-menu">
+                                <a href="#" class="mobile-nav__toggler"><i class="fa fa-bars"></i></a>
+                                <ul class="main-menu__list">
+                                    <li class="current"><a href="/admin/dashboard">Dashboard</a></li>
+                                    <li class="dropdown">
+                                        <a href="#">Clients</a>
+                                        <ul>
+                                            <li><a href="/clients">All Clients</a></li>
+                                            <li><a href="/clients/create">Add New Client</a></li>
+                                            <li><a href="/admin/clients">Admin View</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="#">Operators</a>
+                                        <ul>
+                                            <li><a href="/admin/operators">Manage Operators</a></li>
+                                            <li><a href="/admin/operators/create">Add Operator</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="#">Interactions</a>
+                                        <ul>
+                                            <li><a href="/interactions">All Interactions</a></li>
+                                            <li><a href="/interactions/create">Log Interaction</a></li>
+                                            <li><a href="/admin/interactions">Admin View</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="/admin/reports">Reports</a></li>
+                                    <li><a href="/admin/settings">Settings</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="main-menu-wrapper__right">
+                            <div class="main-menu-wrapper__call">
+                                <div class="main-menu-wrapper__call-icon">
+                                    <span class="icon-phone-call"></span>
+                                </div>
+                                <div class="main-menu-wrapper__call-number">
+                                    <p>Welcome back</p>
+                                    <a href="/admin/profile"><%= user.fullName %></a>
+                                </div>
+                            </div>
+                            <div class="main-menu-wrapper__search-box">
+                                <a href="/logout" class="main-menu-wrapper__logout" title="Logout">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <!-- Header End -->
+
+        <div class="stricky-header stricked-menu main-menu">
+            <div class="sticky-header__content"></div>
+        </div>
+
+        <!--Page Header Start-->
+        <section class="page-header" style="padding: 60px 0 40px;">
+            
+        </section>
+        <!--Page Header End-->
+
+        <!-- Dashboard Content Start -->
+        <section class="dashboard-content pt-80 pb-120">
+            <div class="container">
+                <!-- Welcome Message -->
+                <div class="welcome-user">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h3>Welcome back, <%= user.fullName %></h3>
+                            <p>Here's what's happening with your care system today.</p>
+                            <div class="user-role-badge">
+                                <i class="fas fa-shield-alt me-2"></i>ADMINISTRATOR
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <p><i class="fas fa-calendar-alt me-2"></i><%= moment().format('dddd, MMMM D, YYYY') %></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics Cards -->
+                <div class="row mb-5">
+                    <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="100ms">
+                        <div class="dashboard-stats-box total-clients">
+                            <div class="stats-icon total-clients">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h3 class="stats-number odometer" data-count="<%= stats.totalClients %>">0</h3>
+                            <p class="stats-label">Total Clients</p>
+                            <p class="stats-subtext"><i class="fas fa-user-check text-success me-1"></i> <%= stats.activeClients %> active</p>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="200ms">
+                        <div class="dashboard-stats-box active-clients">
+                            <div class="stats-icon active-clients">
+                                <i class="fas fa-user-check"></i>
+                            </div>
+                            <h3 class="stats-number odometer" data-count="<%= stats.activeClients %>">0</h3>
+                            <p class="stats-label">Active Clients</p>
+                            <p class="stats-subtext"><%= stats.totalClients > 0 ? Math.round((stats.activeClients / stats.totalClients) * 100) : 0 %>% active rate</p>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="300ms">
+                        <div class="dashboard-stats-box active-operators">
+                            <div class="stats-icon active-operators">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                            <h3 class="stats-number odometer" data-count="<%= stats.totalOperators %>">0</h3>
+                            <p class="stats-label">Active Operators</p>
+                            <p class="stats-subtext"><i class="fas fa-users-cog text-info me-1"></i> <%= operatorStats.length %> performing</p>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="400ms">
+                        <div class="dashboard-stats-box total-interactions">
+                            <div class="stats-icon total-interactions">
+                                <i class="fas fa-clipboard-list"></i>
+                            </div>
+                            <h3 class="stats-number odometer" data-count="<%= stats.totalInteractions %>">0</h3>
+                            <p class="stats-label">Total Interactions</p>
+                            <p class="stats-subtext"><i class="fas fa-history text-warning me-1"></i> <%= recentInteractions.length %> recent</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="row mb-5">
+                    <div class="col-12">
+                        <div class="dashboard-section-title">
+                            <h2>Quick Actions</h2>
+                            <p>Common admin tasks at your fingertips</p>
+                        </div>
+                        
+                        <div class="row g-4">
+                            <div class="col-xl-2 col-lg-4 col-md-6">
+                                <a href="/clients/create" class="quick-action-card wow fadeInUp" data-wow-delay="100ms">
+                                    <div class="action-icon">
+                                        <i class="fas fa-plus"></i>
+                                    </div>
+                                    <h5>Add Client</h5>
+                                    <p>Create new client profile</p>
+                                </a>
+                            </div>
+
+                            <div class="col-xl-2 col-lg-4 col-md-6">
+                                <a href="/admin/operators" class="quick-action-card wow fadeInUp" data-wow-delay="200ms">
+                                    <div class="action-icon">
+                                        <i class="fas fa-users-cog"></i>
+                                    </div>
+                                    <h5>Manage Operators</h5>
+                                    <p>Team & permissions</p>
+                                </a>
+                            </div>
+
+                            <div class="col-xl-2 col-lg-4 col-md-6">
+                                <a href="/admin/clients" class="quick-action-card wow fadeInUp" data-wow-delay="300ms">
+                                    <div class="action-icon">
+                                        <i class="fas fa-user-friends"></i>
+                                    </div>
+                                    <h5>All Clients</h5>
+                                    <p>Full client directory</p>
+                                </a>
+                            </div>
+
+                            <div class="col-xl-2 col-lg-4 col-md-6">
+                                <a href="/admin/interactions" class="quick-action-card wow fadeInUp" data-wow-delay="400ms">
+                                    <div class="action-icon">
+                                        <i class="fas fa-history"></i>
+                                    </div>
+                                    <h5>All Interactions</h5>
+                                    <p>Complete activity log</p>
+                                </a>
+                            </div>
+
+                            <div class="col-xl-2 col-lg-4 col-md-6">
+                                <a href="/admin/reports" class="quick-action-card wow fadeInUp" data-wow-delay="500ms">
+                                    <div class="action-icon">
+                                        <i class="fas fa-chart-pie"></i>
+                                    </div>
+                                    <h5>Reports</h5>
+                                    <p>Analytics & insights</p>
+                                </a>
+                            </div>
+
+                            <div class="col-xl-2 col-lg-4 col-md-6">
+                                <a href="/admin/settings" class="quick-action-card wow fadeInUp" data-wow-delay="600ms">
+                                    <div class="action-icon">
+                                        <i class="fas fa-cog"></i>
+                                    </div>
+                                    <h5>Settings</h5>
+                                    <p>System configuration</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content Area -->
+                <div class="row g-4">
+                    <!-- Recent Activities -->
+                    <div class="col-xl-8">
+                        <div class="recent-activities-card wow fadeInUp" data-wow-delay="100ms">
+                            <div class="dashboard-section-title" style="padding: 30px 30px 0;">
+                                <h2>Recent Activities</h2>
+                                <p>Latest interactions across all operators</p>
+                            </div>
+                            
+                            <div class="activities-list">
+                                <% if (recentInteractions.length > 0) { %>
+                                    <% recentInteractions.forEach(interaction => { %>
+                                    <div class="activity-item">
+                                        <div class="d-flex align-items-center">
+                                            <div class="activity-icon <%= 
+                                                interaction.type === 'visit' ? 'visit' : 
+                                                interaction.type === 'phone_call' ? 'phone' :
+                                                interaction.type === 'emergency' ? 'emergency' : 'medication'
+                                            %>">
+                                                <i class="fas fa-<%= 
+                                                    interaction.type === 'visit' ? 'home' : 
+                                                    interaction.type === 'phone_call' ? 'phone' :
+                                                    interaction.type === 'emergency' ? 'exclamation-triangle' : 
+                                                    interaction.type === 'medication' ? 'pills' : 'clipboard' 
+                                                %>"></i>
+                                            </div>
+                                            <div class="activity-content flex-grow-1">
+                                                <h5><%= interaction.title %></h5>
+                                                <p>
+                                                    <i class="fas fa-user me-1"></i> <%= interaction.client.firstName %> <%= interaction.client.lastName %>
+                                                    <span class="mx-2">•</span>
+                                                    <i class="fas fa-user-md me-1"></i> <%= interaction.operator.firstName %> <%= interaction.operator.lastName %>
+                                                </p>
+                                            </div>
+                                            <div class="activity-time text-end">
+                                                <div><%= moment(interaction.createdAt).format('MMM D, YYYY') %></div>
+                                                <div><%= moment(interaction.createdAt).format('h:mm A') %></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <% }); %>
+                                <% } else { %>
+                                    <div class="empty-state">
+                                        <i class="fas fa-clipboard-list"></i>
+                                        <p>No recent activities</p>
+                                    </div>
+                                <% } %>
+                            </div>
+                            
+                            <% if (recentInteractions.length > 0) { %>
+                            <div class="text-center p-3" style="border-top: 1px solid #f0f0f0;">
+                                <a href="/admin/interactions" class="thm-btn">View All Activities</a>
+                            </div>
+                            <% } %>
+                        </div>
+                    </div>
+
+                    <!-- Statistics & Top Operators -->
+                    <div class="col-xl-4">
+                        <!-- Care Level Statistics -->
+                        <div class="statistics-card wow fadeInUp" data-wow-delay="200ms">
+                            <div class="dashboard-section-title" style="padding: 0; margin-bottom: 20px;">
+                                <h2>Care Level Distribution</h2>
+                            </div>
+                            
+                            <% if (clientStats.length > 0) { %>
+                                <% clientStats.forEach(stat => { %>
+                                <div class="statistics-item">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <h6 class="mb-0 text-capitalize"><%= stat._id || 'Not specified' %></h6>
+                                        <span class="fw-bold"><%= stat.count %> (<%= stats.totalClients > 0 ? Math.round((stat.count / stats.totalClients) * 100) : 0 %>%)</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: <%= stats.totalClients > 0 ? (stat.count / stats.totalClients * 100) : 0 %>%"></div>
+                                    </div>
+                                </div>
+                                <% }); %>
+                            <% } else { %>
+                                <div class="empty-state" style="padding: 40px 20px;">
+                                    <i class="fas fa-chart-pie"></i>
+                                    <p>No client data available</p>
+                                </div>
+                            <% } %>
+                        </div>
+
+                        
+                    </div>
+                </div>
+
+                <!-- System Overview -->
+                <div class="row mt-5">
+                    <div class="col-12">
+                        <div class="statistics-card wow fadeInUp" data-wow-delay="400ms">
+                            <div class="dashboard-section-title" style="padding: 0; margin-bottom: 30px;">
+                                <h2>System Overview</h2>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-3 text-center">
+                                    <div class="mb-3">
+                                        <div class="stats-icon total-clients" style="width: 60px; height: 60px; font-size: 24px; margin: 0 auto 10px;">
+                                            <i class="fas fa-calendar-day"></i>
+                                        </div>
+                                        <h4 class="stats-number" style="font-size: 24px;">0</h4>
+                                        <p class="stats-label" style="font-size: 14px;">Avg Daily Interactions</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-3 text-center">
+                                    <div class="mb-3">
+                                        <div class="stats-icon active-clients" style="width: 60px; height: 60px; font-size: 24px; margin: 0 auto 10px;">
+                                            <i class="fas fa-check-circle"></i>
+                                        </div>
+                                        <h4 class="stats-number" style="font-size: 24px;">0%</h4>
+                                        <p class="stats-label" style="font-size: 14px;">Completion Rate</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-3 text-center">
+                                    <div class="mb-3">
+                                        <div class="stats-icon active-operators" style="width: 60px; height: 60px; font-size: 24px; margin: 0 auto 10px;">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <h4 class="stats-number" style="font-size: 24px;">0h</h4>
+                                        <p class="stats-label" style="font-size: 14px;">Avg Response Time</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-3 text-center">
+                                    <div class="mb-3">
+                                        <div class="stats-icon total-interactions" style="width: 60px; height: 60px; font-size: 24px; margin: 0 auto 10px;">
+                                            <i class="fas fa-server"></i>
+                                        </div>
+                                        <h4 class="stats-number" style="font-size: 24px;">100%</h4>
+                                        <p class="stats-label" style="font-size: 14px;">System Uptime</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Dashboard Content End -->
+
+        <!--Footer Start-->
+        <footer class="site-footer">
+            <div class="site-footer-bg" style="background-image: url(/assets/images/backgrounds/site-footer-bg.jpg)"></div>
+            <div class="site-footer-bg-overly"></div>
+            <div class="container">
+                <div class="site-footer__top">
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-2">
+                            <div class="site-footer__top-logo">
+                                <a href="/"><img src="/assets/images/resources/footer-logo-1.jpg" alt=""></a>
+                            </div>
+                        </div>
+                        <div class="col-xl-8 col-lg-10">
+                            <div class="site-footer__top-right">
+                                <div class="site-footer__call-and-social">
+                                    <div class="site-footer__call">
+                                        <p>Care System Admin Panel <a href="tel:+1234567890">Emergency: 123-456-7890</a></p>
+                                    </div>
+                                    <div class="site-footer__social">
+                                        <a href="#"><i class="fab fa-twitter"></i></a>
+                                        <a href="#"><i class="fab fa-facebook"></i></a>
+                                        <a href="#"><i class="fab fa-pinterest-p"></i></a>
+                                        <a href="#"><i class="fab fa-instagram"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="site-footer__bottom">
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="100ms">
+                            <div class="footer-widget__column footer-widget__contact">
+                                <h3 class="footer-widget__title">Contact</h3>
+                                <p class="footer-widget__contact-text">Care System Headquarters<br>123 Health Street, NY, USA</p>
+                                <h5 class="footer-widget__contact-phone-and-email">
+                                    <a href="mailto:admin@caresystem.com" class="footer-widget__contact-email">admin@caresystem.com</a><br>
+                                    <a href="tel:+1234567890" class="footer-widget__contact-phone">+1 234 567 890</a>
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="200ms">
+                            <div class="footer-widget__column footer-widget__links clearfix">
+                                <h3 class="footer-widget__title">Quick Links</h3>
+                                <ul class="footer-widget__links-list list-unstyled">
+                                    <li><a href="/admin/dashboard">Dashboard</a></li>
+                                    <li><a href="/admin/clients">Clients</a></li>
+                                    <li><a href="/admin/operators">Operators</a></li>
+                                    <li><a href="/admin/interactions">Interactions</a></li>
+                                    <li><a href="/admin/reports">Reports</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="300ms">
+                            <div class="footer-widget__column footer-widget__newsletter">
+                                <h3 class="footer-widget__title">System Status</h3>
+                                <div class="system-status">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>All Systems</span>
+                                        <span class="text-success">Operational</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Database</span>
+                                        <span class="text-success">Online</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>API Services</span>
+                                        <span class="text-success">Active</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Last Updated</span>
+                                        <span><%= moment().format('MMM D, h:mm A') %></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="site-footer__copy-right">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="site-footer__copy-right-inner">
+                                <p class="site-footer__copy-right-text">© <%= new Date().getFullYear() %> Care System. All rights reserved.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!--Footer End-->
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav__wrapper">
+        <div class="mobile-nav__overlay mobile-nav__toggler"></div>
+        <div class="mobile-nav__content">
+            <span class="mobile-nav__close mobile-nav__toggler"><i class="fa fa-times"></i></span>
+            <div class="logo-box">
+                <a href="/" aria-label="logo image"><img src="/assets/images/resources/logo-3.png" width="155" alt="" /></a>
+            </div>
+            <div class="mobile-nav__container"></div>
+            <ul class="mobile-nav__contact list-unstyled">
+                <li>
+                    <i class="fa fa-envelope"></i>
+                    <a href="mailto:admin@caresystem.com">admin@caresystem.com</a>
+                </li>
+                <li>
+                    <i class="fa fa-phone-alt"></i>
+                    <a href="tel:+1234567890">+1 234 567 890</a>
+                </li>
+            </ul>
+            <div class="mobile-nav__top">
+                <div class="mobile-nav__social">
+                    <a href="#" class="fab fa-twitter"></a>
+                    <a href="#" class="fab fa-facebook-square"></a>
+                    <a href="#" class="fab fa-pinterest-p"></a>
+                    <a href="#" class="fab fa-instagram"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Popup -->
+    <div class="search-popup">
+        <div class="search-popup__overlay search-toggler"></div>
+        <div class="search-popup__content">
+            <form action="#">
+                <label for="search" class="sr-only">search here</label>
+                <input type="text" id="search" placeholder="Search Here..." />
+                <button type="submit" aria-label="search submit" class="thm-btn">
+                    <i class="icon-magnifying-glass"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <a href="#" data-target="html" class="scroll-to-target scroll-to-top"><i class="fa fa-angle-up"></i></a>
+
+    <!-- JavaScript -->
+    <script src="/assets/vendors/jquery/jquery-3.6.0.min.js"></script>
+    <script src="/assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/vendors/jarallax/jarallax.min.js"></script>
+    <script src="/assets/vendors/jquery-ajaxchimp/jquery.ajaxchimp.min.js"></script>
+    <script src="/assets/vendors/jquery-appear/jquery.appear.min.js"></script>
+    <script src="/assets/vendors/jquery-circle-progress/jquery.circle-progress.min.js"></script>
+    <script src="/assets/vendors/jquery-magnific-popup/jquery.magnific-popup.min.js"></script>
+    <script src="/assets/vendors/jquery-validate/jquery.validate.min.js"></script>
+    <script src="/assets/vendors/nouislider/nouislider.min.js"></script>
+    <script src="/assets/vendors/odometer/odometer.min.js"></script>
+    <script src="/assets/vendors/swiper/swiper.min.js"></script>
+    <script src="/assets/vendors/tiny-slider/tiny-slider.min.js"></script>
+    <script src="/assets/vendors/wnumb/wNumb.min.js"></script>
+    <script src="/assets/vendors/wow/wow.js"></script>
+    <script src="/assets/vendors/isotope/isotope.js"></script>
+    <script src="/assets/vendors/countdown/countdown.min.js"></script>
+    <script src="/assets/vendors/owl-carousel/owl.carousel.min.js"></script>
+    <script src="/assets/vendors/twentytwenty/twentytwenty.js"></script>
+    <script src="/assets/vendors/twentytwenty/jquery.event.move.js"></script>
+    <script src="/assets/vendors/bxslider/jquery.bxslider.min.js"></script>
+    <script src="/assets/vendors/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="/assets/vendors/vegas/vegas.min.js"></script>
+    <script src="/assets/vendors/jquery-ui/jquery-ui.js"></script>
+    <script src="/assets/vendors/timepicker/timePicker.js"></script>
+    
+    <!-- template js -->
+    <script src="/assets/js/sominx.js"></script>
+    
+    <!-- Custom Dashboard Scripts -->
+    <script>
+        $(document).ready(function() {
+            // Odometer animation
+            $('.odometer').each(function() {
+                var $this = $(this);
+                var count = parseInt($this.data('count')) || 0;
+                
+                $({ val: 0 }).animate({ val: count }, {
+                    duration: 2000,
+                    easing: 'swing',
+                    step: function() {
+                        $this.text(Math.floor(this.val));
+                    }
+                });
+            });
+            
+            // Initialize WOW.js
+            if ($('.wow').length) {
+                var wow = new WOW({
+                    boxClass: 'wow',
+                    animateClass: 'animated',
+                    offset: 0,
+                    mobile: true,
+                    live: true
+                });
+                wow.init();
+            }
+            
+            // Auto-refresh dashboard every 60 seconds
+            setTimeout(function() {
+                location.reload();
+            }, 60000);
+            
+            // Handle logout
+            $('.main-menu-wrapper__logout').on('click', function(e) {
+                if (!confirm('Are you sure you want to logout?')) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

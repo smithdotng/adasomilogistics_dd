@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>How It Works - Care Management Platform for UK Providers</title>
+    <meta name="description" content="Learn how Care System helps UK care providers streamline operations, manage staff, and deliver better care in four simple steps." />
+    
+    <!-- favicons Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicons/favicon-16x16.png" />
+    <link rel="manifest" href="/assets/images/favicons/site.webmanifest" />
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS Links -->
+    <link rel="stylesheet" href="/assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/animate/animate.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/sominx-icons/style.css">
+
+    <!-- Custom Styles -->
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Jost', sans-serif;
+            color: #1e1e1e;
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: transparent;
+            padding: 20px 0;
+            z-index: 1000;
+            transition: all 0.4s ease;
+        }
+
+        .main-header.scrolled {
+            background: white;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            padding: 10px 0;
+        }
+
+        .main-header.scrolled .main-menu__list > li > a {
+            color: #333;
+        }
+
+        .main-header.scrolled .btn-outline {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .main-header.scrolled .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .main-menu-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .main-menu-wrapper__logo img {
+            height: 40px;
+            transition: all 0.3s ease;
+        }
+
+        .main-header.scrolled .main-menu-wrapper__logo img {
+            filter: brightness(0.2);
+        }
+
+        .main-menu__list {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 30px;
+        }
+
+        .main-menu__list > li > a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .main-menu__list > li > a:hover,
+        .main-menu__list > li > a.active {
+            color: #ffd700;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-outline {
+            padding: 10px 25px;
+            border: 2px solid white;
+            border-radius: 30px;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-solid {
+            padding: 10px 25px;
+            background: white;
+            border: 2px solid white;
+            border-radius: 30px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-solid:hover {
+            background: transparent;
+            color: white;
+        }
+
+        .mobile-nav__toggler {
+            display: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .main-header.scrolled .mobile-nav__toggler {
+            color: #333;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 150px 0 80px;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+
+        .page-header::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: -100px;
+            width: 300px;
+            height: 300px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+
+        .page-header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .page-header p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.9;
+            position: relative;
+        }
+
+        .breadcrumb {
+            background: transparent;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .breadcrumb a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+        }
+
+        .breadcrumb .active {
+            color: white;
+        }
+
+        /* Process Steps */
+        .process-section {
+            padding: 100px 0;
+            background: white;
+        }
+
+        .step-item {
+            margin-bottom: 80px;
+        }
+
+        .step-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-content {
+            padding: 40px;
+        }
+
+        .step-number-large {
+            font-size: 120px;
+            font-weight: 700;
+            color: rgba(102,126,234,0.1);
+            line-height: 1;
+            margin-bottom: 20px;
+        }
+
+        .step-content h2 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1e1e1e;
+        }
+
+        .step-content p {
+            font-size: 18px;
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .step-features {
+            list-style: none;
+            padding: 0;
+        }
+
+        .step-features li {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: #555;
+        }
+
+        .step-features li i {
+            width: 24px;
+            color: #28a745;
+        }
+
+        .step-image {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.1);
+        }
+
+        .step-image img {
+            width: 100%;
+            height: auto;
+            transition: transform 0.5s ease;
+        }
+
+        .step-image:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Timeline */
+        .timeline-section {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 40px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 60px;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: auto;
+        }
+
+        .timeline-content {
+            width: 45%;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: 30px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            transform: rotate(45deg);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content::before {
+            right: -10px;
+            box-shadow: 5px -5px 10px rgba(0,0,0,0.05);
+        }
+
+        .timeline-item:nth-child(even) .timeline-content::before {
+            left: -10px;
+            box-shadow: -5px 5px 10px rgba(0,0,0,0.05);
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: 30px;
+            width: 20px;
+            height: 20px;
+            background: #667eea;
+            border: 4px solid white;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+
+        .timeline-date {
+            display: inline-block;
+            padding: 5px 15px;
+            background: rgba(102,126,234,0.1);
+            color: #667eea;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .timeline-content h3 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .timeline-content p {
+            color: #666;
+            margin: 0;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 100px 0;
+            background: white;
+        }
+
+        .faq-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .faq-card:hover {
+            box-shadow: 0 10px 30px rgba(102,126,234,0.1);
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-question h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+            color: #1e1e1e;
+        }
+
+        .faq-question i {
+            color: #667eea;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-card.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            margin-top: 20px;
+            display: none;
+            color: #666;
+            line-height: 1.8;
+        }
+
+        .faq-card.active .faq-answer {
+            display: block;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .btn-cta-primary {
+            padding: 15px 40px;
+            background: #ffd700;
+            border: none;
+            border-radius: 40px;
+            color: #333;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cta-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-cta-secondary {
+            padding: 15px 40px;
+            background: transparent;
+            border: 2px solid white;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cta-secondary:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        /* Footer */
+        .site-footer {
+            background: #1e1e1e;
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-widget {
+            margin-bottom: 30px;
+        }
+
+        .footer-logo {
+            max-width: 150px;
+            margin-bottom: 20px;
+        }
+
+        .footer-widget p {
+            color: rgba(255,255,255,0.7);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .footer-social a:hover {
+            background: #667eea;
+            transform: translateY(-3px);
+        }
+
+        .footer-widget h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-contact {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-contact li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 15px;
+        }
+
+        .footer-contact i {
+            width: 30px;
+            color: #667eea;
+        }
+
+        .footer-bottom {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            color: rgba(255,255,255,0.5);
+            font-size: 14px;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 300px;
+            height: 100vh;
+            background: white;
+            z-index: 10000;
+            padding: 40px 20px;
+            transition: left 0.4s ease;
+            box-shadow: 2px 0 20px rgba(0,0,0,0.1);
+        }
+
+        .mobile-menu.open {
+            left: 0;
+        }
+
+        .mobile-menu-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .mobile-menu-logo {
+            margin-bottom: 40px;
+        }
+
+        .mobile-menu-logo img {
+            max-width: 150px;
+        }
+
+        .mobile-menu-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .mobile-menu-links li {
+            margin-bottom: 15px;
+        }
+
+        .mobile-menu-links a {
+            color: #333;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            display: block;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-links a:hover {
+            background: #f0f0f0;
+            padding-left: 20px;
+        }
+
+        .mobile-menu-buttons {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .mobile-menu-buttons .btn-outline {
+            border-color: #667eea;
+            color: #667eea;
+            text-align: center;
+        }
+
+        .mobile-menu-buttons .btn-solid {
+            background: #667eea;
+            color: white;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 991px) {
+            .main-menu__list {
+                display: none;
+            }
+
+            .header-buttons {
+                display: none;
+            }
+
+            .mobile-nav__toggler {
+                display: block;
+            }
+
+            .page-header h1 {
+                font-size: 36px;
+            }
+
+            .step-content {
+                padding: 20px;
+            }
+
+            .step-number-large {
+                font-size: 80px;
+            }
+
+            .timeline::before {
+                left: 30px;
+            }
+
+            .timeline-content {
+                width: calc(100% - 60px);
+                margin-left: 60px !important;
+            }
+
+            .timeline-item:nth-child(odd) .timeline-content::before,
+            .timeline-item:nth-child(even) .timeline-content::before {
+                left: -10px;
+                right: auto;
+                box-shadow: -5px 5px 10px rgba(0,0,0,0.05);
+            }
+
+            .timeline-dot {
+                left: 30px;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .page-header h1 {
+                font-size: 28px;
+            }
+
+            .step-content h2 {
+                font-size: 24px;
+            }
+
+            .step-number-large {
+                font-size: 60px;
+            }
+
+            .cta-section h2 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="main-header" id="mainHeader">
+        <div class="container">
+            <div class="main-menu-wrapper">
+                <div class="main-menu-wrapper__logo">
+                    <a href="/">
+                        <img src="/assets/images/resources/care-logo-white.png" alt="Care System">
+                    </a>
+                </div>
+                <div class="main-menu-wrapper__main-menu">
+                    <ul class="main-menu__list">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/how-it-works" class="active">How It Works</a></li>
+                        <li><a href="/features">Features</a></li>
+                        <li><a href="/pricing">Pricing</a></li>
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="header-buttons">
+                    <a href="/login" class="btn-outline">Login</a>
+                    <a href="/register" class="btn-solid">Start Free Trial</a>
+                </div>
+                <a href="#" class="mobile-nav__toggler" id="mobileToggler">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <span class="mobile-menu-close" id="mobileClose"><i class="fa fa-times"></i></span>
+        <div class="mobile-menu-logo">
+            <img src="/assets/images/resources/care-logo.png" alt="Care System">
+        </div>
+        <ul class="mobile-menu-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/how-it-works">How It Works</a></li>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/contact">Contact</a></li>
+        </ul>
+        <div class="mobile-menu-buttons">
+            <a href="/login" class="btn-outline">Login</a>
+            <a href="/register" class="btn-solid">Start Free Trial</a>
+        </div>
+    </div>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>How Care System Works</h1>
+            <p>Transform your care operations in four simple steps. From setup to daily care delivery, we're with you every step of the way.</p>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">How It Works</li>
+                </ol>
+            </nav>
+        </div>
+    </section>
+
+    <!-- Process Steps -->
+    <section class="process-section">
+        <div class="container">
+            <!-- Step 1 -->
+            <div class="step-item row align-items-center">
+                <div class="col-lg-6">
+                    <div class="step-content">
+                        <div class="step-number-large">01</div>
+                        <h2>Create Your Account</h2>
+                        <p>Get started with a 14-day free trial - no credit card required. Set up your organisation profile in minutes.</p>
+                        <ul class="step-features">
+                            <li><i class="fas fa-check-circle"></i> Free 14-day trial, no commitment</li>
+                            <li><i class="fas fa-check-circle"></i> Simple organisation setup</li>
+                            <li><i class="fas fa-check-circle"></i> Add your CQC registration details</li>
+                            <li><i class="fas fa-check-circle"></i> Invite team members instantly</li>
+                            <li><i class="fas fa-check-circle"></i> Personalised onboarding support</li>
+                        </ul>
+                        <div class="mt-4">
+                            <a href="/register" class="btn btn-lg" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 30px; border-radius: 30px;">Start Free Trial</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="step-image">
+                        <img src="/assets/images/step-1.jpg" alt="Create Account" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step-item row align-items-center flex-row-reverse">
+                <div class="col-lg-6">
+                    <div class="step-content">
+                        <div class="step-number-large">02</div>
+                        <h2>Add Your Care Team</h2>
+                        <p>Build your workforce profile with comprehensive staff management. Track qualifications, DBS checks, and availability.</p>
+                        <ul class="step-features">
+                            <li><i class="fas fa-check-circle"></i> Staff profiles with qualifications</li>
+                            <li><i class="fas fa-check-circle"></i> DBS and training tracking</li>
+                            <li><i class="fas fa-check-circle"></i> Availability management</li>
+                            <li><i class="fas fa-check-circle"></i> Skills and specialisations</li>
+                            <li><i class="fas fa-check-circle"></i> Document storage</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="step-image">
+                        <img src="/assets/images/step-2.jpg" alt="Add Care Team" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step-item row align-items-center">
+                <div class="col-lg-6">
+                    <div class="step-content">
+                        <div class="step-number-large">03</div>
+                        <h2>Add Your Clients</h2>
+                        <p>Create comprehensive client profiles with detailed care plans, medical history, and emergency contacts.</p>
+                        <ul class="step-features">
+                            <li><i class="fas fa-check-circle"></i> Client profiles with NHS numbers</li>
+                            <li><i class="fas fa-check-circle"></i> Digital care plans</li>
+                            <li><i class="fas fa-check-circle"></i> Medication management</li>
+                            <li><i class="fas fa-check-circle"></i> Risk assessments</li>
+                            <li><i class="fas fa-check-circle"></i> Emergency contacts</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="step-image">
+                        <img src="/assets/images/step-3.jpg" alt="Add Clients" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="step-item row align-items-center flex-row-reverse">
+                <div class="col-lg-6">
+                    <div class="step-content">
+                        <div class="step-number-large">04</div>
+                        <h2>Start Delivering Care</h2>
+                        <p>Begin scheduling visits, logging interactions, and tracking care delivery in real-time.</p>
+                        <ul class="step-features">
+                            <li><i class="fas fa-check-circle"></i> Intelligent scheduling</li>
+                            <li><i class="fas fa-check-circle"></i> Mobile interaction logging</li>
+                            <li><i class="fas fa-check-circle"></i> Real-time updates</li>
+                            <li><i class="fas fa-check-circle"></i> Family portal access</li>
+                            <li><i class="fas fa-check-circle"></i> CQC-ready reports</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="step-image">
+                        <img src="/assets/images/step-4.jpg" alt="Deliver Care" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section class="timeline-section">
+        <div class="container">
+            <div class="section-title text-center mb-5">
+                <span class="section-subtitle">YOUR JOURNEY</span>
+                <h2>From Sign-up to Success</h2>
+                <p>See how quickly you can transform your care operations with Care System.</p>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">Day 1</span>
+                        <h3>Account Creation</h3>
+                        <p>Sign up and set up your organisation profile. Takes less than 10 minutes.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">Day 2</span>
+                        <h3>Staff Onboarding</h3>
+                        <p>Add your care team members and import their qualifications.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">Day 3</span>
+                        <h3>Client Setup</h3>
+                        <p>Create client profiles and upload care plans.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">Day 4</span>
+                        <h3>First Schedule</h3>
+                        <p>Create your first care schedule and assign staff.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">Day 5</span>
+                        <h3>Go Live</h3>
+                        <p>Start logging interactions and delivering care digitally.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="container">
+            <div class="section-title text-center mb-5">
+                <span class="section-subtitle">FAQ</span>
+                <h2>Frequently Asked Questions</h2>
+                <p>Got questions? We've got answers.</p>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="faq-card">
+                        <div class="faq-question">
+                            <h4>How long does it take to set up?</h4>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Most providers are up and running within a week. The basic setup can be completed in just a few hours, but we recommend taking time to properly onboard your team and input client data for the best results.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-card">
+                        <div class="faq-question">
+                            <h4>Do I need technical expertise?</h4>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Not at all! Care System is designed to be intuitive and user-friendly. We provide comprehensive training and support to ensure your team can hit the ground running.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-card">
+                        <div class="faq-question">
+                            <h4>Can I import existing client data?</h4>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Yes! We offer data import services to help you transition from your existing system. Our team can assist with mapping and migrating your data securely.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-card">
+                        <div class="faq-question">
+                            <h4>Is training included?</h4>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Absolutely. All plans include access to our knowledge base, video tutorials, and live onboarding sessions. Enterprise plans include dedicated training for your entire team.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-card">
+                        <div class="faq-question">
+                            <h4>What happens after my free trial?</h4>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Your trial automatically converts to a paid subscription unless you cancel. We'll send reminders before your trial ends, and you can upgrade, downgrade, or cancel at any time.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to Transform Your Care Service?</h2>
+            <p>Join hundreds of UK care providers who trust us to streamline their operations and deliver better care.</p>
+            <div class="cta-buttons">
+                <a href="/register" class="btn-cta-primary">Start Your Free Trial</a>
+                <a href="/contact" class="btn-cta-secondary">Schedule Demo</a>
+            </div>
+            <p class="mt-4"><small>No credit card required • Cancel anytime</small></p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="site-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-widget">
+                        <img src="/assets/images/resources/care-logo-white.png" alt="CareShed" class="footer-logo">
+                        <p>Complete care management platform for UK care providers. CQC compliant, secure, and easy to use.</p>
+                        
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <div class="footer-widget">
+                        <h4>Quick Links</h4>
+                        <ul class="footer-links">
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/how-it-works">How It Works</a></li>
+                            <li><a href="/features">Features</a></li>
+                            <li><a href="/pricing">Pricing</a></li>
+                            <li><a href="/about">About Us</a></li>
+                            <li><a href="/contact">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-widget">
+                        <h4>Legal</h4>
+                        <ul class="footer-links">
+                            <li><a href="/privacy">Privacy Policy</a></li>
+                            <li><a href="/terms">Terms of Use</a></li>
+                            <li><a href="/cookies">Cookie Policy</a></li>
+                            <li><a href="/compliance">CQC Compliance</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-widget">
+                        <h4>Contact Us</h4>
+                        <ul class="footer-contact">
+                            
+                            <li><i class="fas fa-envelope"></i> hello@careshed.co.uk</li>
+                        </ul>
+                        <div class="footer-social">
+                            <a href="https://www.facebook.com/careshed"><i class="fab fa-facebook"></i></a>
+                            
+                            <a href="https://linkedin.com/company/careshed"><i class="fab fa-linkedin"></i></a>
+                            <a href="https://instagram.com/careshed"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© <%= new Date().getFullYear() %> CareShed. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="/assets/vendors/jquery/jquery-3.6.0.min.js"></script>
+    <script src="/assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Header scroll effect
+            $(window).scroll(function() {
+                if ($(this).scrollTop() > 100) {
+                    $('#mainHeader').addClass('scrolled');
+                } else {
+                    $('#mainHeader').removeClass('scrolled');
+                }
+            });
+
+            // Mobile menu toggle
+            $('#mobileToggler').click(function(e) {
+                e.preventDefault();
+                $('#mobileMenu').addClass('open');
+            });
+
+            $('#mobileClose').click(function(e) {
+                e.preventDefault();
+                $('#mobileMenu').removeClass('open');
+            });
+
+            // Close mobile menu when clicking a link
+            $('.mobile-menu-links a').click(function() {
+                $('#mobileMenu').removeClass('open');
+            });
+
+            // FAQ Accordion
+            $('.faq-card').click(function() {
+                $(this).toggleClass('active');
+            });
+        });
+    </script>
+</body>
+</html>

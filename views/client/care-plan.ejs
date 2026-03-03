@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Care Plan || Care Management System</title>
+    
+    <!-- favicons Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicons/favicon-16x16.png" />
+    <link rel="manifest" href="/assets/images/favicons/site.webmanifest" />
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS Links -->
+    <link rel="stylesheet" href="/assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/sominx-icons/style.css">
+
+    <style>
+        /* Same base styles as dashboard */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Jost', sans-serif;
+            background: #f5f7fb;
+        }
+
+        .main-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 0;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px 0;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            color: #333;
+            margin: 30px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .info-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .info-item .label {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .info-item .value {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .goal-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .goal-card.achieved {
+            border-left-color: #28a745;
+            opacity: 0.8;
+        }
+
+        .goal-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .goal-category {
+            font-size: 12px;
+            color: #667eea;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .goal-status {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: #ffc107;
+            color: #333;
+        }
+
+        .goal-card.achieved .goal-status {
+            background: #28a745;
+            color: white;
+        }
+
+        .medication-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .medication-table th {
+            text-align: left;
+            padding: 10px;
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .medication-table td {
+            padding: 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .btn-print {
+            background: #6c757d;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .site-footer {
+            background: #333;
+            color: white;
+            padding: 30px 0;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container">
+            <div class="main-menu-wrapper">
+                <div class="main-menu-wrapper__logo">
+                    <a href="/client/dashboard">
+                        <img src="/assets/images/resources/care-logo-white.png" alt="Care System">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>My Care Plan</h1>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="dashboard-content">
+        <div class="container">
+            <!-- Care Plan Overview -->
+            <div class="content-card">
+                <h3>Care Plan Overview</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="label">Plan Title</div>
+                        <div class="value"><%= carePlan?.title || 'Personal Care Plan' %></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="label">Status</div>
+                        <div class="value"><%= carePlan?.status || 'Active' %></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="label">Created Date</div>
+                        <div class="value"><%= carePlan?.createdAt ? moment(carePlan.createdAt).format('DD/MM/YYYY') : 'Not specified' %></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="label">Last Updated</div>
+                        <div class="value"><%= carePlan?.updatedAt ? moment(carePlan.updatedAt).format('DD/MM/YYYY') : 'Not specified' %></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Personal Care -->
+            <div class="content-card">
+                <h3 class="section-title">Personal Care</h3>
+                <div class="info-grid">
+                    <% if (carePlan?.personalCare?.bathing) { %>
+                        <div class="info-item">
+                            <div class="label">Bathing Assistance</div>
+                            <div class="value"><%= carePlan.personalCare.bathing.assistance || 'Not specified' %></div>
+                            <% if (carePlan.personalCare.bathing.preferences) { %>
+                                <p class="mt-2"><small>Preferences: <%= carePlan.personalCare.bathing.preferences %></small></p>
+                            <% } %>
+                        </div>
+                    <% } %>
+
+                    <% if (carePlan?.personalCare?.dressing) { %>
+                        <div class="info-item">
+                            <div class="label">Dressing Assistance</div>
+                            <div class="value"><%= carePlan.personalCare.dressing.assistance || 'Not specified' %></div>
+                            <% if (carePlan.personalCare.dressing.preferences) { %>
+                                <p class="mt-2"><small>Preferences: <%= carePlan.personalCare.dressing.preferences %></small></p>
+                            <% } %>
+                        </div>
+                    <% } %>
+
+                    <% if (carePlan?.personalCare?.toileting) { %>
+                        <div class="info-item">
+                            <div class="label">Toileting Assistance</div>
+                            <div class="value"><%= carePlan.personalCare.toileting.assistance || 'Not specified' %></div>
+                            <% if (carePlan.personalCare.toileting.continence) { %>
+                                <p class="mt-2"><small>Continence: <%= carePlan.personalCare.toileting.continence %></small></p>
+                            <% } %>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Mobility -->
+            <div class="content-card">
+                <h3 class="section-title">Mobility & Transfers</h3>
+                <div class="info-grid">
+                    <% if (carePlan?.mobility?.mobilityAids) { %>
+                        <div class="info-item">
+                            <div class="label">Mobility Aids</div>
+                            <div class="value"><%= carePlan.mobility.mobilityAids.join(', ') %></div>
+                        </div>
+                    <% } %>
+
+                    <div class="info-item">
+                        <div class="label">Falls Risk</div>
+                        <div class="value"><%= carePlan?.mobility?.fallsRisk || 'Not assessed' %></div>
+                    </div>
+
+                    <% if (carePlan?.mobility?.transfers) { %>
+                        <div class="info-item">
+                            <div class="label">Transfer Assistance</div>
+                            <ul class="mt-2">
+                                <% if (carePlan.mobility.transfers.bed) { %>
+                                    <li>Bed: <%= carePlan.mobility.transfers.bed %></li>
+                                <% } %>
+                                <% if (carePlan.mobility.transfers.chair) { %>
+                                    <li>Chair: <%= carePlan.mobility.transfers.chair %></li>
+                                <% } %>
+                            </ul>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Nutrition -->
+            <div class="content-card">
+                <h3 class="section-title">Nutrition & Hydration</h3>
+                <div class="info-grid">
+                    <% if (carePlan?.nutrition?.dietType) { %>
+                        <div class="info-item">
+                            <div class="label">Diet Type</div>
+                            <div class="value"><%= carePlan.nutrition.dietType.join(', ') %></div>
+                        </div>
+                    <% } %>
+
+                    <% if (carePlan?.nutrition?.allergies) { %>
+                        <div class="info-item">
+                            <div class="label">Allergies</div>
+                            <div class="value"><%= carePlan.nutrition.allergies.join(', ') %></div>
+                        </div>
+                    <% } %>
+
+                    <div class="info-item">
+                        <div class="label">Fluid Intake</div>
+                        <div class="value"><%= carePlan?.nutrition?.fluidIntake || 'Not specified' %></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Medications -->
+            <div class="content-card">
+                <h3 class="section-title">Medications</h3>
+                <% if (clientInfo?.medications && clientInfo.medications.length > 0) { %>
+                    <table class="medication-table">
+                        <thead>
+                            <tr>
+                                <th>Medication</th>
+                                <th>Dosage</th>
+                                <th>Frequency</th>
+                                <th>Prescribed By</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% clientInfo.medications.forEach(med => { %>
+                                <tr>
+                                    <td><strong><%= med.name %></strong></td>
+                                    <td><%= med.dosage %></td>
+                                    <td><%= med.frequency %></td>
+                                    <td><%= med.prescribedBy || 'N/A' %></td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                <% } else { %>
+                    <p>No medications listed</p>
+                <% } %>
+            </div>
+
+            <!-- Goals -->
+            <div class="content-card">
+                <h3 class="section-title">Care Goals</h3>
+                <% if (carePlan?.goals && carePlan.goals.length > 0) { %>
+                    <% carePlan.goals.forEach(goal => { %>
+                        <div class="goal-card <%= goal.status === 'achieved' ? 'achieved' : '' %>">
+                            <div class="goal-header">
+                                <span class="goal-category"><%= goal.category?.replace('_', ' ') || 'General' %></span>
+                                <span class="goal-status"><%= goal.status || 'Pending' %></span>
+                            </div>
+                            <p><%= goal.description %></p>
+                            <small>Target: <%= goal.targetDate ? moment(goal.targetDate).format('DD/MM/YYYY') : 'Not set' %></small>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <p>No goals set</p>
+                <% } %>
+            </div>
+
+            <!-- Review Schedule -->
+            <div class="content-card">
+                <h3 class="section-title">Review Schedule</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="label">Review Frequency</div>
+                        <div class="value"><%= carePlan?.reviewSchedule?.frequency || 'Not specified' %></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="label">Next Review</div>
+                        <div class="value"><%= carePlan?.reviewSchedule?.nextReview ? moment(carePlan.reviewSchedule.nextReview).format('DD/MM/YYYY') : 'Not scheduled' %></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Print Button -->
+            <div class="text-center mb-4">
+                <a href="/client/care-plan/print" class="btn-print">
+                    <i class="fas fa-print"></i> Print Care Plan
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container text-center">
+            <p>© <%= new Date().getFullYear() %> Care Shed. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

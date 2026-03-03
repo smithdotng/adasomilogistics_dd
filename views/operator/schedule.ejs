@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Schedule || Care Management System</title>
+    
+    <!-- favicons Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicons/favicon-16x16.png" />
+    <link rel="manifest" href="/assets/images/favicons/site.webmanifest" />
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS Links -->
+    <link rel="stylesheet" href="/assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/sominx-icons/style.css">
+
+    <!-- FullCalendar CSS -->
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
+
+    <!-- Custom Styles -->
+    <style>
+        /* Same base styles as dashboard */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Jost', sans-serif;
+            background: #f5f7fb;
+        }
+
+        /* Header Styles - Same as dashboard */
+        .main-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 0;
+            position: relative;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .main-menu-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .main-menu-wrapper__left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .main-menu-wrapper__logo img {
+            height: 40px;
+        }
+
+        .main-menu__list {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 20px;
+        }
+
+        .main-menu__list > li {
+            position: relative;
+        }
+
+        .main-menu__list > li > a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 5px 0;
+        }
+
+        .main-menu-wrapper__right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .main-menu-wrapper__call {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+        }
+
+        .operator-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .main-menu-wrapper__logout {
+            color: white;
+            font-size: 18px;
+        }
+
+        .mobile-nav__toggler {
+            display: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobile-nav__wrapper {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 300px;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: 9999;
+            transition: left 0.3s ease;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+            overflow-y: auto;
+        }
+
+        .mobile-nav__wrapper.open {
+            left: 0;
+        }
+
+        .mobile-nav__overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9998;
+            display: none;
+        }
+
+        .mobile-nav__overlay.open {
+            display: block;
+        }
+
+        .mobile-nav__content {
+            padding: 30px 20px;
+        }
+
+        .mobile-nav__close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-box {
+            text-align: center;
+            margin: 40px 0 30px;
+        }
+
+        .logo-box img {
+            max-width: 150px;
+        }
+
+        .mobile-nav__container ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .mobile-nav__container ul li a {
+            display: block;
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px 0;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .page-header .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin: 10px 0 0;
+        }
+
+        .page-header .breadcrumb a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+        }
+
+        .page-header .breadcrumb .active {
+            color: white;
+        }
+
+        /* Schedule Controls */
+        .schedule-controls {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .view-selector {
+            display: flex;
+            gap: 10px;
+        }
+
+        .view-btn {
+            padding: 8px 20px;
+            border: 2px solid #f0f0f0;
+            border-radius: 8px;
+            background: white;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .view-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        .date-navigation {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .date-nav-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #f0f0f0;
+            border-radius: 8px;
+            background: white;
+            color: #667eea;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .date-nav-btn:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        .current-date {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            min-width: 200px;
+            text-align: center;
+        }
+
+        /* Calendar Container */
+        .calendar-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        #calendar {
+            min-height: 600px;
+        }
+
+        /* List View */
+        .schedule-list {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .schedule-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .schedule-list-header h3 {
+            margin: 0;
+            color: #333;
+        }
+
+        .visit-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid #f0f0f0;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .visit-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102,126,234,0.1);
+        }
+
+        .visit-date {
+            min-width: 80px;
+            text-align: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-right: 20px;
+        }
+
+        .visit-date .day {
+            font-size: 20px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .visit-date .month {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .visit-time {
+            min-width: 100px;
+            text-align: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-right: 20px;
+        }
+
+        .visit-time .time {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .visit-info {
+            flex: 1;
+        }
+
+        .visit-info h4 {
+            margin: 0 0 5px;
+            color: #333;
+        }
+
+        .visit-info p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .visit-status {
+            margin-left: 20px;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-badge.scheduled {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .status-badge.completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 13px;
+            margin-left: 10px;
+        }
+
+        .action-btn.view {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .site-footer {
+            background: #333;
+            color: white;
+            padding: 30px 0;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 991px) {
+            .main-menu__list {
+                display: none;
+            }
+            
+            .main-menu-wrapper__right {
+                display: none;
+            }
+            
+            .mobile-nav__toggler {
+                display: flex;
+            }
+            
+            .main-menu-wrapper__left {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .schedule-controls {
+                flex-direction: column;
+            }
+
+            .visit-item {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .visit-date, .visit-time {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+
+            .visit-status {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container">
+            <div class="main-menu-wrapper">
+                <div class="main-menu-wrapper__left">
+                    <div class="main-menu-wrapper__logo">
+                        <a href="/operator/dashboard">
+                            <img src="/assets/images/resources/care-logo-white.png" alt="Care System">
+                        </a>
+                    </div>
+                    <div class="main-menu-wrapper__main-menu">
+                        <a href="#" class="mobile-nav__toggler" id="mobileNavToggler">
+                            <i class="fa fa-bars"></i>
+                        </a>
+                        <ul class="main-menu__list">
+                            <li><a href="/operator/dashboard">Dashboard</a></li>
+                            <li class="current"><a href="/operator/schedule">My Schedule</a></li>
+                            <li><a href="/operator/clients">My Clients</a></li>
+                            <li><a href="/operator/interactions">My Visits</a></li>
+                            <li><a href="/operator/timesheets">My Timesheets</a></li>
+                            <li><a href="/operator/profile">Profile</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="main-menu-wrapper__right">
+                    <div class="main-menu-wrapper__call">
+                        <div class="main-menu-wrapper__call-icon">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <div class="main-menu-wrapper__call-number">
+                            <span class="operator-badge"><%= user.role %></span>
+                            <span><%= user.firstName %> <%= user.lastName %></span>
+                        </div>
+                    </div>
+                    <div class="main-menu-wrapper__search-box">
+                        <a href="/logout" class="main-menu-wrapper__logout" onclick="return confirm('Logout?')">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-nav__wrapper" id="mobileNav">
+        <div class="mobile-nav__content">
+            <span class="mobile-nav__close" id="mobileNavClose"><i class="fa fa-times"></i></span>
+            <div class="logo-box">
+                <img src="/assets/images/resources/care-logo-white.png" alt="Care System">
+            </div>
+            <div class="mobile-nav__container">
+                <ul>
+                    <li><a href="/operator/dashboard">Dashboard</a></li>
+                    <li><a href="/operator/schedule">My Schedule</a></li>
+                    <li><a href="/operator/clients">My Clients</a></li>
+                    <li><a href="/operator/interactions">My Visits</a></li>
+                    <li><a href="/operator/timesheets">My Timesheets</a></li>
+                    <li><a href="/operator/profile">Profile</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>My Schedule</h1>
+            <div class="breadcrumb">
+                <a href="/operator/dashboard">Dashboard</a> / 
+                <span class="active">Schedule</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="dashboard-content">
+        <div class="container">
+            <!-- Flash Messages -->
+            <% if (success && success.length > 0) { %>
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle me-2"></i><%= success %>
+                </div>
+            <% } %>
+            
+            <% if (error && error.length > 0) { %>
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle me-2"></i><%= error %>
+                </div>
+            <% } %>
+
+            <!-- Schedule Controls -->
+            <div class="schedule-controls">
+                <div class="view-selector">
+                    <a href="/operator/schedule?view=day" class="view-btn <%= view === 'day' ? 'active' : '' %>">Day</a>
+                    <a href="/operator/schedule?view=week" class="view-btn <%= view === 'week' ? 'active' : '' %>">Week</a>
+                    <a href="/operator/schedule?view=month" class="view-btn <%= view === 'month' ? 'active' : '' %>">Month</a>
+                    <a href="/operator/schedule?view=list" class="view-btn <%= view === 'list' ? 'active' : '' %>">List</a>
+                </div>
+
+                <div class="date-navigation">
+                    <a href="/operator/schedule?date=<%= moment(selectedDate).subtract(1, view).format('YYYY-MM-DD') %>&view=<%= view %>" class="date-nav-btn">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                    <span class="current-date">
+                        <% if (view === 'day') { %>
+                            <%= moment(selectedDate).format('DD MMMM YYYY') %>
+                        <% } else if (view === 'week') { %>
+                            Week of <%= moment(selectedDate).startOf('week').format('DD MMM') %> - <%= moment(selectedDate).endOf('week').format('DD MMM YYYY') %>
+                        <% } else { %>
+                            <%= moment(selectedDate).format('MMMM YYYY') %>
+                        <% } %>
+                    </span>
+                    <a href="/operator/schedule?date=<%= moment(selectedDate).add(1, view).format('YYYY-MM-DD') %>&view=<%= view %>" class="date-nav-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <% if (view === 'list') { %>
+                <!-- List View -->
+                <div class="schedule-list">
+                    <div class="schedule-list-header">
+                        <h3>Upcoming Visits</h3>
+                        <span><%= interactions.length %> visits found</span>
+                    </div>
+
+                    <% if (interactions && interactions.length > 0) { %>
+                        <% interactions.forEach(interaction => { %>
+                            <div class="visit-item">
+                                <div class="visit-date">
+                                    <div class="day"><%= moment(interaction.scheduledStart).format('DD') %></div>
+                                    <div class="month"><%= moment(interaction.scheduledStart).format('MMM') %></div>
+                                </div>
+                                <div class="visit-time">
+                                    <div class="time"><%= moment(interaction.scheduledStart).format('HH:mm') %></div>
+                                    <div><%= moment(interaction.scheduledEnd).format('HH:mm') %></div>
+                                </div>
+                                <div class="visit-info">
+                                    <h4><%= interaction.clientId?.firstName %> <%= interaction.clientId?.lastName %></h4>
+                                    <p>
+                                        <i class="fas fa-map-marker-alt me-1"></i> <%= interaction.clientId?.clientInfo?.address?.street || 'Address not available' %><br>
+                                        <i class="fas fa-tag me-1"></i> <%= interaction.type?.replace('_', ' ') %>
+                                    </p>
+                                </div>
+                                <div class="visit-status">
+                                    <span class="status-badge <%= interaction.status %>"><%= interaction.status %></span>
+                                    <a href="/operator/interactions/<%= interaction._id %>" class="action-btn view">
+                                        <i class="fas fa-eye"></i> View
+                                    </a>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } else { %>
+                        <p class="text-center text-muted">No visits scheduled</p>
+                    <% } %>
+                </div>
+            <% } else { %>
+                <!-- Calendar View -->
+                <div class="calendar-container">
+                    <div id="calendar"></div>
+                </div>
+            <% } %>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container text-center">
+            <p>© <%= new Date().getFullYear() %> Care System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="/assets/vendors/jquery/jquery-3.6.0.min.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu functionality
+            const mobileNav = document.getElementById('mobileNav');
+            const mobileToggler = document.getElementById('mobileNavToggler');
+            const mobileClose = document.getElementById('mobileNavClose');
+            
+            function toggleMenu(show) {
+                if (show) {
+                    mobileNav.classList.add('open');
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    mobileNav.classList.remove('open');
+                    document.body.style.overflow = '';
+                }
+            }
+            
+            if (mobileToggler) {
+                mobileToggler.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    toggleMenu(true);
+                });
+            }
+            
+            if (mobileClose) {
+                mobileClose.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    toggleMenu(false);
+                });
+            }
+
+            // Initialize Calendar only if not in list view
+            <% if (view !== 'list') { %>
+                var calendarEl = document.getElementById('calendar');
+                var calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: '<%= view %>',
+                    initialDate: '<%= moment(selectedDate).format('YYYY-MM-DD') %>',
+                    headerToolbar: false,
+                    events: [
+                        <% interactions.forEach(interaction => { %>
+                        {
+                            title: '<%= interaction.clientId?.firstName %> <%= interaction.clientId?.lastName %>',
+                            start: '<%= moment(interaction.scheduledStart).format('YYYY-MM-DDTHH:mm:ss') %>',
+                            end: '<%= moment(interaction.scheduledEnd).format('YYYY-MM-DDTHH:mm:ss') %>',
+                            url: '/operator/interactions/<%= interaction._id %>',
+                            backgroundColor: '#667eea',
+                            borderColor: '#667eea',
+                            extendedProps: {
+                                type: '<%= interaction.type %>',
+                                status: '<%= interaction.status %>'
+                            }
+                        },
+                        <% }); %>
+                    ],
+                    eventClick: function(info) {
+                        info.jsEvent.preventDefault();
+                        window.location.href = info.event.url;
+                    }
+                });
+                calendar.render();
+            <% } %>
+
+            // Auto-hide flash messages
+            setTimeout(() => {
+                document.querySelectorAll('.alert').forEach(alert => {
+                    alert.style.display = 'none';
+                });
+            }, 5000);
+        });
+    </script>
+</body>
+</html>

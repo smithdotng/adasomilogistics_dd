@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Timesheets || Care Management System</title>
+    
+    <!-- favicons Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicons/favicon-16x16.png" />
+    <link rel="manifest" href="/assets/images/favicons/site.webmanifest" />
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS Links -->
+    <link rel="stylesheet" href="/assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/sominx-icons/style.css">
+
+    <!-- Custom Styles -->
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Jost', sans-serif;
+            background: #f5f7fb;
+        }
+
+        /* Header Styles */
+        .main-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 0;
+            position: relative;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .main-menu-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .main-menu-wrapper__left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .main-menu-wrapper__logo img {
+            height: 40px;
+        }
+
+        /* Desktop Menu */
+        .main-menu__list {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 20px;
+        }
+
+        .main-menu__list > li {
+            position: relative;
+        }
+
+        .main-menu__list > li > a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 5px 0;
+        }
+
+        .main-menu__list .dropdown ul {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            min-width: 200px;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: none;
+            padding: 10px 0;
+        }
+
+        .main-menu__list .dropdown:hover ul {
+            display: block;
+        }
+
+        .main-menu__list .dropdown ul li {
+            padding: 8px 20px;
+        }
+
+        .main-menu__list .dropdown ul li a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        /* Right Section */
+        .main-menu-wrapper__right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .main-menu-wrapper__call {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+        }
+
+        .provider-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .subscription-badge {
+            background: #28a745;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+
+        .main-menu-wrapper__logout {
+            color: white;
+            font-size: 18px;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-nav__toggler {
+            display: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Mobile Menu */
+        .mobile-nav__wrapper {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 300px;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: 9999;
+            transition: left 0.3s ease;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+            overflow-y: auto;
+        }
+
+        .mobile-nav__wrapper.open {
+            left: 0;
+        }
+
+        .mobile-nav__overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9998;
+            display: none;
+        }
+
+        .mobile-nav__overlay.open {
+            display: block;
+        }
+
+        .mobile-nav__content {
+            padding: 30px 20px;
+        }
+
+        .mobile-nav__close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-box {
+            text-align: center;
+            margin: 40px 0 30px;
+        }
+
+        .logo-box img {
+            max-width: 150px;
+        }
+
+        .mobile-nav__container ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .mobile-nav__container ul li a {
+            display: block;
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px 0;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .page-header .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin: 10px 0 0;
+        }
+
+        .page-header .breadcrumb a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+        }
+
+        .page-header .breadcrumb .active {
+            color: white;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .filter-left {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+
+        .filter-select {
+            padding: 10px 35px 10px 15px;
+            border: 2px solid #f0f0f0;
+            border-radius: 8px;
+            font-size: 15px;
+            min-width: 150px;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236c6c6c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+            color: white;
+        }
+
+        /* Table Styles */
+        .table-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 15px 10px;
+            color: #333;
+            font-weight: 600;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        td {
+            padding: 15px 10px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #666;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: #f8f9fa;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-badge.draft {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .status-badge.submitted {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .status-badge.approved {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-badge.paid {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-badge.rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .action-btn.view {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .action-btn.approve {
+            background: #28a745;
+            color: white;
+        }
+
+        .action-btn.reject {
+            background: #dc3545;
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .empty-state i {
+            font-size: 60px;
+            color: #e0e0e0;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: #999;
+            margin-bottom: 20px;
+        }
+
+        /* Footer */
+        .site-footer {
+            background: #333;
+            color: white;
+            padding: 30px 0;
+            margin-top: 40px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 991px) {
+            .main-menu__list {
+                display: none;
+            }
+            
+            .main-menu-wrapper__right {
+                display: none;
+            }
+            
+            .mobile-nav__toggler {
+                display: flex;
+            }
+            
+            .main-menu-wrapper__left {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .filter-bar {
+                flex-direction: column;
+            }
+
+            .filter-left {
+                width: 100%;
+            }
+
+            .filter-select {
+                width: 100%;
+            }
+
+            .btn-add {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container">
+            <div class="main-menu-wrapper">
+                <div class="main-menu-wrapper__left">
+                    <div class="main-menu-wrapper__logo">
+                        <a href="/provider/dashboard">
+                            <img src="/assets/images/resources/care-logo-white.png" alt="Care System">
+                        </a>
+                    </div>
+                    <div class="main-menu-wrapper__main-menu">
+                        <a href="#" class="mobile-nav__toggler" id="mobileNavToggler">
+                            <i class="fa fa-bars"></i>
+                        </a>
+                        <ul class="main-menu__list">
+                            <li><a href="/provider/dashboard">Dashboard</a></li>
+                            <li class="dropdown">
+                                <a href="#">Operators</a>
+                                <ul>
+                                    <li><a href="/provider/operators">All Operators</a></li>
+                                    <li><a href="/provider/operators/create">Add Operator</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#">Clients</a>
+                                <ul>
+                                    <li><a href="/provider/clients">All Clients</a></li>
+                                    <li><a href="/provider/clients/create">Add Client</a></li>
+                                    <li><a href="/provider/care-plans">Care Plans</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="/provider/schedule">Schedule</a></li>
+                            <li class="dropdown">
+                                <a href="#" class="current">Finance</a>
+                                <ul>
+                                    <li><a href="/provider/payments/dashboard">Payroll Dashboard</a></li>
+                                    <li class="current"><a href="/provider/payments/timesheets">Timesheets</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="/provider/reports">Reports</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="main-menu-wrapper__right">
+                    <div class="main-menu-wrapper__call">
+                        <div class="main-menu-wrapper__call-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="main-menu-wrapper__call-number">
+                            <span class="provider-badge"><%= user.role.replace('_', ' ') %></span>
+                            <span class="subscription-badge">
+                                <%= user.providerInfo.subscription.plan %>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="main-menu-wrapper__search-box">
+                        <a href="/logout" class="main-menu-wrapper__logout" onclick="return confirm('Logout?')">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-nav__wrapper" id="mobileNav">
+        <div class="mobile-nav__content">
+            <span class="mobile-nav__close" id="mobileNavClose"><i class="fa fa-times"></i></span>
+            <div class="logo-box">
+                <img src="/assets/images/resources/care-logo-white.png" alt="Care System">
+            </div>
+            <div class="mobile-nav__container">
+                <ul>
+                    <li><a href="/provider/dashboard">Dashboard</a></li>
+                    <li><a href="/provider/operators">All Operators</a></li>
+                    <li><a href="/provider/operators/create">Add Operator</a></li>
+                    <li><a href="/provider/clients">All Clients</a></li>
+                    <li><a href="/provider/clients/create">Add Client</a></li>
+                    <li><a href="/provider/care-plans">Care Plans</a></li>
+                    <li><a href="/provider/schedule">Schedule</a></li>
+                    <li><a href="/provider/payments/dashboard">Payroll</a></li>
+                    <li><a href="/provider/payments/timesheets">Timesheets</a></li>
+                    <li><a href="/provider/reports">Reports</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Timesheets</h1>
+            <div class="breadcrumb">
+                <a href="/provider/dashboard">Dashboard</a> / 
+                <a href="/provider/payments/dashboard">Payroll</a> / 
+                <span class="active">Timesheets</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="dashboard-content">
+        <div class="container">
+            <!-- Flash Messages -->
+            <% if (success && success.length > 0) { %>
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle me-2"></i><%= success %>
+                </div>
+            <% } %>
+            
+            <% if (error && error.length > 0) { %>
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle me-2"></i><%= error %>
+                </div>
+            <% } %>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <div class="filter-left">
+                    <select class="filter-select" name="operator" onchange="window.location.href=this.value">
+                        <option value="/provider/payments/timesheets?operator=all">All Operators</option>
+                        <% if (operators && operators.length > 0) { %>
+                            <% operators.forEach(op => { %>
+                                <option value="/provider/payments/timesheets?operator=<%= op._id %>" 
+                                    <%= filters && filters.operator === op._id.toString() ? 'selected' : '' %>>
+                                    <%= op.firstName %> <%= op.lastName %>
+                                </option>
+                            <% }); %>
+                        <% } %>
+                    </select>
+
+                    <select class="filter-select" name="status" onchange="window.location.href=this.value">
+                        <option value="/provider/payments/timesheets?status=all">All Status</option>
+                        <option value="/provider/payments/timesheets?status=draft" 
+                            <%= filters && filters.status === 'draft' ? 'selected' : '' %>>Draft</option>
+                        <option value="/provider/payments/timesheets?status=submitted" 
+                            <%= filters && filters.status === 'submitted' ? 'selected' : '' %>>Submitted</option>
+                        <option value="/provider/payments/timesheets?status=approved" 
+                            <%= filters && filters.status === 'approved' ? 'selected' : '' %>>Approved</option>
+                        <option value="/provider/payments/timesheets?status=paid" 
+                            <%= filters && filters.status === 'paid' ? 'selected' : '' %>>Paid</option>
+                        <option value="/provider/payments/timesheets?status=rejected" 
+                            <%= filters && filters.status === 'rejected' ? 'selected' : '' %>>Rejected</option>
+                    </select>
+
+                    <input type="week" class="filter-select" id="weekFilter" value="<%= filters && filters.week ? filters.week : '' %>" 
+                           onchange="window.location.href='/provider/payments/timesheets?week=' + this.value">
+                </div>
+
+                <a href="/provider/payments/timesheets/create" class="btn-add">
+                    <i class="fas fa-plus"></i> Create Timesheet
+                </a>
+            </div>
+
+            <!-- Timesheets Table -->
+            <div class="table-card">
+                <% if (timesheets && timesheets.length > 0) { %>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Operator</th>
+                                <th>Period</th>
+                                <th>Week</th>
+                                <th>Regular Hours</th>
+                                <th>Overtime</th>
+                                <th>Weekend</th>
+                                <th>Total Hours</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% timesheets.forEach(ts => { %>
+                                <tr>
+                                    <td><strong><%= ts.operatorId?.firstName %> <%= ts.operatorId?.lastName %></strong></td>
+                                    <td><%= moment(ts.periodStart).format('DD/MM') %> - <%= moment(ts.periodEnd).format('DD/MM/YY') %></td>
+                                    <td>Week <%= ts.weekNumber %></td>
+                                    <td><%= (ts.totalRegularHours || 0).toFixed(1) %></td>
+                                    <td><%= (ts.totalOvertimeHours || 0).toFixed(1) %></td>
+                                    <td><%= (ts.totalWeekendHours || 0).toFixed(1) %></td>
+                                    <td><strong><%= (ts.totalRegularHours + ts.totalOvertimeHours + ts.totalWeekendHours).toFixed(1) %></strong></td>
+                                    <td><strong>£<%= (ts.totalAmount || 0).toFixed(2) %></strong></td>
+                                    <td>
+                                        <span class="status-badge <%= ts.status %>">
+                                            <%= ts.status.charAt(0).toUpperCase() + ts.status.slice(1) %>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <a href="/provider/payments/timesheets/<%= ts._id %>" class="action-btn view">
+                                                <i class="fas fa-eye"></i> View
+                                            </a>
+                                            <% if (ts.status === 'submitted') { %>
+                                                <form action="/provider/payments/timesheets/<%= ts._id %>/approve" method="POST" style="display: inline;">
+                                                    <button type="submit" class="action-btn approve" onclick="return confirm('Approve this timesheet?')">
+                                                        <i class="fas fa-check"></i> Approve
+                                                    </button>
+                                                </form>
+                                            <% } %>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                <% } else { %>
+                    <!-- Empty State -->
+                    <div class="empty-state">
+                        <i class="fas fa-clock"></i>
+                        <h3>No Timesheets Found</h3>
+                        <p>Create your first timesheet to track operator hours and payments.</p>
+                        <a href="/provider/payments/timesheets/create" class="btn-add">
+                            <i class="fas fa-plus"></i> Create Timesheet
+                        </a>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container text-center">
+            <p>© <%= new Date().getFullYear() %> Care System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu functionality
+            const mobileNav = document.getElementById('mobileNav');
+            const mobileToggler = document.getElementById('mobileNavToggler');
+            const mobileClose = document.getElementById('mobileNavClose');
+            
+            function toggleMenu(show) {
+                if (show) {
+                    mobileNav.classList.add('open');
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    mobileNav.classList.remove('open');
+                    document.body.style.overflow = '';
+                }
+            }
+            
+            if (mobileToggler) {
+                mobileToggler.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    toggleMenu(true);
+                });
+            }
+            
+            if (mobileClose) {
+                mobileClose.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    toggleMenu(false);
+                });
+            }
+
+            // Auto-hide flash messages
+            setTimeout(() => {
+                document.querySelectorAll('.alert').forEach(alert => {
+                    alert.style.display = 'none';
+                });
+            }, 5000);
+        });
+    </script>
+</body>
+</html>

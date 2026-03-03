@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Client || Care Management System</title>
+    
+    <!-- favicons Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicons/favicon-16x16.png" />
+    <link rel="manifest" href="/assets/images/favicons/site.webmanifest" />
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS Links -->
+    <link rel="stylesheet" href="/assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/sominx-icons/style.css">
+
+    <!-- Custom Styles -->
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Jost', sans-serif;
+            background: #f5f7fb;
+        }
+
+        /* Header Styles */
+        .main-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 0;
+            position: relative;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .main-menu-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .main-menu-wrapper__left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .main-menu-wrapper__logo img {
+            height: 40px;
+        }
+
+        /* Desktop Menu */
+        .main-menu__list {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 20px;
+        }
+
+        .main-menu__list > li {
+            position: relative;
+        }
+
+        .main-menu__list > li > a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 5px 0;
+        }
+
+        .main-menu__list .dropdown ul {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            min-width: 200px;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: none;
+            padding: 10px 0;
+        }
+
+        .main-menu__list .dropdown:hover ul {
+            display: block;
+        }
+
+        .main-menu__list .dropdown ul li {
+            padding: 8px 20px;
+        }
+
+        .main-menu__list .dropdown ul li a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        /* Right Section */
+        .main-menu-wrapper__right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .main-menu-wrapper__call {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+        }
+
+        .provider-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .subscription-badge {
+            background: #28a745;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+
+        .main-menu-wrapper__logout {
+            color: white;
+            font-size: 18px;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-nav__toggler {
+            display: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Mobile Menu */
+        .mobile-nav__wrapper {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 300px;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: 9999;
+            transition: left 0.3s ease;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+            overflow-y: auto;
+        }
+
+        .mobile-nav__wrapper.open {
+            left: 0;
+        }
+
+        .mobile-nav__overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9998;
+            display: none;
+        }
+
+        .mobile-nav__overlay.open {
+            display: block;
+        }
+
+        .mobile-nav__content {
+            padding: 30px 20px;
+        }
+
+        .mobile-nav__close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-box {
+            text-align: center;
+            margin: 40px 0 30px;
+        }
+
+        .logo-box img {
+            max-width: 150px;
+        }
+
+        .mobile-nav__container ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .mobile-nav__container ul li a {
+            display: block;
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px 0;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .page-header .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin: 10px 0 0;
+        }
+
+        .page-header .breadcrumb a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+        }
+
+        .page-header .breadcrumb .active {
+            color: white;
+        }
+
+        /* Form Styles */
+        .form-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .form-card h3 {
+            margin: 0 0 20px;
+            font-size: 20px;
+            color: #333;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group label .required {
+            color: #dc3545;
+            margin-left: 4px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #f0f0f0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        .form-control.error {
+            border-color: #dc3545;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        /* Radio and Checkbox Styles */
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 8px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+        }
+
+        .radio-option input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            accent-color: #667eea;
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+
+        .info-box p {
+            margin: 0;
+            color: #666;
+        }
+
+        /* Footer */
+        .site-footer {
+            background: #333;
+            color: white;
+            padding: 30px 0;
+            margin-top: 40px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 991px) {
+            .main-menu__list {
+                display: none;
+            }
+            
+            .main-menu-wrapper__right {
+                display: none;
+            }
+            
+            .mobile-nav__toggler {
+                display: flex;
+            }
+            
+            .main-menu-wrapper__left {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container">
+            <div class="main-menu-wrapper">
+                <div class="main-menu-wrapper__left">
+                    <div class="main-menu-wrapper__logo">
+                        <a href="/provider/dashboard">
+                            <img src="/assets/images/resources/care-logo-white.png" alt="Care System">
+                        </a>
+                    </div>
+                    <div class="main-menu-wrapper__main-menu">
+                        <a href="#" class="mobile-nav__toggler" id="mobileNavToggler">
+                            <i class="fa fa-bars"></i>
+                        </a>
+                        <ul class="main-menu__list">
+                            <li><a href="/provider/dashboard">Dashboard</a></li>
+                            <li class="dropdown">
+                                <a href="#">Operators</a>
+                                <ul>
+                                    <li><a href="/provider/operators">All Operators</a></li>
+                                    <li><a href="/provider/operators/create">Add Operator</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#">Clients</a>
+                                <ul>
+                                    <li><a href="/provider/clients">All Clients</a></li>
+                                    <li class="current"><a href="/provider/clients/create">Add Client</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="/provider/schedule">Schedule</a></li>
+                            <li><a href="/provider/reports">Reports</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="main-menu-wrapper__right">
+                    <div class="main-menu-wrapper__call">
+                        <div class="main-menu-wrapper__call-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="main-menu-wrapper__call-number">
+                            <span class="provider-badge"><%= user.role.replace('_', ' ') %></span>
+                            <span class="subscription-badge">
+                                <%= user.providerInfo.subscription.plan %>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="main-menu-wrapper__search-box">
+                        <a href="/logout" class="main-menu-wrapper__logout" onclick="return confirm('Logout?')">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-nav__overlay" id="mobileNavOverlay"></div>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-nav__wrapper" id="mobileNav">
+        <div class="mobile-nav__content">
+            <span class="mobile-nav__close" id="mobileNavClose"><i class="fa fa-times"></i></span>
+            <div class="logo-box">
+                <img src="/assets/images/resources/care-logo-white.png" alt="Care System">
+            </div>
+            <div class="mobile-nav__container">
+                <ul>
+                    <li><a href="/provider/dashboard">Dashboard</a></li>
+                    <li><a href="/provider/operators">All Operators</a></li>
+                    <li><a href="/provider/operators/create">Add Operator</a></li>
+                    <li><a href="/provider/clients">All Clients</a></li>
+                    <li><a href="/provider/clients/create">Add Client</a></li>
+                    <li><a href="/provider/schedule">Schedule</a></li>
+                    <li><a href="/provider/reports">Reports</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Add New Client</h1>
+            <div class="breadcrumb">
+                <a href="/provider/dashboard">Dashboard</a> / 
+                <a href="/provider/clients">Clients</a> / 
+                <span class="active">Add New</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="dashboard-content">
+        <div class="container">
+            <!-- Flash Messages -->
+            <% if (success && success.length > 0) { %>
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle me-2"></i><%= success %>
+                </div>
+            <% } %>
+            
+            <% if (error && error.length > 0) { %>
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle me-2"></i><%= error %>
+                </div>
+            <% } %>
+
+            <!-- Info Box -->
+            <div class="info-box">
+                <p><i class="fas fa-info-circle me-2" style="color: #667eea;"></i>Client will receive login credentials via email after account creation.</p>
+            </div>
+
+            <!-- Create Form -->
+            <div class="form-card">
+                <form action="/provider/clients" method="POST" id="clientForm">
+                    <h3>Personal Information</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="firstName" name="firstName" 
+                                   placeholder="Enter first name" required>
+                            <div class="error-message" id="firstNameError">First name is required</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="lastName">Last Name <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="lastName" name="lastName" 
+                                   placeholder="Enter last name" required>
+                            <div class="error-message" id="lastNameError">Last name is required</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Email Address <span class="required">*</span></label>
+                            <input type="email" class="form-control" id="email" name="email" 
+                                   placeholder="Enter email address" required>
+                            <div class="error-message" id="emailError">Valid email is required</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" 
+                                   placeholder="Enter phone number">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nhsNumber">NHS Number</label>
+                            <input type="text" class="form-control" id="nhsNumber" name="nhsNumber" 
+                                   placeholder="Enter NHS number">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="dateOfBirth">Date of Birth <span class="required">*</span></label>
+                            <input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth" required>
+                            <div class="error-message" id="dobError">Date of birth is required</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select class="form-control" id="gender" name="gender">
+                                <option value="">Select gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                                <option value="prefer-not">Prefer not to say</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="maritalStatus">Marital Status</label>
+                            <select class="form-control" id="maritalStatus" name="maritalStatus">
+                                <option value="">Select status</option>
+                                <option value="single">Single</option>
+                                <option value="married">Married</option>
+                                <option value="divorced">Divorced</option>
+                                <option value="widowed">Widowed</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <h3 class="mt-4">Address Information</h3>
+
+                    <div class="form-group">
+                        <label for="addressStreet">Street Address <span class="required">*</span></label>
+                        <input type="text" class="form-control" id="addressStreet" name="addressStreet" 
+                               placeholder="Enter street address" required>
+                        <div class="error-message" id="streetError">Street address is required</div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="addressCity">City <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="addressCity" name="addressCity" 
+                                   placeholder="Enter city" required>
+                            <div class="error-message" id="cityError">City is required</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="addressPostcode">Postcode <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="addressPostcode" name="addressPostcode" 
+                                   placeholder="Enter postcode" required>
+                            <div class="error-message" id="postcodeError">Postcode is required</div>
+                        </div>
+                    </div>
+
+                    <h3 class="mt-4">GP Details</h3>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="gpName">GP Name</label>
+                            <input type="text" class="form-control" id="gpName" name="gpName" 
+                                   placeholder="Enter GP name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="gpPhone">GP Phone</label>
+                            <input type="tel" class="form-control" id="gpPhone" name="gpPhone" 
+                                   placeholder="Enter GP phone">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gpAddress">GP Surgery Address</label>
+                        <textarea class="form-control" id="gpAddress" name="gpAddress" 
+                                  rows="3" placeholder="Enter GP surgery address"></textarea>
+                    </div>
+
+                    <h3 class="mt-4">Emergency Contact</h3>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="emergencyName">Contact Name <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="emergencyName" name="emergencyName" 
+                                   placeholder="Enter emergency contact name" required>
+                            <div class="error-message" id="emergencyNameError">Emergency contact name is required</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="emergencyRelationship">Relationship <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="emergencyRelationship" name="emergencyRelationship" 
+                                   placeholder="e.g., Spouse, Child" required>
+                            <div class="error-message" id="emergencyRelationshipError">Relationship is required</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="emergencyPhone">Emergency Phone <span class="required">*</span></label>
+                            <input type="tel" class="form-control" id="emergencyPhone" name="emergencyPhone" 
+                                   placeholder="Enter emergency phone" required>
+                            <div class="error-message" id="emergencyPhoneError">Emergency phone is required</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="emergencyEmail">Emergency Email</label>
+                            <input type="email" class="form-control" id="emergencyEmail" name="emergencyEmail" 
+                                   placeholder="Enter emergency email">
+                        </div>
+                    </div>
+
+                    <h3 class="mt-4">Care Package</h3>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="carePackageType">Care Type <span class="required">*</span></label>
+                            <select class="form-control" id="carePackageType" name="carePackageType" required>
+                                <option value="">Select care type</option>
+                                <option value="domiciliary">Domiciliary Care</option>
+                                <option value="residential">Residential Care</option>
+                                <option value="nursing">Nursing Care</option>
+                                <option value="supported_living">Supported Living</option>
+                            </select>
+                            <div class="error-message" id="careTypeError">Care type is required</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="fundingSource">Funding Source</label>
+                            <select class="form-control" id="fundingSource" name="fundingSource">
+                                <option value="">Select funding source</option>
+                                <option value="local_authority">Local Authority</option>
+                                <option value="ccg">CCG</option>
+                                <option value="self_funded">Self Funded</option>
+                                <option value="mixed">Mixed</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="weeklyHours">Weekly Hours</label>
+                            <input type="number" class="form-control" id="weeklyHours" name="weeklyHours" 
+                                   placeholder="Enter weekly hours" step="0.5">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="careStartDate">Care Start Date</label>
+                            <input type="date" class="form-control" id="careStartDate" name="careStartDate">
+                        </div>
+                    </div>
+
+                    <h3 class="mt-4">Medical Information</h3>
+
+                    <div class="form-group">
+                        <label for="medicalConditions">Medical Conditions (comma separated)</label>
+                        <input type="text" class="form-control" id="medicalConditions" name="medicalConditions" 
+                               placeholder="e.g., Diabetes, Hypertension, Arthritis">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="allergies">Allergies (comma separated)</label>
+                        <input type="text" class="form-control" id="allergies" name="allergies" 
+                               placeholder="e.g., Penicillin, Nuts, Lactose">
+                    </div>
+
+                    <div class="button-group">
+                        <a href="/provider/clients" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Create Client
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container text-center">
+            <p>© <%= new Date().getFullYear() %> Care System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu functionality
+            const mobileNav = document.getElementById('mobileNav');
+            const mobileToggler = document.getElementById('mobileNavToggler');
+            const mobileOverlay = document.getElementById('mobileNavOverlay');
+            const mobileClose = document.getElementById('mobileNavClose');
+            
+            function toggleMenu(show) {
+                if (show) {
+                    mobileNav.classList.add('open');
+                    mobileOverlay.classList.add('open');
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    mobileNav.classList.remove('open');
+                    mobileOverlay.classList.remove('open');
+                    document.body.style.overflow = '';
+                }
+            }
+            
+            if (mobileToggler) {
+                mobileToggler.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    toggleMenu(true);
+                });
+            }
+            
+            if (mobileOverlay) {
+                mobileOverlay.addEventListener('click', function() {
+                    toggleMenu(false);
+                });
+            }
+            
+            if (mobileClose) {
+                mobileClose.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    toggleMenu(false);
+                });
+            }
+            
+            // Form validation
+            const form = document.getElementById('clientForm');
+            
+            form.addEventListener('submit', function(e) {
+                let isValid = true;
+                
+                // Clear previous errors
+                document.querySelectorAll('.form-control').forEach(field => {
+                    field.classList.remove('error');
+                });
+                document.querySelectorAll('.error-message').forEach(msg => {
+                    msg.classList.remove('show');
+                });
+                
+                // Validate required fields
+                const firstName = document.getElementById('firstName');
+                if (!firstName.value.trim()) {
+                    firstName.classList.add('error');
+                    document.getElementById('firstNameError').classList.add('show');
+                    isValid = false;
+                }
+                
+                const lastName = document.getElementById('lastName');
+                if (!lastName.value.trim()) {
+                    lastName.classList.add('error');
+                    document.getElementById('lastNameError').classList.add('show');
+                    isValid = false;
+                }
+                
+                const email = document.getElementById('email');
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!email.value.trim()) {
+                    email.classList.add('error');
+                    document.getElementById('emailError').textContent = 'Email is required';
+                    document.getElementById('emailError').classList.add('show');
+                    isValid = false;
+                } else if (!emailPattern.test(email.value)) {
+                    email.classList.add('error');
+                    document.getElementById('emailError').textContent = 'Please enter a valid email';
+                    document.getElementById('emailError').classList.add('show');
+                    isValid = false;
+                }
+                
+                const dateOfBirth = document.getElementById('dateOfBirth');
+                if (!dateOfBirth.value) {
+                    dateOfBirth.classList.add('error');
+                    document.getElementById('dobError').classList.add('show');
+                    isValid = false;
+                }
+                
+                const addressStreet = document.getElementById('addressStreet');
+                if (!addressStreet.value.trim()) {
+                    addressStreet.classList.add('error');
+                    document.getElementById('streetError').classList.add('show');
+                    isValid = false;
+                }
+                
+                const addressCity = document.getElementById('addressCity');
+                if (!addressCity.value.trim()) {
+                    addressCity.classList.add('error');
+                    document.getElementById('cityError').classList.add('show');
+                    isValid = false;
+                }
+                
+                const addressPostcode = document.getElementById('addressPostcode');
+                if (!addressPostcode.value.trim()) {
+                    addressPostcode.classList.add('error');
+                    document.getElementById('postcodeError').classList.add('show');
+                    isValid = false;
+                }
+                
+                const emergencyName = document.getElementById('emergencyName');
+                if (!emergencyName.value.trim()) {
+                    emergencyName.classList.add('error');
+                    document.getElementById('emergencyNameError').classList.add('show');
+                    isValid = false;
+                }
+                
+                const emergencyRelationship = document.getElementById('emergencyRelationship');
+                if (!emergencyRelationship.value.trim()) {
+                    emergencyRelationship.classList.add('error');
+                    document.getElementById('emergencyRelationshipError').classList.add('show');
+                    isValid = false;
+                }
+                
+                const emergencyPhone = document.getElementById('emergencyPhone');
+                if (!emergencyPhone.value.trim()) {
+                    emergencyPhone.classList.add('error');
+                    document.getElementById('emergencyPhoneError').classList.add('show');
+                    isValid = false;
+                }
+                
+                const carePackageType = document.getElementById('carePackageType');
+                if (!carePackageType.value) {
+                    carePackageType.classList.add('error');
+                    document.getElementById('careTypeError').classList.add('show');
+                    isValid = false;
+                }
+                
+                if (!isValid) {
+                    e.preventDefault();
+                }
+            });
+            
+            // Auto-hide flash messages
+            setTimeout(() => {
+                document.querySelectorAll('.alert').forEach(alert => {
+                    alert.style.display = 'none';
+                });
+            }, 5000);
+        });
+    </script>
+</body>
+</html>

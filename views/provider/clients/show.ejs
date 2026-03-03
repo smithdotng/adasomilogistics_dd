@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Client Details || Care Management System</title>
+    
+    <!-- favicons Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicons/favicon-16x16.png" />
+    <link rel="manifest" href="/assets/images/favicons/site.webmanifest" />
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS Links -->
+    <link rel="stylesheet" href="/assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/sominx-icons/style.css">
+
+    <!-- Custom Styles -->
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Jost', sans-serif;
+            background: #f5f7fb;
+        }
+
+        /* Header Styles */
+        .main-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 0;
+            position: relative;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .main-menu-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .main-menu-wrapper__left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .main-menu-wrapper__logo img {
+            height: 40px;
+        }
+
+        /* Desktop Menu */
+        .main-menu__list {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 20px;
+        }
+
+        .main-menu__list > li {
+            position: relative;
+        }
+
+        .main-menu__list > li > a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 5px 0;
+        }
+
+        .main-menu__list .dropdown ul {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            min-width: 200px;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: none;
+            padding: 10px 0;
+        }
+
+        .main-menu__list .dropdown:hover ul {
+            display: block;
+        }
+
+        .main-menu__list .dropdown ul li {
+            padding: 8px 20px;
+        }
+
+        .main-menu__list .dropdown ul li a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        /* Right Section */
+        .main-menu-wrapper__right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .main-menu-wrapper__call {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+        }
+
+        .provider-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .subscription-badge {
+            background: #28a745;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+
+        .main-menu-wrapper__logout {
+            color: white;
+            font-size: 18px;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-nav__toggler {
+            display: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Mobile Menu */
+        .mobile-nav__wrapper {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 300px;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: 9999;
+            transition: left 0.3s ease;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+            overflow-y: auto;
+        }
+
+        .mobile-nav__wrapper.open {
+            left: 0;
+        }
+
+        .mobile-nav__overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9998;
+            display: none;
+        }
+
+        .mobile-nav__overlay.open {
+            display: block;
+        }
+
+        .mobile-nav__content {
+            padding: 30px 20px;
+        }
+
+        .mobile-nav__close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-box {
+            text-align: center;
+            margin: 40px 0 30px;
+        }
+
+        .logo-box img {
+            max-width: 150px;
+        }
+
+        .mobile-nav__container ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .mobile-nav__container ul li a {
+            display: block;
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px 0;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .page-header .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin: 10px 0 0;
+        }
+
+        .page-header .breadcrumb a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+        }
+
+        .page-header .breadcrumb .active {
+            color: white;
+        }
+
+        /* Action Bar */
+        .action-bar {
+            background: white;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn.edit {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .action-btn.plan {
+            background: #28a745;
+            color: white;
+        }
+
+        .action-btn.back {
+            background: #6c757d;
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Client Profile Header */
+        .profile-header {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .client-avatar-large {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: 600;
+        }
+
+        .client-info h2 {
+            margin: 0 0 10px;
+            color: #333;
+        }
+
+        .client-meta {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+        }
+
+        .meta-item i {
+            color: #667eea;
+            width: 20px;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-badge.active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-badge.inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Content Cards */
+        .content-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .content-card h3 {
+            margin: 0 0 20px;
+            font-size: 18px;
+            color: #333;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .info-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .info-item .label {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .info-item .value {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        /* Care Team */
+        .care-team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .team-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .team-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #667eea;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .team-info h4 {
+            margin: 0 0 5px;
+            color: #333;
+        }
+
+        .team-info p {
+            margin: 0;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .team-role {
+            color: #667eea;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* Medications Table */
+        .medication-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .medication-table th {
+            text-align: left;
+            padding: 12px;
+            background: #f8f9fa;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .medication-table td {
+            padding: 12px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .medication-table tr:hover td {
+            background: #f8f9fa;
+        }
+
+        /* Emergency Contacts */
+        .contact-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .contact-card.primary {
+            border-left-color: #28a745;
+        }
+
+        .contact-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .contact-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .contact-badge {
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            background: #667eea;
+            color: white;
+        }
+
+        .contact-badge.primary {
+            background: #28a745;
+        }
+
+        .contact-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .contact-detail {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+        }
+
+        .contact-detail i {
+            color: #667eea;
+            width: 20px;
+        }
+
+        /* Recent Activity */
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(102,126,234,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: #667eea;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-content p {
+            margin: 0;
+            color: #666;
+        }
+
+        .activity-content small {
+            color: #999;
+        }
+
+        .activity-time {
+            color: #999;
+            font-size: 12px;
+        }
+
+        /* Footer */
+        .site-footer {
+            background: #333;
+            color: white;
+            padding: 30px 0;
+            margin-top: 40px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 991px) {
+            .main-menu__list {
+                display: none;
+            }
+            
+            .main-menu-wrapper__right {
+                display: none;
+            }
+            
+            .mobile-nav__toggler {
+                display: flex;
+            }
+            
+            .main-menu-wrapper__left {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .client-meta {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container">
+            <div class="main-menu-wrapper">
+                <div class="main-menu-wrapper__left">
+                    <div class="main-menu-wrapper__logo">
+                        <a href="/provider/dashboard">
+                            <img src="/assets/images/resources/care-logo-white.png" alt="Care System">
+                        </a>
+                    </div>
+                    <div class="main-menu-wrapper__main-menu">
+                        <a href="#" class="mobile-nav__toggler" id="mobileNavToggler">
+                            <i class="fa fa-bars"></i>
+                        </a>
+                        <ul class="main-menu__list">
+                            <li><a href="/provider/dashboard">Dashboard</a></li>
+                            <li class="dropdown">
+                                <a href="#">Operators</a>
+                                <ul>
+                                    <li><a href="/provider/operators">All Operators</a></li>
+                                    <li><a href="/provider/operators/create">Add Operator</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="current">Clients</a>
+                                <ul>
+                                    <li><a href="/provider/clients">All Clients</a></li>
+                                    <li><a href="/provider/clients/create">Add Client</a></li>
+                                    <li><a href="/provider/care-plans">Care Plans</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="/provider/schedule">Schedule</a></li>
+                            <li class="dropdown">
+                                <a href="#">Finance</a>
+                                <ul>
+                                    <li><a href="/provider/payments/dashboard">Payroll Dashboard</a></li>
+                                    <li><a href="/provider/payments/timesheets">Timesheets</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="/provider/reports">Reports</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="main-menu-wrapper__right">
+                    <div class="main-menu-wrapper__call">
+                        <div class="main-menu-wrapper__call-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="main-menu-wrapper__call-number">
+                            <span class="provider-badge"><%= user.role.replace('_', ' ') %></span>
+                            <span class="subscription-badge">
+                                <%= user.providerInfo.subscription.plan %>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="main-menu-wrapper__search-box">
+                        <a href="/logout" class="main-menu-wrapper__logout" onclick="return confirm('Logout?')">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-nav__wrapper" id="mobileNav">
+        <div class="mobile-nav__content">
+            <span class="mobile-nav__close" id="mobileNavClose"><i class="fa fa-times"></i></span>
+            <div class="logo-box">
+                <img src="/assets/images/resources/care-logo-white.png" alt="Care System">
+            </div>
+            <div class="mobile-nav__container">
+                <ul>
+                    <li><a href="/provider/dashboard">Dashboard</a></li>
+                    <li><a href="/provider/operators">All Operators</a></li>
+                    <li><a href="/provider/operators/create">Add Operator</a></li>
+                    <li><a href="/provider/clients">All Clients</a></li>
+                    <li><a href="/provider/clients/create">Add Client</a></li>
+                    <li><a href="/provider/care-plans">Care Plans</a></li>
+                    <li><a href="/provider/schedule">Schedule</a></li>
+                    <li><a href="/provider/payments/dashboard">Payroll</a></li>
+                    <li><a href="/provider/payments/timesheets">Timesheets</a></li>
+                    <li><a href="/provider/reports">Reports</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Client Details</h1>
+            <div class="breadcrumb">
+                <a href="/provider/dashboard">Dashboard</a> / 
+                <a href="/provider/clients">Clients</a> / 
+                <span class="active"><%= client.firstName %> <%= client.lastName %></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="dashboard-content">
+        <div class="container">
+            <!-- Flash Messages -->
+            <% if (success && success.length > 0) { %>
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle me-2"></i><%= success %>
+                </div>
+            <% } %>
+            
+            <% if (error && error.length > 0) { %>
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle me-2"></i><%= error %>
+                </div>
+            <% } %>
+
+            <!-- Action Bar -->
+            <div class="action-bar">
+                <div class="status-selector">
+                    <span class="status-badge <%= client.isActive ? 'active' : 'inactive' %>">
+                        <%= client.isActive ? 'Active' : 'Inactive' %>
+                    </span>
+                </div>
+                <div class="action-buttons">
+                    <a href="/provider/clients/<%= client._id %>/edit" class="action-btn edit">
+                        <i class="fas fa-edit"></i> Edit Client
+                    </a>
+                    <% if (!carePlan) { %>
+                        <a href="/provider/care-plans/create/<%= client._id %>" class="action-btn plan">
+                            <i class="fas fa-file-medical"></i> Create Care Plan
+                        </a>
+                    <% } else { %>
+                        <a href="/provider/care-plans/<%= carePlan._id %>" class="action-btn plan">
+                            <i class="fas fa-file-medical"></i> View Care Plan
+                        </a>
+                    <% } %>
+                    <a href="/provider/clients" class="action-btn back">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </div>
+
+            <!-- Client Profile Header -->
+            <div class="profile-header">
+                <div class="client-avatar-large">
+                    <%= client.firstName?.charAt(0) %><%= client.lastName?.charAt(0) %>
+                </div>
+                <div class="client-info">
+                    <h2><%= client.firstName %> <%= client.lastName %></h2>
+                    <div class="client-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-id-card"></i>
+                            <span>NHS: <%= client.clientInfo?.nhsNumber || 'Not provided' %></span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>DOB: <%= client.clientInfo?.dateOfBirth ? moment(client.clientInfo.dateOfBirth).format('DD/MM/YYYY') : 'Not provided' %></span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-venus-mars"></i>
+                            <span>Gender: <%= client.clientInfo?.gender || 'Not specified' %></span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-phone"></i>
+                            <span><%= client.phone || 'No phone' %></span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-envelope"></i>
+                            <span><%= client.email %></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Left Column -->
+                <div class="col-lg-6">
+                    <!-- Personal Information -->
+                    <div class="content-card">
+                        <h3>Personal Information</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="label">Full Name</div>
+                                <div class="value"><%= client.firstName %> <%= client.lastName %></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="label">Date of Birth</div>
+                                <div class="value"><%= client.clientInfo?.dateOfBirth ? moment(client.clientInfo.dateOfBirth).format('DD/MM/YYYY') : 'Not provided' %></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="label">Age</div>
+                                <div class="value">
+                                    <%= client.clientInfo?.dateOfBirth ? moment().diff(moment(client.clientInfo.dateOfBirth), 'years') : 'N/A' %> years
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="label">Gender</div>
+                                <div class="value"><%= client.clientInfo?.gender || 'Not specified' %></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="label">Marital Status</div>
+                                <div class="value"><%= client.clientInfo?.maritalStatus || 'Not specified' %></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="label">NHS Number</div>
+                                <div class="value"><%= client.clientInfo?.nhsNumber || 'Not provided' %></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="content-card">
+                        <h3>Address</h3>
+                        <% if (client.address) { %>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <div class="label">Street</div>
+                                    <div class="value"><%= client.address.street || 'Not provided' %></div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="label">City</div>
+                                    <div class="value"><%= client.address.city || 'Not provided' %></div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="label">County</div>
+                                    <div class="value"><%= client.address.county || 'Not provided' %></div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="label">Postcode</div>
+                                    <div class="value"><%= client.address.postcode || 'Not provided' %></div>
+                                </div>
+                            </div>
+                        <% } else { %>
+                            <p class="text-muted">No address provided</p>
+                        <% } %>
+                    </div>
+
+                    <!-- GP Details -->
+                    <div class="content-card">
+                        <h3>GP Details</h3>
+                        <% if (client.clientInfo?.gpDetails) { %>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <div class="label">GP Name</div>
+                                    <div class="value"><%= client.clientInfo.gpDetails.name || 'Not provided' %></div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="label">Surgery</div>
+                                    <div class="value"><%= client.clientInfo.gpDetails.surgery || 'Not provided' %></div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="label">Phone</div>
+                                    <div class="value"><%= client.clientInfo.gpDetails.phone || 'Not provided' %></div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="label">Address</div>
+                                    <div class="value"><%= client.clientInfo.gpDetails.address || 'Not provided' %></div>
+                                </div>
+                            </div>
+                        <% } else { %>
+                            <p class="text-muted">No GP details provided</p>
+                        <% } %>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="col-lg-6">
+                    <!-- Care Package -->
+                    <div class="content-card">
+                        <h3>Care Package</h3>
+                        <% if (client.clientInfo?.carePackage) { %>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <div class="label">Care Type</div>
+                                    <div class="value"><%= client.clientInfo.carePackage.type?.replace('_', ' ') || 'Not specified' %></div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="label">Funding Source</div>
+                                    <div class="value"><%= client.clientInfo.carePackage.fundedBy?.replace('_', ' ') || 'Not specified' %></div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="label">Weekly Hours</div>
+                                    <div class="value"><%= client.clientInfo.carePackage.weeklyHours || 0 %> hours</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="label">Start Date</div>
+                                    <div class="value"><%= client.clientInfo.carePackage.startDate ? moment(client.clientInfo.carePackage.startDate).format('DD/MM/YYYY') : 'Not set' %></div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="label">Review Date</div>
+                                    <div class="value"><%= client.clientInfo.carePackage.reviewDate ? moment(client.clientInfo.carePackage.reviewDate).format('DD/MM/YYYY') : 'Not scheduled' %></div>
+                                </div>
+                            </div>
+                        <% } else { %>
+                            <p class="text-muted">No care package information</p>
+                        <% } %>
+                    </div>
+
+                    <!-- Care Team -->
+                    <div class="content-card">
+                        <h3>Care Team</h3>
+                        <div class="care-team-grid">
+                            <% if (client.clientInfo?.primaryCarer) { %>
+                                <div class="team-card">
+                                    <div class="team-avatar">
+                                        <%= client.clientInfo.primaryCarer.firstName?.charAt(0) %><%= client.clientInfo.primaryCarer.lastName?.charAt(0) %>
+                                    </div>
+                                    <div class="team-info">
+                                        <h4><%= client.clientInfo.primaryCarer.firstName %> <%= client.clientInfo.primaryCarer.lastName %></h4>
+                                        <p class="team-role">Primary Carer</p>
+                                        <p><i class="fas fa-phone"></i> <%= client.clientInfo.primaryCarer.phone || 'N/A' %></p>
+                                    </div>
+                                </div>
+                            <% } %>
+
+                            <% if (client.clientInfo?.secondaryCarers && client.clientInfo.secondaryCarers.length > 0) { %>
+                                <% client.clientInfo.secondaryCarers.slice(0, 2).forEach(carer => { %>
+                                    <div class="team-card">
+                                        <div class="team-avatar">
+                                            <%= carer.firstName?.charAt(0) %><%= carer.lastName?.charAt(0) %>
+                                        </div>
+                                        <div class="team-info">
+                                            <h4><%= carer.firstName %> <%= carer.lastName %></h4>
+                                            <p class="team-role">Support Carer</p>
+                                            <p><i class="fas fa-phone"></i> <%= carer.phone || 'N/A' %></p>
+                                        </div>
+                                    </div>
+                                <% }); %>
+                            <% } %>
+
+                            <% if (!client.clientInfo?.primaryCarer && (!client.clientInfo?.secondaryCarers || client.clientInfo.secondaryCarers.length === 0)) { %>
+                                <p class="text-muted">No carers assigned</p>
+                            <% } %>
+                        </div>
+                    </div>
+
+                    <!-- Medical Conditions -->
+                    <div class="content-card">
+                        <h3>Medical Conditions</h3>
+                        <% if (client.clientInfo?.medicalConditions && client.clientInfo.medicalConditions.length > 0) { %>
+                            <ul class="list-group">
+                                <% client.clientInfo.medicalConditions.forEach(condition => { %>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <%= condition.name %>
+                                        <% if (condition.severity) { %>
+                                            <span class="badge bg-<%= condition.severity === 'severe' ? 'danger' : (condition.severity === 'moderate' ? 'warning' : 'info') %>">
+                                                <%= condition.severity %>
+                                            </span>
+                                        <% } %>
+                                    </li>
+                                <% }); %>
+                            </ul>
+                        <% } else { %>
+                            <p class="text-muted">No medical conditions recorded</p>
+                        <% } %>
+                    </div>
+
+                    <!-- Allergies -->
+                    <div class="content-card">
+                        <h3>Allergies</h3>
+                        <% if (client.clientInfo?.allergies && client.clientInfo.allergies.length > 0) { %>
+                            <ul class="list-group">
+                                <% client.clientInfo.allergies.forEach(allergy => { %>
+                                    <li class="list-group-item">
+                                        <strong><%= allergy.allergen %></strong>
+                                        <% if (allergy.reaction) { %>
+                                            <p class="mb-0 text-muted"><small>Reaction: <%= allergy.reaction %></small></p>
+                                        <% } %>
+                                    </li>
+                                <% }); %>
+                            </ul>
+                        <% } else { %>
+                            <p class="text-muted">No allergies recorded</p>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Medications -->
+            <div class="content-card">
+                <h3>Medications</h3>
+                <% if (client.clientInfo?.medications && client.clientInfo.medications.length > 0) { %>
+                    <table class="medication-table">
+                        <thead>
+                            <tr>
+                                <th>Medication</th>
+                                <th>Dosage</th>
+                                <th>Frequency</th>
+                                <th>Prescribed By</th>
+                                <th>Start Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% client.clientInfo.medications.forEach(med => { %>
+                                <tr>
+                                    <td><strong><%= med.name %></strong></td>
+                                    <td><%= med.dosage %></td>
+                                    <td><%= med.frequency %></td>
+                                    <td><%= med.prescribedBy || 'N/A' %></td>
+                                    <td><%= med.startDate ? moment(med.startDate).format('DD/MM/YYYY') : 'N/A' %></td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                <% } else { %>
+                    <p class="text-muted">No medications recorded</p>
+                <% } %>
+            </div>
+
+            <!-- Emergency Contacts -->
+            <div class="content-card">
+                <h3>Emergency Contacts</h3>
+                <% if (client.clientInfo?.emergencyContacts && client.clientInfo.emergencyContacts.length > 0) { %>
+                    <% client.clientInfo.emergencyContacts.forEach((contact, index) => { %>
+                        <div class="contact-card <%= contact.isPrimary ? 'primary' : '' %>">
+                            <div class="contact-header">
+                                <span class="contact-name"><%= contact.name %></span>
+                                <% if (contact.isPrimary) { %>
+                                    <span class="contact-badge primary">Primary</span>
+                                <% } %>
+                            </div>
+                            <div class="contact-details">
+                                <div class="contact-detail">
+                                    <i class="fas fa-phone"></i> <%= contact.phone %>
+                                </div>
+                                <div class="contact-detail">
+                                    <i class="fas fa-envelope"></i> <%= contact.email || 'No email' %>
+                                </div>
+                                <div class="contact-detail">
+                                    <i class="fas fa-users"></i> <%= contact.relationship %>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <p class="text-muted">No emergency contacts recorded</p>
+                <% } %>
+            </div>
+
+            <!-- Recent Interactions -->
+            <div class="content-card">
+                <h3>
+                    Recent Interactions
+                    <a href="/provider/interactions?client=<%= client._id %>" class="view-all">View All</a>
+                </h3>
+                <% if (recentInteractions && recentInteractions.length > 0) { %>
+                    <% recentInteractions.slice(0, 5).forEach(interaction => { %>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-<%= interaction.type === 'home_visit' ? 'home' : 'phone' %>"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p>
+                                    <strong><%= interaction.operatorId?.firstName %> <%= interaction.operatorId?.lastName %></strong>
+                                    - <%= interaction.type?.replace('_', ' ') %>
+                                </p>
+                                <small><%= interaction.description?.substring(0, 100) %>...</small>
+                            </div>
+                            <div class="activity-time">
+                                <%= moment(interaction.createdAt).format('DD/MM/YYYY') %>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <p class="text-muted">No recent interactions</p>
+                <% } %>
+            </div>
+
+            <!-- Upcoming Schedule -->
+            <div class="content-card">
+                <h3>
+                    Upcoming Schedule
+                    <a href="/provider/schedule?client=<%= client._id %>" class="view-all">View Full Schedule</a>
+                </h3>
+                <% if (upcomingSchedule && upcomingSchedule.length > 0) { %>
+                    <% upcomingSchedule.slice(0, 5).forEach(schedule => { %>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-calendar"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p>
+                                    <strong><%= schedule.operatorId?.firstName %> <%= schedule.operatorId?.lastName %></strong>
+                                    - <%= schedule.type?.replace('_', ' ') %>
+                                </p>
+                                <small><%= schedule.notes || 'No notes' %></small>
+                            </div>
+                            <div class="activity-time">
+                                <%= schedule.startTime %> - <%= schedule.endTime %>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <p class="text-muted">No upcoming schedules</p>
+                <% } %>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container text-center">
+            <p>© <%= new Date().getFullYear() %> Care System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu functionality
+            const mobileNav = document.getElementById('mobileNav');
+            const mobileToggler = document.getElementById('mobileNavToggler');
+            const mobileClose = document.getElementById('mobileNavClose');
+            
+            function toggleMenu(show) {
+                if (show) {
+                    mobileNav.classList.add('open');
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    mobileNav.classList.remove('open');
+                    document.body.style.overflow = '';
+                }
+            }
+            
+            if (mobileToggler) {
+                mobileToggler.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    toggleMenu(true);
+                });
+            }
+            
+            if (mobileClose) {
+                mobileClose.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    toggleMenu(false);
+                });
+            }
+
+            // Auto-hide flash messages
+            setTimeout(() => {
+                document.querySelectorAll('.alert').forEach(alert => {
+                    alert.style.display = 'none';
+                });
+            }, 5000);
+        });
+    </script>
+</body>
+</html>

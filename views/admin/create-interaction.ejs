@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create New Interaction || Care System Admin</title>
+    
+    <!-- favicons Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicons/favicon-16x16.png" />
+    <link rel="manifest" href="/assets/images/favicons/site.webmanifest" />
+    <meta name="description" content="Care System Admin - Create New Interaction" />
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <!-- CSS libraries -->
+    <link rel="stylesheet" href="/assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/animate/animate.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/animate/custom-animate.css" />
+    <link rel="stylesheet" href="/assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/jarallax/jarallax.css" />
+    <link rel="stylesheet" href="/assets/vendors/jquery-magnific-popup/jquery.magnific-popup.css" />
+    <link rel="stylesheet" href="/assets/vendors/nouislider/nouislider.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/nouislider/nouislider.pips.css" />
+    <link rel="stylesheet" href="/assets/vendors/odometer/odometer.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/swiper/swiper.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/sominx-icons/style.css">
+    <link rel="stylesheet" href="/assets/vendors/tiny-slider/tiny-slider.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/reey-font/stylesheet.css" />
+    <link rel="stylesheet" href="/assets/vendors/owl-carousel/owl.carousel.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/owl-carousel/owl.theme.default.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/twentytwenty/twentytwenty.css" />
+    <link rel="stylesheet" href="/assets/vendors/bxslider/jquery.bxslider.css" />
+    <link rel="stylesheet" href="/assets/vendors/bootstrap-select/css/bootstrap-select.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/vegas/vegas.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/jquery-ui/jquery-ui.css" />
+    <link rel="stylesheet" href="/assets/vendors/timepicker/timePicker.css" />
+
+    <!-- template styles -->
+    <link rel="stylesheet" href="/assets/css/sominx.css" />
+    <link rel="stylesheet" href="/assets/css/sominx-responsive.css" />
+    
+    <!-- Admin Interaction Styles -->
+    <style>
+        :root {
+            --admin-primary: #2c3e50;
+            --admin-secondary: #3498db;
+            --admin-success: #27ae60;
+            --admin-warning: #f39c12;
+            --admin-danger: #e74c3c;
+            --admin-info: #17a2b8;
+        }
+        
+        .admin-form-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0px 10px 60px 0px rgba(0, 0, 0, 0.07);
+        }
+        
+        .form-section {
+            border-left: 4px solid var(--admin-primary);
+            padding-left: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .form-section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--admin-primary);
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+        
+        .required:after {
+            content: " *";
+            color: #e74c3c;
+        }
+        
+        .form-control, .form-select, .form-textarea {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 12px 15px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus, .form-select:focus, .form-textarea:focus {
+            border-color: var(--admin-primary);
+            box-shadow: 0 0 0 0.2rem rgba(44, 62, 80, 0.15);
+        }
+        
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .btn-admin-primary {
+            background: var(--admin-primary);
+            border-color: var(--admin-primary);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-admin-primary:hover {
+            background: #1a252f;
+            border-color: #1a252f;
+            color: white;
+        }
+        
+        .form-help-text {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        
+        .client-operator-info {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid var(--admin-secondary);
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #2c3e50;
+            min-width: 100px;
+        }
+        
+        .info-value {
+            color: #34495e;
+        }
+        
+        .interaction-type-option {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+            background: white;
+        }
+        
+        .interaction-type-option:hover {
+            border-color: var(--admin-primary);
+            background: rgba(44, 62, 80, 0.03);
+            transform: translateY(-2px);
+        }
+        
+        .interaction-type-option.active {
+            border-color: var(--admin-primary);
+            background: rgba(44, 62, 80, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .type-icon {
+            font-size: 28px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .type-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #2c3e50;
+        }
+        
+        .type-description {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        
+        .form-row-gap {
+            margin-bottom: 20px;
+        }
+        
+        .input-group-with-icon {
+            position: relative;
+        }
+        
+        .input-group-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7f8c8d;
+            z-index: 4;
+        }
+        
+        .input-group-with-icon .form-control {
+            padding-left: 45px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+        
+        .status-draft { background: #f8f9fa; color: #6c757d; }
+        .status-completed { background: #d4edda; color: #155724; }
+        .status-cancelled { background: #f8d7da; color: #721c24; }
+        .status-needs_review { background: #fff3cd; color: #856404; }
+        
+        .location-option {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .location-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            color: var(--admin-primary);
+            border: 2px solid #e9ecef;
+        }
+        
+        .error-field {
+            border-color: #e74c3c !important;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+        
+        .form-navigation {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 30px;
+            border-top: 2px solid #e9ecef;
+        }
+        
+        .page-header-admin {
+            background: linear-gradient(135deg, var(--admin-primary) 0%, #3498db 100%);
+            color: white;
+            padding: 40px 0;
+            margin-bottom: 40px;
+        }
+        
+        .page-header-admin h2 {
+            color: white;
+            margin-bottom: 10px;
+        }
+        
+        .page-header-admin .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin-bottom: 0;
+        }
+        
+        .page-header-admin .breadcrumb-item a {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .page-header-admin .breadcrumb-item.active {
+            color: white;
+        }
+        
+        .type-visit { color: #3498db; }
+        .type-phone_call { color: #27ae60; }
+        .type-video_call { color: #9b59b6; }
+        .type-email { color: #e67e22; }
+        .type-assessment { color: #1abc9c; }
+        .type-medication { color: #e74c3c; }
+        .type-emergency { color: #c0392b; }
+        .type-routine_check { color: #f39c12; }
+        .type-family_meeting { color: #8e44ad; }
+    </style>
+</head>
+
+<body>
+    <div class="preloader">
+        <img class="preloader__image" width="60" src="/assets/images/loader.png" alt="" />
+    </div>
+    <!-- /.preloader -->
+    
+    <div class="page-wrapper">
+        <!-- Header Start -->
+        <header class="main-header clearfix">
+            <nav class="main-menu clearfix">
+                <div class="main-menu-wrapper clearfix">
+                    <div class="main-menu-wrapper-inner clearfix">
+                        <div class="main-menu-wrapper__left clearfix">
+                            <div class="main-menu-wrapper__logo">
+                                <a href="/"><img src="/assets/images/resources/logo-1.jpg" alt="Care System"></a>
+                            </div>
+                            <div class="main-menu-wrapper__main-menu">
+                                <a href="#" class="mobile-nav__toggler"><i class="fa fa-bars"></i></a>
+                                <ul class="main-menu__list">
+                                    <li><a href="/admin/dashboard">Dashboard</a></li>
+                                    <li><a href="/admin/clients">Clients</a></li>
+                                    <li><a href="/admin/operators">Operators</a></li>
+                                    <li class="current"><a href="/admin/interactions">Interactions</a></li>
+                                    <li><a href="/admin/reports">Reports</a></li>
+                                    <li><a href="/admin/settings">Settings</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="main-menu-wrapper__right">
+                            <div class="main-menu-wrapper__call">
+                                <div class="main-menu-wrapper__call-icon">
+                                    <span class="icon-user-check"></span>
+                                </div>
+                                <div class="main-menu-wrapper__call-number">
+                                    <p>Admin Panel</p>
+                                    <a href="/admin/profile"><%= user.firstName %> <%= user.lastName %></a>
+                                </div>
+                            </div>
+                            <div class="main-menu-wrapper__search-box">
+                                <a href="/logout" class="main-menu-wrapper__logout" title="Logout">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <!-- Header End -->
+
+        <div class="stricky-header stricked-menu main-menu">
+            <div class="sticky-header__content"></div>
+        </div>
+
+        <!-- Page Header -->
+        <section class="page-header-admin">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <h2 class="mb-3">
+                            <i class="fas fa-plus-circle me-2"></i>
+                            Create New Interaction
+                        </h2>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="/admin/dashboard">Admin</a></li>
+                                <li class="breadcrumb-item"><a href="/admin/interactions">Interactions</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Create New</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="col-lg-4 text-lg-end">
+                        <a href="/admin/interactions" class="thm-btn" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3);">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Interactions
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <section class="interaction-create-content pt-80 pb-120">
+            <div class="container">
+                <!-- Flash Messages -->
+                <% if (typeof messages !== 'undefined' && messages.error && messages.error.length > 0) { %>
+                    <div class="alert alert-danger alert-dismissible fade show mb-4 wow fadeInUp" data-wow-delay="100ms" role="alert">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-exclamation-triangle me-3 fs-4"></i>
+                            <div><%= messages.error %></div>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <% } %>
+                
+                <% if (typeof messages !== 'undefined' && messages.success && messages.success.length > 0) { %>
+                    <div class="alert alert-success alert-dismissible fade show mb-4 wow fadeInUp" data-wow-delay="100ms" role="alert">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-check-circle me-3 fs-4"></i>
+                            <div><%= messages.success %></div>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <% } %>
+
+                <div class="admin-form-card wow fadeInUp" data-wow-delay="200ms">
+                    <form action="/admin/interactions" method="POST" id="createInteractionForm" class="needs-validation" novalidate>
+                        <!-- Client & Operator Selection -->
+                        <div class="form-section mb-5">
+                            <h4 class="form-section-title">
+                                <i class="fas fa-users me-2"></i>Client & Operator
+                            </h4>
+                            
+                            <div class="row">
+                                <div class="col-md-6 form-row-gap">
+                                    <label for="client" class="form-label required">
+                                        <i class="fas fa-user me-2"></i>Select Client
+                                    </label>
+                                    <select class="form-select" id="client" name="client" required>
+                                        <option value="">-- Select Client --</option>
+                                        <% clients.forEach(client => { %>
+                                            <option value="<%= client._id %>">
+                                                <%= client.firstName %> <%= client.lastName %> 
+                                                <% if (client.referenceId) { %>
+                                                    (ID: <%= client.referenceId %>)
+                                                <% } %>
+                                            </option>
+                                        <% }); %>
+                                    </select>
+                                    <div class="form-help-text">The client this interaction is about</div>
+                                    <div class="invalid-feedback">Please select a client</div>
+                                </div>
+                                
+                                <div class="col-md-6 form-row-gap">
+                                    <label for="operator" class="form-label required">
+                                        <i class="fas fa-user-md me-2"></i>Select Operator
+                                    </label>
+                                    <select class="form-select" id="operator" name="operator" required>
+                                        <option value="">-- Select Operator --</option>
+                                        <% operators.forEach(operator => { %>
+                                            <option value="<%= operator._id %>">
+                                                <%= operator.firstName %> <%= operator.lastName %> 
+                                                (<%= operator.email %>)
+                                            </option>
+                                        <% }); %>
+                                    </select>
+                                    <div class="form-help-text">The operator who performed the interaction</div>
+                                    <div class="invalid-feedback">Please select an operator</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Interaction Details -->
+                        <div class="form-section mb-5">
+                            <h4 class="form-section-title">
+                                <i class="fas fa-info-circle me-2"></i>Interaction Details
+                            </h4>
+                            
+                            <div class="row">
+                                <div class="col-md-8 form-row-gap">
+                                    <label for="title" class="form-label required">
+                                        <i class="fas fa-heading me-2"></i>Interaction Title
+                                    </label>
+                                    <div class="input-group-with-icon">
+                                        <i class="fas fa-heading input-group-icon"></i>
+                                        <input type="text" class="form-control" id="title" name="title" 
+                                               placeholder="e.g., Weekly Health Check, Medication Administration, Family Consultation" required>
+                                    </div>
+                                    <div class="form-help-text">Provide a clear, descriptive title for this interaction</div>
+                                    <div class="invalid-feedback">Please provide a title for this interaction</div>
+                                </div>
+                                
+                                <div class="col-md-4 form-row-gap">
+                                    <label for="status" class="form-label required">
+                                        <i class="fas fa-tasks me-2"></i>Status
+                                    </label>
+                                    <select class="form-select" id="status" name="status" required>
+                                        <option value="draft">Draft</option>
+                                        <option value="completed" selected>Completed</option>
+                                        <option value="cancelled">Cancelled</option>
+                                        <option value="needs_review">Needs Review</option>
+                                    </select>
+                                    <div class="form-help-text">Current status of this interaction</div>
+                                </div>
+                            </div>
+                            
+                            <div class="row mt-4">
+                                <div class="col-12 form-row-gap">
+                                    <label class="form-label required">
+                                        <i class="fas fa-stethoscope me-2"></i>Interaction Type
+                                    </label>
+                                    <div class="row" id="typeSelection">
+                                        <!-- Visit -->
+                                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                                            <div class="interaction-type-option" data-type="visit">
+                                                <i class="fas fa-home type-icon type-visit"></i>
+                                                <div class="type-name">Visit</div>
+                                                <div class="type-description">Home or facility visit</div>
+                                            </div>
+                                            <input type="radio" name="type" value="visit" class="d-none" required>
+                                        </div>
+                                        
+                                        <!-- Phone Call -->
+                                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                                            <div class="interaction-type-option" data-type="phone_call">
+                                                <i class="fas fa-phone type-icon type-phone_call"></i>
+                                                <div class="type-name">Phone Call</div>
+                                                <div class="type-description">Telephone conversation</div>
+                                            </div>
+                                            <input type="radio" name="type" value="phone_call" class="d-none">
+                                        </div>
+                                        
+                                        <!-- Video Call -->
+                                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                                            <div class="interaction-type-option" data-type="video_call">
+                                                <i class="fas fa-video type-icon type-video_call"></i>
+                                                <div class="type-name">Video Call</div>
+                                                <div class="type-description">Virtual meeting</div>
+                                            </div>
+                                            <input type="radio" name="type" value="video_call" class="d-none">
+                                        </div>
+                                        
+                                        <!-- Email -->
+                                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                                            <div class="interaction-type-option" data-type="email">
+                                                <i class="fas fa-envelope type-icon type-email"></i>
+                                                <div class="type-name">Email</div>
+                                                <div class="type-description">Electronic communication</div>
+                                            </div>
+                                            <input type="radio" name="type" value="email" class="d-none">
+                                        </div>
+                                        
+                                        <!-- Assessment -->
+                                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                                            <div class="interaction-type-option" data-type="assessment">
+                                                <i class="fas fa-clipboard-check type-icon type-assessment"></i>
+                                                <div class="type-name">Assessment</div>
+                                                <div class="type-description">Health evaluation</div>
+                                            </div>
+                                            <input type="radio" name="type" value="assessment" class="d-none">
+                                        </div>
+                                        
+                                        <!-- Medication -->
+                                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                                            <div class="interaction-type-option" data-type="medication">
+                                                <i class="fas fa-pills type-icon type-medication"></i>
+                                                <div class="type-name">Medication</div>
+                                                <div class="type-description">Drug administration</div>
+                                            </div>
+                                            <input type="radio" name="type" value="medication" class="d-none">
+                                        </div>
+                                        
+                                        <!-- Emergency -->
+                                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                                            <div class="interaction-type-option" data-type="emergency">
+                                                <i class="fas fa-exclamation-triangle type-icon type-emergency"></i>
+                                                <div class="type-name">Emergency</div>
+                                                <div class="type-description">Urgent situation</div>
+                                            </div>
+                                            <input type="radio" name="type" value="emergency" class="d-none">
+                                        </div>
+                                        
+                                        <!-- Routine Check -->
+                                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                                            <div class="interaction-type-option" data-type="routine_check">
+                                                <i class="fas fa-heartbeat type-icon type-routine_check"></i>
+                                                <div class="type-name">Routine Check</div>
+                                                <div class="type-description">Regular monitoring</div>
+                                            </div>
+                                            <input type="radio" name="type" value="routine_check" class="d-none">
+                                        </div>
+                                        
+                                        <!-- Family Meeting -->
+                                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                                            <div class="interaction-type-option" data-type="family_meeting" data-active="true">
+                                                <i class="fas fa-users type-icon type-family_meeting"></i>
+                                                <div class="type-name">Family Meeting</div>
+                                                <div class="type-description">Family consultation</div>
+                                            </div>
+                                            <input type="radio" name="type" value="family_meeting" class="d-none" checked>
+                                        </div>
+                                    </div>
+                                    <div class="form-help-text">Select the type of interaction</div>
+                                    <div class="invalid-feedback d-none" id="typeError">Please select an interaction type</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Time & Location -->
+                        <div class="form-section mb-5">
+                            <h4 class="form-section-title">
+                                <i class="fas fa-clock me-2"></i>Time & Location
+                            </h4>
+                            
+                            <div class="row">
+                                <div class="col-md-6 form-row-gap">
+                                    <label for="startTime" class="form-label required">
+                                        <i class="fas fa-calendar-plus me-2"></i>Start Date & Time
+                                    </label>
+                                    <div class="input-group-with-icon">
+                                        <i class="fas fa-calendar-alt input-group-icon"></i>
+                                        <input type="datetime-local" class="form-control" id="startTime" name="startTime" required>
+                                    </div>
+                                    <div class="form-help-text">When the interaction began</div>
+                                    <div class="invalid-feedback">Please select a start date and time</div>
+                                </div>
+                                
+                                <div class="col-md-6 form-row-gap">
+                                    <label for="endTime" class="form-label">
+                                        <i class="fas fa-calendar-minus me-2"></i>End Date & Time
+                                    </label>
+                                    <div class="input-group-with-icon">
+                                        <i class="fas fa-calendar-alt input-group-icon"></i>
+                                        <input type="datetime-local" class="form-control" id="endTime" name="endTime">
+                                    </div>
+                                    <div class="form-help-text">When the interaction ended (leave blank if ongoing)</div>
+                                </div>
+                                
+                                <div class="col-md-12 form-row-gap mt-3">
+                                    <label for="location" class="form-label">
+                                        <i class="fas fa-map-marker-alt me-2"></i>Location
+                                    </label>
+                                    <select class="form-select" id="location" name="location">
+                                        <option value="client_home">Client's Home</option>
+                                        <option value="office">Office / Clinic</option>
+                                        <option value="hospital">Hospital</option>
+                                        <option value="community">Community Setting</option>
+                                        <option value="other">Other Location</option>
+                                    </select>
+                                    <div class="form-help-text">Where the interaction took place</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Description & Notes -->
+                        <div class="form-section mb-5">
+                            <h4 class="form-section-title">
+                                <i class="fas fa-file-alt me-2"></i>Description & Notes
+                            </h4>
+                            
+                            <div class="form-row-gap">
+                                <label for="description" class="form-label required">
+                                    <i class="fas fa-align-left me-2"></i>Description
+                                </label>
+                                <textarea class="form-control form-textarea" id="description" name="description" 
+                                          placeholder="Provide a detailed description of what happened during the interaction. Include any observations, discussions, actions taken, and outcomes..." 
+                                          rows="8" required></textarea>
+                                <div class="form-help-text">Be as detailed as possible. This information is crucial for care continuity.</div>
+                                <div class="invalid-feedback">Please provide a description of the interaction</div>
+                            </div>
+                            
+                            <div class="row mt-4">
+                                <div class="col-md-6 form-row-gap">
+                                    <label for="observationsMood" class="form-label">
+                                        <i class="fas fa-smile me-2"></i>Client's Mood
+                                    </label>
+                                    <select class="form-select" id="observationsMood" name="observations.mood">
+                                        <option value="">-- Select Mood --</option>
+                                        <option value="excellent">Excellent</option>
+                                        <option value="good">Good</option>
+                                        <option value="fair">Fair</option>
+                                        <option value="poor">Poor</option>
+                                        <option value="distressed">Distressed</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-md-6 form-row-gap">
+                                    <label for="observationsPhysical" class="form-label">
+                                        <i class="fas fa-heartbeat me-2"></i>Physical Condition
+                                    </label>
+                                    <input type="text" class="form-control" id="observationsPhysical" name="observations.physicalCondition" 
+                                           placeholder="e.g., Stable, Feverish, Weak, etc.">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row-gap mt-3">
+                                <label for="observationsNotes" class="form-label">
+                                    <i class="fas fa-clipboard me-2"></i>Additional Observations
+                                </label>
+                                <textarea class="form-control form-textarea" id="observationsNotes" name="observations.notes" 
+                                          placeholder="Any additional observations about the client's behavior, mental state, or other relevant factors..." 
+                                          rows="4"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Additional Information -->
+                        <div class="form-section mb-5">
+                            <h4 class="form-section-title">
+                                <i class="fas fa-plus-circle me-2"></i>Additional Information
+                            </h4>
+                            
+                            <div class="row">
+                                <div class="col-md-6 form-row-gap">
+                                    <label for="verificationNotes" class="form-label">
+                                        <i class="fas fa-check-circle me-2"></i>Verification Notes
+                                    </label>
+                                    <textarea class="form-control form-textarea" id="verificationNotes" name="verificationNotes" 
+                                              placeholder="Any notes about verification, confirmation, or follow-up required..." 
+                                              rows="4"></textarea>
+                                </div>
+                                
+                                <div class="col-md-6 form-row-gap">
+                                    <label class="form-label">
+                                        <i class="fas fa-tags me-2"></i>Tags
+                                    </label>
+                                    <input type="text" class="form-control" id="tags" name="tags" 
+                                           placeholder="e.g., follow-up, medication, assessment (separate with commas)">
+                                    <div class="form-help-text">Tags help categorize and search for interactions</div>
+                                </div>
+                            </div>
+                            
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="verifiedByClient" name="verifiedByClient" value="true">
+                                        <label class="form-check-label" for="verifiedByClient">
+                                            Client Verified
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="verifiedByGuardian" name="verifiedByGuardian" value="true">
+                                        <label class="form-check-label" for="verifiedByGuardian">
+                                            Guardian Verified
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Navigation -->
+                        <div class="form-navigation wow fadeInUp" data-wow-delay="300ms">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <a href="/admin/interactions" class="btn btn-secondary">
+                                        <i class="fas fa-times me-2"></i>Cancel
+                                    </a>
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-outline-primary me-2" id="saveDraft">
+                                        <i class="fas fa-save me-2"></i>Save as Draft
+                                    </button>
+                                    <button type="submit" class="btn-admin-primary">
+                                        <i class="fas fa-check-circle me-2"></i>Create Interaction
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!--Footer Start-->
+        <footer class="site-footer">
+            <div class="site-footer-bg" style="background-image: url(/assets/images/backgrounds/site-footer-bg.jpg)"></div>
+            <div class="site-footer-bg-overly"></div>
+            <div class="container">
+                <div class="site-footer__top">
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-2">
+                            <div class="site-footer__top-logo">
+                                <a href="/"><img src="/assets/images/resources/footer-logo-1.jpg" alt="Care System"></a>
+                            </div>
+                        </div>
+                        <div class="col-xl-8 col-lg-10">
+                            <div class="site-footer__top-right">
+                                <div class="site-footer__call-and-social">
+                                    <div class="site-footer__call">
+                                        <p>Admin Portal <span><%= moment().format('MMMM D, YYYY') %></span></p>
+                                    </div>
+                                    <div class="site-footer__social">
+                                        <a href="/admin/dashboard" title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
+                                        <a href="/admin/interactions" title="Interactions"><i class="fas fa-history"></i></a>
+                                        <a href="/admin/settings" title="Settings"><i class="fas fa-cog"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="site-footer__bottom">
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="100ms">
+                            <div class="footer-widget__column footer-widget__contact">
+                                <h3 class="footer-widget__title">Care System Admin</h3>
+                                <p class="footer-widget__contact-text">
+                                    Interaction Management System<br>
+                                    Create, track, and manage client interactions
+                                </p>
+                                <h5 class="footer-widget__contact-phone-and-email">
+                                    <a href="mailto:admin@caresystem.com" class="footer-widget__contact-email">admin@caresystem.com</a><br>
+                                    <a href="tel:+1234567890" class="footer-widget__contact-phone">+1 234 567 890</a>
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="200ms">
+                            <div class="footer-widget__column footer-widget__links clearfix">
+                                <h3 class="footer-widget__title">Quick Links</h3>
+                                <ul class="footer-widget__links-list list-unstyled">
+                                    <li><a href="/admin/dashboard">Dashboard</a></li>
+                                    <li><a href="/admin/clients">Clients</a></li>
+                                    <li><a href="/admin/operators">Operators</a></li>
+                                    <li><a href="/admin/interactions">Interactions</a></li>
+                                    <li><a href="/admin/reports">Reports</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="300ms">
+                            <div class="footer-widget__column footer-widget__newsletter">
+                                <h3 class="footer-widget__title">System Info</h3>
+                                <div class="system-status">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Admin:</span>
+                                        <span><%= user.firstName %> <%= user.lastName %></span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Total Clients:</span>
+                                        <span><%= clients.length %></span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Total Operators:</span>
+                                        <span><%= operators.length %></span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Current Time:</span>
+                                        <span><%= moment().format('h:mm A') %></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="site-footer__copy-right">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="site-footer__copy-right-inner">
+                                <p class="site-footer__copy-right-text">© <%= new Date().getFullYear() %> Care System. All rights reserved.</p>
+                                <p class="site-footer__copy-right-text small mt-2">
+                                    Admin Interaction Management System
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!--Footer End-->
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav__wrapper">
+        <div class="mobile-nav__overlay mobile-nav__toggler"></div>
+        <div class="mobile-nav__content">
+            <span class="mobile-nav__close mobile-nav__toggler"><i class="fa fa-times"></i></span>
+            <div class="logo-box">
+                <a href="/" aria-label="logo image"><img src="/assets/images/resources/logo-3.png" width="155" alt="" /></a>
+            </div>
+            <div class="mobile-nav__container"></div>
+            <ul class="mobile-nav__contact list-unstyled">
+                <li>
+                    <i class="fa fa-envelope"></i>
+                    <a href="mailto:admin@caresystem.com">admin@caresystem.com</a>
+                </li>
+                <li>
+                    <i class="fa fa-phone-alt"></i>
+                    <a href="tel:+1234567890">+1 234 567 890</a>
+                </li>
+            </ul>
+            <div class="mobile-nav__top">
+                <div class="mobile-nav__social">
+                    <a href="/admin/dashboard" class="fas fa-tachometer-alt" title="Dashboard"></a>
+                    <a href="/admin/interactions" class="fas fa-history" title="Interactions"></a>
+                    <a href="/admin/settings" class="fas fa-cog" title="Settings"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Popup -->
+    <div class="search-popup">
+        <div class="search-popup__overlay search-toggler"></div>
+        <div class="search-popup__content">
+            <form action="#">
+                <label for="search" class="sr-only">search here</label>
+                <input type="text" id="search" placeholder="Search Here..." />
+                <button type="submit" aria-label="search submit" class="thm-btn">
+                    <i class="icon-magnifying-glass"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <a href="#" data-target="html" class="scroll-to-target scroll-to-top"><i class="fa fa-angle-up"></i></a>
+
+    <!-- JavaScript -->
+    <script src="/assets/vendors/jquery/jquery-3.6.0.min.js"></script>
+    <script src="/assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/vendors/jarallax/jarallax.min.js"></script>
+    <script src="/assets/vendors/jquery-ajaxchimp/jquery.ajaxchimp.min.js"></script>
+    <script src="/assets/vendors/jquery-appear/jquery.appear.min.js"></script>
+    <script src="/assets/vendors/jquery-circle-progress/jquery.circle-progress.min.js"></script>
+    <script src="/assets/vendors/jquery-magnific-popup/jquery.magnific-popup.min.js"></script>
+    <script src="/assets/vendors/jquery-validate/jquery.validate.min.js"></script>
+    <script src="/assets/vendors/nouislider/nouislider.min.js"></script>
+    <script src="/assets/vendors/odometer/odometer.min.js"></script>
+    <script src="/assets/vendors/swiper/swiper.min.js"></script>
+    <script src="/assets/vendors/tiny-slider/tiny-slider.min.js"></script>
+    <script src="/assets/vendors/wnumb/wNumb.min.js"></script>
+    <script src="/assets/vendors/wow/wow.js"></script>
+    <script src="/assets/vendors/isotope/isotope.js"></script>
+    <script src="/assets/vendors/countdown/countdown.min.js"></script>
+    <script src="/assets/vendors/owl-carousel/owl.carousel.min.js"></script>
+    <script src="/assets/vendors/twentytwenty/twentytwenty.js"></script>
+    <script src="/assets/vendors/twentytwenty/jquery.event.move.js"></script>
+    <script src="/assets/vendors/bxslider/jquery.bxslider.min.js"></script>
+    <script src="/assets/vendors/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="/assets/vendors/vegas/vegas.min.js"></script>
+    <script src="/assets/vendors/jquery-ui/jquery-ui.js"></script>
+    <script src="/assets/vendors/timepicker/timePicker.js"></script>
+    
+    <!-- template js -->
+    <script src="/assets/js/sominx.js"></script>
+    
+    <!-- Admin Create Interaction Script -->
+    <script>
+        $(document).ready(function() {
+            // Initialize WOW.js
+            if ($('.wow').length) {
+                new WOW().init();
+            }
+            
+            // Set default dates
+            const now = new Date();
+            const timezoneOffset = now.getTimezoneOffset() * 60000;
+            const localISOTime = new Date(now - timezoneOffset).toISOString().slice(0, 16);
+            
+            // Set start time to now
+            $('#startTime').val(localISOTime);
+            
+            // Set end time to 1 hour from now
+            const endTime = new Date(now.getTime() + (60 * 60 * 1000));
+            const endISOTime = new Date(endTime - timezoneOffset).toISOString().slice(0, 16);
+            $('#endTime').val(endISOTime);
+            
+            // Type selection
+            $('#typeSelection .interaction-type-option').click(function() {
+                const type = $(this).data('type');
+                
+                // Remove active class from all options
+                $('#typeSelection .interaction-type-option').removeClass('active');
+                
+                // Add active class to clicked option
+                $(this).addClass('active');
+                
+                // Set the corresponding radio button as checked
+                $(this).siblings('input[type="radio"]').prop('checked', true).trigger('change');
+                
+                // Hide error message
+                $('#typeError').addClass('d-none');
+            });
+            
+            // Set default active type (family_meeting)
+            $('.interaction-type-option[data-type="family_meeting"]').addClass('active');
+            
+            // Auto-update end time when start time changes
+            $('#startTime').on('change', function() {
+                const startTime = new Date($(this).val());
+                if (startTime && !isNaN(startTime.getTime())) {
+                    const endTime = new Date(startTime.getTime() + (60 * 60 * 1000)); // +1 hour
+                    const endISOTime = new Date(endTime - timezoneOffset).toISOString().slice(0, 16);
+                    $('#endTime').val(endISOTime);
+                }
+            });
+            
+            // Save as draft button
+            $('#saveDraft').on('click', function() {
+                $('#status').val('draft');
+                $('#createInteractionForm').submit();
+            });
+            
+            // Form validation
+            $('#createInteractionForm').on('submit', function(event) {
+                // Check if type is selected
+                const typeSelected = $('input[name="type"]:checked').length > 0;
+                if (!typeSelected) {
+                    $('#typeError').removeClass('d-none').show();
+                    event.preventDefault();
+                    event.stopPropagation();
+                    return false;
+                } else {
+                    $('#typeError').addClass('d-none').hide();
+                }
+                
+                // Check all required fields
+                let isValid = true;
+                $(this).find('[required]').each(function() {
+                    if (!$(this).val()) {
+                        $(this).addClass('error-field');
+                        isValid = false;
+                    } else {
+                        $(this).removeClass('error-field');
+                    }
+                });
+                
+                if (!isValid) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    alert('Please fill in all required fields marked with *');
+                    return false;
+                }
+                
+                // Validate end time is after start time
+                const startTime = new Date($('#startTime').val());
+                const endTime = $('#endTime').val() ? new Date($('#endTime').val()) : null;
+                
+                if (endTime && endTime <= startTime) {
+                    event.preventDefault();
+                    alert('End time must be after start time');
+                    return false;
+                }
+                
+                // If validation passes, show loading state
+                const submitBtn = $(this).find('button[type="submit"]');
+                const originalText = submitBtn.html();
+                submitBtn.html('<i class="fas fa-spinner fa-spin me-2"></i>Creating...').prop('disabled', true);
+                
+                // Re-enable button after 10 seconds in case of error
+                setTimeout(() => {
+                    submitBtn.html(originalText).prop('disabled', false);
+                }, 10000);
+                
+                return true;
+            });
+            
+            // Remove error class when user starts typing
+            $('input, textarea, select').on('input change', function() {
+                if ($(this).val()) {
+                    $(this).removeClass('error-field');
+                }
+            });
+            
+            // Client and operator search enhancement
+            $('#client, #operator').select2({
+                theme: 'bootstrap-5',
+                placeholder: $(this).data('placeholder'),
+                allowClear: true,
+                width: '100%'
+            });
+            
+            // Initialize tooltips
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        });
+    </script>
+</body>
+</html>

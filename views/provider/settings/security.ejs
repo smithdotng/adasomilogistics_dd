@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Security Settings - CareShed Provider</title>
+    
+    <!-- favicons Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicons/favicon-16x16.png" />
+    <link rel="manifest" href="/assets/images/favicons/site.webmanifest" />
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS Links -->
+    <link rel="stylesheet" href="/assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/animate/animate.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/sominx-icons/style.css">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Jost', sans-serif; background: #f5f7fb; }
+
+        /* Header Styles - Same as billing page */
+        .main-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 0;
+            position: relative;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .main-menu-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .main-menu-wrapper__left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .main-menu-wrapper__logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .main-menu__list {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 20px;
+        }
+
+        .main-menu__list > li {
+            position: relative;
+        }
+
+        .main-menu__list > li > a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 5px 0;
+            display: block;
+        }
+
+        .main-menu__list .dropdown ul {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            min-width: 200px;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: none;
+            padding: 10px 0;
+        }
+
+        .main-menu__list .dropdown:hover ul {
+            display: block;
+        }
+
+        .main-menu__list .dropdown ul li {
+            padding: 8px 20px;
+        }
+
+        .main-menu__list .dropdown ul li a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        .main-menu-wrapper__right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .main-menu-wrapper__call {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+        }
+
+        .provider-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .subscription-badge {
+            background: #28a745;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .main-menu-wrapper__logout {
+            color: white;
+            font-size: 18px;
+        }
+
+        .mobile-nav__toggler {
+            display: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobile-nav__wrapper {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 300px;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: 9999;
+            transition: left 0.3s ease;
+        }
+
+        .mobile-nav__wrapper.open { left: 0; }
+        .mobile-nav__overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9998;
+            display: none;
+        }
+        .mobile-nav__overlay.open { display: block; }
+
+        .mobile-nav__content { padding: 30px 20px; }
+        .mobile-nav__close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-box { text-align: center; margin: 40px 0 30px; }
+        .mobile-nav__container ul { list-style: none; padding: 0; }
+        .mobile-nav__container ul li a {
+            display: block;
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px 0;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 { margin: 0; font-size: 28px; }
+        .page-header .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin: 10px 0 0;
+        }
+        .page-header .breadcrumb a { color: rgba(255,255,255,0.8); text-decoration: none; }
+        .page-header .breadcrumb .active { color: white; }
+
+        /* Settings Navigation */
+        .settings-nav {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .settings-nav a {
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: #666;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .settings-nav a:hover { background: #f0f0f0; }
+        .settings-nav a.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        /* Content Cards */
+        .content-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .content-card h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0 0 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .content-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0 0 15px;
+            color: #333;
+        }
+
+        /* Password Form */
+        .password-form {
+            max-width: 500px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #f0f0f0;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .form-control:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        .password-strength {
+            margin-top: 10px;
+        }
+
+        .strength-bar {
+            height: 4px;
+            background: #f0f0f0;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .strength-bar-fill {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s ease;
+        }
+
+        .strength-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Two Factor */
+        .two-factor-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .two-factor-status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .status-badge.enabled {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-badge.disabled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .btn-setup {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .btn-setup:hover {
+            background: #5a6fd8;
+        }
+
+        /* Session Settings */
+        .session-setting {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            border: 2px solid #f0f0f0;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .session-info h4 {
+            margin: 0 0 5px;
+            color: #333;
+        }
+
+        .session-info p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .session-select {
+            padding: 8px 15px;
+            border: 2px solid #f0f0f0;
+            border-radius: 8px;
+            min-width: 150px;
+        }
+
+        /* Login History */
+        .login-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .login-item:last-child {
+            border-bottom: none;
+        }
+
+        .login-icon {
+            width: 40px;
+            height: 40px;
+            background: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+
+        .login-details {
+            flex: 1;
+        }
+
+        .login-details h4 {
+            margin: 0 0 5px;
+            font-size: 16px;
+        }
+
+        .login-details p {
+            margin: 0;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .login-time {
+            color: #999;
+            font-size: 13px;
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success { background: #d4edda; color: #155724; }
+        .alert-danger { background: #f8d7da; color: #721c24; }
+
+        /* Footer */
+        .site-footer {
+            background: #333;
+            color: white;
+            padding: 30px 0;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 991px) {
+            .main-menu__list { display: none; }
+            .main-menu-wrapper__right { display: none; }
+            .mobile-nav__toggler { display: flex; }
+            .main-menu-wrapper__left { width: 100%; justify-content: space-between; }
+            .settings-nav { flex-direction: column; }
+            .two-factor-status { flex-direction: column; align-items: flex-start; }
+            .session-setting { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="main-header clearfix">
+        <div class="container">
+            <div class="main-menu-wrapper">
+                <div class="main-menu-wrapper__left">
+                    <div class="main-menu-wrapper__logo">
+                        <a href="/provider/dashboard">
+                            <img src="/assets/images/resources/careshed-logo-white.png" alt="CareShed">
+                        </a>
+                    </div>
+                    <div class="main-menu-wrapper__main-menu">
+                        <a href="#" class="mobile-nav__toggler" id="mobileNavToggler">
+                            <i class="fa fa-bars"></i>
+                        </a>
+                        <ul class="main-menu__list">
+                            <li><a href="/provider/dashboard">Dashboard</a></li>
+                            <li class="dropdown">
+                                <a href="#">Operators</a>
+                                <ul>
+                                    <li><a href="/provider/operators">All Operators</a></li>
+                                    <li><a href="/provider/operators/create">Add Operator</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#">Clients</a>
+                                <ul>
+                                    <li><a href="/provider/clients">All Clients</a></li>
+                                    <li><a href="/provider/clients/create">Add Client</a></li>
+                                    <li><a href="/provider/care-plans">Care Plans</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="/provider/schedule">Schedule</a></li>
+                            <li class="dropdown">
+                                <a href="#">Finance</a>
+                                <ul>
+                                    <li><a href="/provider/payments/dashboard">Payroll Dashboard</a></li>
+                                    <li><a href="/provider/payments/timesheets">Timesheets</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="/provider/reports">Reports</a></li>
+                            <li class="dropdown">
+                                <a href="#" class="current">Settings</a>
+                                <ul>
+                                    <li><a href="/provider/settings">Profile</a></li>
+                                    <li><a href="/provider/settings/billing">Billing</a></li>
+                                    <li><a href="/provider/settings/team">Team</a></li>
+                                    <li><a href="/provider/settings/notifications">Notifications</a></li>
+                                    <li class="current"><a href="/provider/settings/security">Security</a></li>
+                                    <li><a href="/provider/settings/api">API</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="main-menu-wrapper__right">
+                    <div class="main-menu-wrapper__call">
+                        <div class="main-menu-wrapper__call-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="main-menu-wrapper__call-number">
+                            <p><%= user.providerInfo.companyName %></p>
+                            <span class="provider-badge"><%= user.role.replace('_', ' ') %></span>
+                            <span class="subscription-badge <%= user.providerInfo.subscription.status === 'expired' ? 'expired' : (user.providerInfo.subscription.status === 'trial' ? 'warning' : '') %>">
+                                <%= user.providerInfo.subscription.plan %> • <%= user.providerInfo.subscription.status %>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="main-menu-wrapper__search-box">
+                        <a href="/logout" class="main-menu-wrapper__logout" onclick="return confirm('Logout?')">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-nav__wrapper" id="mobileNav">
+        <div class="mobile-nav__overlay" id="mobileNavOverlay"></div>
+        <div class="mobile-nav__content">
+            <span class="mobile-nav__close" id="mobileNavClose"><i class="fa fa-times"></i></span>
+            <div class="logo-box">
+                <img src="/assets/images/resources/careshed-logo-white.png" width="155" alt="CareShed">
+            </div>
+            <div class="mobile-nav__container">
+                <ul>
+                    <li><a href="/provider/dashboard">Dashboard</a></li>
+                    <li><a href="/provider/operators">All Operators</a></li>
+                    <li><a href="/provider/operators/create">Add Operator</a></li>
+                    <li><a href="/provider/clients">All Clients</a></li>
+                    <li><a href="/provider/clients/create">Add Client</a></li>
+                    <li><a href="/provider/care-plans">Care Plans</a></li>
+                    <li><a href="/provider/schedule">Schedule</a></li>
+                    <li><a href="/provider/payments/dashboard">Payroll</a></li>
+                    <li><a href="/provider/payments/timesheets">Timesheets</a></li>
+                    <li><a href="/provider/reports">Reports</a></li>
+                    <li><a href="/provider/settings">Profile</a></li>
+                    <li><a href="/provider/settings/billing">Billing</a></li>
+                    <li><a href="/provider/settings/team">Team</a></li>
+                    <li><a href="/provider/settings/notifications">Notifications</a></li>
+                    <li><a href="/provider/settings/security">Security</a></li>
+                    <li><a href="/provider/settings/api">API</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Security Settings</h1>
+            <div class="breadcrumb">
+                <a href="/provider/dashboard">Dashboard</a> / 
+                <a href="/provider/settings">Settings</a> / 
+                <span class="active">Security</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="dashboard-content">
+        <div class="container">
+            <!-- Flash Messages -->
+            <% if (success && success.length > 0) { %>
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle me-2"></i><%= success %>
+                </div>
+            <% } %>
+            
+            <% if (error && error.length > 0) { %>
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle me-2"></i><%= error %>
+                </div>
+            <% } %>
+
+            <!-- Settings Navigation -->
+            <div class="settings-nav">
+                <a href="/provider/settings">Profile</a>
+                <a href="/provider/settings/billing">Billing</a>
+                <a href="/provider/settings/team">Team</a>
+                <a href="/provider/settings/notifications">Notifications</a>
+                <a href="/provider/settings/security" class="active">Security</a>
+                <a href="/provider/settings/api">API</a>
+            </div>
+
+            <!-- Change Password -->
+            <div class="content-card">
+                <h2>Change Password</h2>
+                
+                <div class="password-form">
+                    <form action="/provider/settings/security/password" method="POST" id="passwordForm">
+                        <div class="form-group">
+                            <label for="currentPassword">Current Password</label>
+                            <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newPassword">New Password</label>
+                            <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+                            <div class="password-strength">
+                                <div class="strength-bar">
+                                    <div class="strength-bar-fill" id="passwordStrength"></div>
+                                </div>
+                                <span class="strength-text" id="passwordStrengthText">Enter a password</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm New Password</label>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                            <small class="text-muted" id="passwordMatch"></small>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Update Password</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Two-Factor Authentication -->
+            <div class="content-card">
+                <h2>Two-Factor Authentication</h2>
+                
+                <div class="two-factor-section">
+                    <div class="two-factor-status">
+                        <div>
+                            <h3>Status: 
+                                <span class="status-badge <%= user.twoFactorEnabled ? 'enabled' : 'disabled' %>">
+                                    <%= user.twoFactorEnabled ? 'Enabled' : 'Disabled' %>
+                                </span>
+                            </h3>
+                            <p class="text-muted mt-2">
+                                <%= user.twoFactorEnabled ? 
+                                    'Two-factor authentication is active on your account.' : 
+                                    'Add an extra layer of security to your account.' %>
+                            </p>
+                        </div>
+                        <% if (!user.twoFactorEnabled) { %>
+                            <button class="btn-setup" onclick="setup2FA()">Set Up Two-Factor</button>
+                        <% } else { %>
+                            <button class="btn-setup" style="background: #dc3545;" onclick="disable2FA()">Disable</button>
+                        <% } %>
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Two-factor authentication adds an extra layer of security by requiring a verification code from your mobile device.
+                </div>
+            </div>
+
+            <!-- Session Settings -->
+            <div class="content-card">
+                <h2>Session Settings</h2>
+                
+                <div class="session-setting">
+                    <div class="session-info">
+                        <h4>Session Timeout</h4>
+                        <p>Automatically log out after period of inactivity</p>
+                    </div>
+                    <select class="session-select">
+                        <option value="15" selected>15 minutes</option>
+                        <option value="30">30 minutes</option>
+                        <option value="60">1 hour</option>
+                        <option value="120">2 hours</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-primary">Save Session Settings</button>
+            </div>
+
+            <!-- Login History -->
+            <div class="content-card">
+                <h2>Recent Login Activity</h2>
+                
+                <div class="login-history">
+                    <div class="login-item">
+                        <div class="login-icon">
+                            <i class="fas fa-check-circle" style="color: #28a745;"></i>
+                        </div>
+                        <div class="login-details">
+                            <h4>Current Session</h4>
+                            <p>Chrome on Windows • London, UK</p>
+                        </div>
+                        <div class="login-time">Now</div>
+                    </div>
+
+                    <div class="login-item">
+                        <div class="login-icon">
+                            <i class="fas fa-circle" style="color: #666;"></i>
+                        </div>
+                        <div class="login-details">
+                            <h4>Chrome on Mac</h4>
+                            <p>Manchester, UK • IP: 192.168.1.1</p>
+                        </div>
+                        <div class="login-time">2 days ago</div>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <button class="btn btn-secondary" onclick="logoutAllDevices()">Log Out All Devices</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container text-center">
+            <p>© <%= new Date().getFullYear() %> CareShed. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="/assets/vendors/jquery/jquery-3.6.0.min.js"></script>
+    <script src="/assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Mobile menu functionality
+            const mobileNav = document.getElementById('mobileNav');
+            const mobileToggler = document.getElementById('mobileNavToggler');
+            const mobileOverlay = document.getElementById('mobileNavOverlay');
+            const mobileClose = document.getElementById('mobileNavClose');
+            
+            function toggleMenu(show) {
+                if (show) {
+                    mobileNav.classList.add('open');
+                    mobileOverlay.classList.add('open');
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    mobileNav.classList.remove('open');
+                    mobileOverlay.classList.remove('open');
+                    document.body.style.overflow = '';
+                }
+            }
+            
+            if (mobileToggler) {
+                mobileToggler.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    toggleMenu(true);
+                });
+            }
+            
+            if (mobileOverlay) {
+                mobileOverlay.addEventListener('click', function() {
+                    toggleMenu(false);
+                });
+            }
+            
+            if (mobileClose) {
+                mobileClose.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    toggleMenu(false);
+                });
+            }
+
+            // Password strength checker
+            $('#newPassword').on('input', function() {
+                const password = $(this).val();
+                const strength = calculatePasswordStrength(password);
+                const strengthBar = $('#passwordStrength');
+                const strengthText = $('#passwordStrengthText');
+
+                if (strength === 0) {
+                    strengthBar.css({ width: '0%', background: '#f0f0f0' });
+                    strengthText.text('Enter a password');
+                } else if (strength < 30) {
+                    strengthBar.css({ width: '25%', background: '#dc3545' });
+                    strengthText.text('Weak password');
+                } else if (strength < 50) {
+                    strengthBar.css({ width: '50%', background: '#ffc107' });
+                    strengthText.text('Fair password');
+                } else if (strength < 75) {
+                    strengthBar.css({ width: '75%', background: '#17a2b8' });
+                    strengthText.text('Good password');
+                } else {
+                    strengthBar.css({ width: '100%', background: '#28a745' });
+                    strengthText.text('Strong password');
+                }
+            });
+
+            function calculatePasswordStrength(password) {
+                let strength = 0;
+                
+                if (password.length >= 8) strength += 25;
+                if (password.match(/[a-z]+/)) strength += 25;
+                if (password.match(/[A-Z]+/)) strength += 25;
+                if (password.match(/[0-9]+/)) strength += 15;
+                if (password.match(/[$@#&!]+/)) strength += 10;
+                
+                return Math.min(strength, 100);
+            }
+
+            // Password match checker
+            $('#confirmPassword').on('input', function() {
+                const password = $('#newPassword').val();
+                const confirm = $(this).val();
+                const matchText = $('#passwordMatch');
+
+                if (confirm.length === 0) {
+                    matchText.text('');
+                } else if (password === confirm) {
+                    matchText.html('<span style="color: #28a745;"><i class="fas fa-check-circle"></i> Passwords match</span>');
+                } else {
+                    matchText.html('<span style="color: #dc3545;"><i class="fas fa-exclamation-circle"></i> Passwords do not match</span>');
+                }
+            });
+
+            // Auto-hide flash messages
+            setTimeout(() => {
+                document.querySelectorAll('.alert').forEach(alert => {
+                    alert.style.display = 'none';
+                });
+            }, 5000);
+        });
+
+        function setup2FA() {
+            alert('Two-factor authentication setup would be initiated here');
+        }
+
+        function disable2FA() {
+            if (confirm('Are you sure you want to disable two-factor authentication?')) {
+                alert('2FA disabled');
+            }
+        }
+
+        function logoutAllDevices() {
+            if (confirm('This will log you out from all devices except this one. Continue?')) {
+                alert('Logged out from all other devices');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | Care Management System</title>
+    <meta name="description" content="Secure login to your Care Management account" />
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicons/favicon-16x16.png" />
+
+    <!-- Google Fonts - Jost -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <!-- All Sominx Vendors (same as contact page) -->
+    <link rel="stylesheet" href="/assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/animate/animate.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/animate/custom-animate.css" />
+    <link rel="stylesheet" href="/assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/jarallax/jarallax.css" />
+    <link rel="stylesheet" href="/assets/vendors/jquery-magnific-popup/jquery.magnific-popup.css" />
+    <link rel="stylesheet" href="/assets/vendors/odometer/odometer.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/swiper/swiper.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/sominx-icons/style.css" />
+    <link rel="stylesheet" href="/assets/vendors/owl-carousel/owl.carousel.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/owl-carousel/owl.theme.default.min.css" />
+
+    <!-- Main Theme Files -->
+    <link rel="stylesheet" href="/assets/css/sominx.css" />
+    <link rel="stylesheet" href="/assets/css/sominx-responsive.css" />
+
+    <style>
+        :root {
+            --thm-primary: #4f46e5; /* You can change this to match your brand */
+        }
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .login-section {
+            padding: 120px 0 100px;
+        }
+        .login-card {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+            padding: 60px 50px;
+        }
+        .comment-form__input-box {
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .comment-form__input-box input,
+        .comment-form__input-box textarea {
+            width: 100%;
+            height: 60px;
+            background-color: #f9f9f9;
+            border: none;
+            border-radius: 10px;
+            padding: 0 30px;
+            font-size: 16px;
+            color: #222;
+            transition: all 0.3s ease;
+        }
+        .comment-form__input-box input:focus,
+        .comment-form__input-box textarea:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.15);
+        }
+        .comment-form__input-box label {
+            position: absolute;
+            top: 50%;
+            left: 30px;
+            transform: translateY(-50%);
+            color: #777;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+        .comment-form__input-box input:focus + label,
+        .comment-form__input-box input:not(:placeholder-shown) + label {
+            top: -10px;
+            left: 20px;
+            font-size: 13px;
+            color: var(--thm-primary);
+            background: #fff;
+            padding: 0 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page-wrapper">
+
+    <!-- Page Header -->
+    <section class="page-header" style="padding: 60px 0 40px;">
+        <div class="container">
+            <div class="page-header__inner text-center">
+                <ul class="thm-breadcrumb list-unstyled">
+                    <li><a href="/">Home</a></li>
+                    <li><span>/</span></li>
+                    <li>Login</li>
+                </ul>
+                <h2>Sign In to Your Account</h2>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Form - Styled like Contact Form -->
+    <section class="login-section contact-page">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-6 col-lg-8">
+                    <div class="login-card wow fadeInUp" data-wow-delay="100ms">
+
+                        <!-- Messages -->
+                        <% if (success && success.length > 0) { %>
+                        <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                            <%= success %>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        <% } %>
+
+                        <% if (error && error.length > 0) { %>
+                        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                            <%= error %>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        <% } %>
+
+                        <form action="/login" method="POST" class="comment-one__form contact-form-validated" novalidate="novalidate">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="comment-form__input-box">
+                                        <input type="email" 
+                                               placeholder="" 
+                                               name="email" 
+                                               id="email" 
+                                               required 
+                                               autofocus>
+                                        <label for="email">Email address</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="comment-form__input-box">
+                                        <input type="password" 
+                                               placeholder="" 
+                                               name="password" 
+                                               id="password" 
+                                               required>
+                                        <label for="password">Password</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-center">
+                                <button type="submit" class="thm-btn comment-form__btn">
+                                    Sign In
+                                </button>
+                            </div>
+
+                            <div class="text-center mt-4">
+                                <p class="text-muted small">
+                                    <i class="fas fa-shield-alt me-1"></i>
+                                    Secure • Encrypted • HIPAA Compliant
+                                </p>
+                                <p class="text-muted small mt-2">
+                                    Contact your administrator if you need access
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add this debug section to your login.ejs, right after the form -->
+<div class="mt-4 p-3 bg-light rounded">
+  <h6 class="text-muted">Debug Info (Remove in production):</h6>
+  <p class="small mb-1">Created guardians: Check console logs for passwords</p>
+  <p class="small mb-1">Test URL: /debug-guardian/EMAIL?password=PASSWORD</p>
+  <p class="small mb-0">Check Node.js console for detailed logs</p>
+</div>
+    </section>
+
+</div><!-- /.page-wrapper -->
+
+<!-- Mobile Nav, Search, Scroll Top -->
+<div class="mobile-nav__wrapper">
+    <!-- ... same as original contact page ... -->
+</div>
+
+<div class="search-popup">
+    <!-- ... same as original ... -->
+</div>
+
+<a href="#" data-target="html" class="scroll-to-target scroll-to-top"><i class="fa fa-angle-up"></i></a>
+
+<!-- Scripts (full set from contact page) -->
+<script src="/assets/vendors/jquery/jquery-3.6.0.min.js"></script>
+<script src="/assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendors/wow/wow.js"></script>
+<script src="/assets/vendors/jquery-validate/jquery.validate.min.js"></script>
+<script src="/assets/js/sominx.js"></script>
+
+</body>
+</html>

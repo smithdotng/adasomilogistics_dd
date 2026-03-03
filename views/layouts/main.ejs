@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+        <% if (typeof title !== 'undefined') { %>
+            <%= title %> | Care Management System
+        <% } else { %>
+            Care Management System
+        <% } %>
+    </title>
+    <meta name="description" content="Comprehensive care service management system for care providers and operators" />
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicons/favicon-16x16.png" />
+    <link rel="manifest" href="/assets/images/favicons/site.webmanifest" />
+
+    <!-- Google Fonts - Jost -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <!-- Vendors (core Sominx set) -->
+    <link rel="stylesheet" href="/assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/animate/animate.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/animate/custom-animate.css" />
+    <link rel="stylesheet" href="/assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/sominx-icons/style.css" />
+
+    <!-- Main Theme -->
+    <link rel="stylesheet" href="/assets/css/sominx.css" />
+    <link rel="stylesheet" href="/assets/css/sominx-responsive.css" />
+
+    
+</head>
+
+<body>
+
+<div class="page-wrapper">
+
+    <% if (typeof user !== 'undefined' && user) { %>
+    <!-- Main Header -->
+    <header class="main-header clearfix">
+        <nav class="main-menu clearfix">
+            <div class="main-menu-wrapper clearfix">
+                <div class="main-menu-wrapper-inner clearfix">
+                    <div class="main-menu-wrapper__left clearfix">
+                        <div class="main-menu-wrapper__logo">
+                            <a href="/dashboard">
+                                <img src="/assets/images/care-logo.png" alt="Care Management System" width="140">
+                            </a>
+                        </div>
+                        <div class="main-menu-wrapper__main-menu">
+                            <a href="#" class="mobile-nav__toggler"><i class="fa fa-bars"></i></a>
+                            <ul class="main-menu__list">
+                                <li class="<%= typeof currentPage !== 'undefined' && currentPage === 'dashboard' ? 'current' : '' %>">
+                                    <a href="/dashboard">Dashboard</a>
+                                </li>
+                                <% if (user.role === 'admin') { %>
+                                    <li class="<%= typeof currentPage !== 'undefined' && currentPage === 'admin' ? 'current' : '' %>">
+                                        <a href="/admin/dashboard">Admin</a>
+                                    </li>
+                                <% } %>
+                                <li class="<%= typeof currentPage !== 'undefined' && currentPage === 'clients' ? 'current' : '' %>">
+                                    <a href="/clients">Clients</a>
+                                </li>
+                                <li class="<%= typeof currentPage !== 'undefined' && currentPage === 'interactions' ? 'current' : '' %>">
+                                    <a href="/interactions">Interactions</a>
+                                </li>
+                                <li class="<%= typeof currentPage !== 'undefined' && currentPage === 'schedule' ? 'current' : '' %>">
+                                    <a href="/operator/schedule">Schedule</a>
+                                </li>
+                                <li class="dropdown <%= typeof currentPage !== 'undefined' && currentPage === 'profile' ? 'current' : '' %>">
+                                    <a href="#">
+                                        <i class="fas fa-user-circle me-2"></i><%= user.firstName %>
+                                    </a>
+                                    <ul>
+                                        <li><a href="/profile">My Profile</a></li>
+                                        <li><a href="/logout">Logout</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="main-menu-wrapper__right">
+                        <div class="main-menu-wrapper__call">
+                            <div class="main-menu-wrapper__call-icon">
+                                <span class="icon-phone-call"></span>
+                            </div>
+                            <div class="main-menu-wrapper__call-number">
+                                <p>Emergency Support</p>
+                                <a href="tel:911">911</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Sticky Header -->
+    <div class="stricky-header stricked-menu main-menu">
+        <div class="sticky-header__content"></div>
+    </div>
+    <% } %>
+
+    <!-- Flash Messages -->
+    <% if (success && success.length > 0) { %>
+    <div class="container mt-4">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <%= success %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+    <% } %>
+
+    <% if (error && error.length > 0) { %>
+    <div class="container mt-4">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <%= error %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+    <% } %>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <%- body %>
+    </main>
+
+    <% if (typeof user !== 'undefined' && user) { %>
+    <!-- Site Footer -->
+    <footer class="site-footer">
+        <div class="site-footer-bg" style="background-image: url(/assets/images/backgrounds/site-footer-bg.jpg);"></div>
+        <div class="site-footer-bg-overly"></div>
+        <div class="container">
+            <div class="site-footer__top">
+                <div class="row">
+                    <div class="col-xl-4 col-lg-3">
+                        <div class="site-footer__top-logo">
+                            <a href="/dashboard">
+                                <img src="/assets/images/care-logo-white.png" alt="Care Management" width="140">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-xl-8 col-lg-9">
+                        <div class="site-footer__top-right">
+                            <div class="site-footer__call-and-social">
+                                <div class="site-footer__call">
+                                    <p>24/7 Emergency Support <a href="tel:911">Call 911</a></p>
+                                </div>
+                                <div class="site-footer__social">
+                                    <span class="text-white me-3">Logged in as: <strong><%= user.fullName %></strong></span>
+                                    <span class="badge bg-light text-dark"><%= user.role.toUpperCase() %></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+
+            <div class="site-footer__copy-right">
+                <div class="row">
+                    <div class="col-xl-12 text-center">
+                        <p class="site-footer__copy-right-text">
+                            © <%= new Date().getFullYear() %> Care Management System. All Rights Reserved.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <% } %>
+
+</div><!-- /.page-wrapper -->
+
+<!-- Mobile Navigation -->
+<% if (typeof user !== 'undefined' && user) { %>
+<div class="mobile-nav__wrapper">
+    <div class="mobile-nav__overlay mobile-nav__toggler"></div>
+    <div class="mobile-nav__content">
+        <span class="mobile-nav__close mobile-nav__toggler"><i class="fa fa-times"></i></span>
+
+        <div class="logo-box">
+            <a href="/dashboard">
+                <img src="/assets/images/care-logo.png" width="155" alt="Care Management System" />
+            </a>
+        </div>
+
+        <div class="mobile-nav__container">
+            <ul class="mobile-nav__list list-unstyled">
+                <li><a href="/dashboard">Dashboard</a></li>
+                <% if (user.role === 'admin') { %>
+                    <li><a href="/admin/dashboard">Admin</a></li>
+                <% } %>
+                <li><a href="/clients">Clients</a></li>
+                <li><a href="/interactions">Interactions</a></li>
+                <li><a href="/operator/schedule">Schedule</a></li>
+                <li><a href="/profile">My Profile</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </div>
+
+        <ul class="mobile-nav__contact list-unstyled">
+            <li>
+                <i class="fa fa-user"></i>
+                <span><%= user.fullName %></span>
+            </li>
+            <li>
+                <i class="fa fa-shield-alt"></i>
+                <span><%= user.role.toUpperCase() %></span>
+            </li>
+        </ul>
+    </div>
+</div>
+<% } %>
+
+<!-- Scroll to Top -->
+<a href="#" data-target="html" class="scroll-to-target scroll-to-top">
+    <i class="fa fa-angle-up"></i>
+</a>
+
+<!-- Scripts -->
+<script src="/assets/vendors/jquery/jquery-3.6.0.min.js"></script>
+<script src="/assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendors/wow/wow.js"></script>
+<script src="/assets/js/sominx.js"></script>
+<script src="/js/care-management.js"></script>
+
+</body>
+</html>

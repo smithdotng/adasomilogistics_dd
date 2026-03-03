@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Log Interaction || Care System</title>
+    
+    <!-- favicons Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicons/favicon-16x16.png" />
+    <link rel="manifest" href="/assets/images/favicons/site.webmanifest" />
+    <meta name="description" content="Care System - Log Interaction" />
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <!-- CSS libraries -->
+    <link rel="stylesheet" href="/assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/animate/animate.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/animate/custom-animate.css" />
+    <link rel="stylesheet" href="/assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/jarallax/jarallax.css" />
+    <link rel="stylesheet" href="/assets/vendors/jquery-magnific-popup/jquery.magnific-popup.css" />
+    <link rel="stylesheet" href="/assets/vendors/nouislider/nouislider.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/nouislider/nouislider.pips.css" />
+    <link rel="stylesheet" href="/assets/vendors/odometer/odometer.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/swiper/swiper.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/sominx-icons/style.css">
+    <link rel="stylesheet" href="/assets/vendors/tiny-slider/tiny-slider.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/reey-font/stylesheet.css" />
+    <link rel="stylesheet" href="/assets/vendors/owl-carousel/owl.carousel.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/owl-carousel/owl.theme.default.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/twentytwenty/twentytwenty.css" />
+    <link rel="stylesheet" href="/assets/vendors/bxslider/jquery.bxslider.css" />
+    <link rel="stylesheet" href="/assets/vendors/bootstrap-select/css/bootstrap-select.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/vegas/vegas.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/jquery-ui/jquery-ui.css" />
+    <link rel="stylesheet" href="/assets/vendors/timepicker/timePicker.css" />
+
+    <!-- template styles -->
+    <link rel="stylesheet" href="/assets/css/sominx.css" />
+    <link rel="stylesheet" href="/assets/css/sominx-responsive.css" />
+    
+    <!-- Custom Styles for Create Interaction Page -->
+    <style>
+        .interactions-header {
+            background: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0px 10px 60px 0px rgba(0, 0, 0, 0.07);
+        }
+        
+        .interaction-form-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0px 10px 60px 0px rgba(0, 0, 0, 0.07);
+        }
+        
+        .form-control, .form-select, .form-textarea {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+        
+        .form-control:focus, .form-select:focus, .form-textarea:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .thm-btn {
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #213360;
+            margin-bottom: 8px;
+        }
+        
+        .required:after {
+            content: " *";
+            color: #dc3545;
+        }
+        
+        .type-option {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+        }
+        
+        .type-option:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+        
+        .type-option.active {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        .type-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .task-item, .medication-item {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .remove-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .remove-btn:hover {
+            background: #c82333;
+        }
+        
+        .file-preview {
+            border: 1px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            background: #f8f9fa;
+        }
+        
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+        
+        .file-name {
+            flex: 1;
+            margin: 0 10px;
+            font-size: 14px;
+        }
+        
+        .form-section {
+            border-top: 2px solid #f0f0f0;
+            padding-top: 30px;
+            margin-top: 30px;
+        }
+        
+        .form-section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #213360;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .btn-add {
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 20px;
+            font-size: 14px;
+        }
+        
+        .btn-add:hover {
+            background: #218838;
+        }
+        
+        .duration-inputs {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .duration-input {
+            flex: 1;
+        }
+        
+        .duration-label {
+            font-size: 12px;
+            color: #6c757d;
+            margin-top: 5px;
+            text-align: center;
+        }
+        
+        .alert-warning {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="preloader">
+        <img class="preloader__image" width="60" src="/assets/images/loader.png" alt="" />
+    </div>
+    <!-- /.preloader -->
+    
+    <div class="page-wrapper">
+        <!-- Header Start -->
+        <header class="main-header clearfix">
+            <nav class="main-menu clearfix">
+                <div class="main-menu-wrapper clearfix">
+                    <div class="main-menu-wrapper-inner clearfix">
+                        <div class="main-menu-wrapper__left clearfix">
+                            <div class="main-menu-wrapper__logo">
+                                <a href="/"><img src="/assets/images/resources/logo-1.jpg" alt="Care System"></a>
+                            </div>
+                            <div class="main-menu-wrapper__main-menu">
+                                <a href="#" class="mobile-nav__toggler"><i class="fa fa-bars"></i></a>
+                                <ul class="main-menu__list">
+                                    <li><a href="/dashboard">Dashboard</a></li>
+                                    <% if (user.role === 'admin') { %>
+                                        <li class="dropdown">
+                                            <a href="#">Clients</a>
+                                            <ul>
+                                                <li><a href="/clients">All Clients</a></li>
+                                                <li><a href="/clients/create">Add New Client</a></li>
+                                                <li><a href="/admin/clients">Admin View</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown">
+                                            <a href="#">Operators</a>
+                                            <ul>
+                                                <li><a href="/admin/operators">Manage Operators</a></li>
+                                                <li><a href="/admin/operators/create">Add Operator</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown current">
+                                            <a href="#">Interactions</a>
+                                            <ul>
+                                                <li><a href="/interactions">All Interactions</a></li>
+                                                <li><a href="/interactions/create">Log Interaction</a></li>
+                                                <li><a href="/admin/interactions">Admin View</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="/admin/reports">Reports</a></li>
+                                        <li><a href="/admin/settings">Settings</a></li>
+                                    <% } else { %>
+                                        <li class="dropdown">
+                                            <a href="#">Clients</a>
+                                            <ul>
+                                                <li><a href="/clients">My Clients</a></li>
+                                                <li><a href="/clients/create">Add Client</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown current">
+                                            <a href="#">Interactions</a>
+                                            <ul>
+                                                <li><a href="/interactions">My Interactions</a></li>
+                                                <li><a href="/interactions/create">Log Interaction</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="/reports">Reports</a></li>
+                                        <li><a href="/profile">Profile</a></li>
+                                    <% } %>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="main-menu-wrapper__right">
+                            <div class="main-menu-wrapper__call">
+                                <div class="main-menu-wrapper__call-icon">
+                                    <span class="icon-phone-call"></span>
+                                </div>
+                                <div class="main-menu-wrapper__call-number">
+                                    <p>Welcome</p>
+                                    <a href="/profile"><%= user.fullName %></a>
+                                </div>
+                            </div>
+                            <div class="main-menu-wrapper__search-box">
+                                <a href="/logout" class="main-menu-wrapper__logout" title="Logout">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <!-- Header End -->
+
+        <div class="stricky-header stricked-menu main-menu">
+            <div class="sticky-header__content"></div>
+        </div>
+
+        <!--Page Header Start-->
+        <section class="page-header" style="padding: 60px 0 40px;">
+            <div class="container">
+                <div class="page-header__inner">
+                    
+                    <h2>Log New Interaction</h2>
+                </div>
+            </div>
+        </section>
+        <!--Page Header End-->
+
+        <!-- Create Interaction Content Start -->
+        <section class="interactions-content pt-80 pb-120">
+            <div class="container">
+                <div class="interactions-header wow fadeInUp" data-wow-delay="100ms">
+                    <div class="row align-items-center">
+                        <div class="col-lg-8">
+                            <h3 class="mb-3">
+                                <i class="fas fa-plus-circle text-primary me-2"></i>
+                                Log New Client Interaction
+                            </h3>
+                            <p class="text-muted mb-0">Record details of your interaction with a client. Fill in all required fields marked with *.</p>
+                        </div>
+                        <div class="col-lg-4 text-lg-end">
+                            <a href="/interactions" class="thm-btn" style="background: #6c757d;">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Interactions
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flash Messages -->
+                <% if (messages.error) { %>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <%= messages.error %>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <% } %>
+                
+                <% if (messages.success) { %>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <%= messages.success %>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <% } %>
+
+                <div class="interaction-form-card wow fadeInUp" data-wow-delay="200ms">
+                    <form action="/interactions" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        <!-- Basic Information Section -->
+                        <div class="mb-5">
+                            <h4 class="form-section-title">
+                                <i class="fas fa-info-circle me-2"></i>Basic Information
+                            </h4>
+                            
+                            <div class="row">
+                                <div class="col-md-8 mb-4">
+                                    <label for="title" class="form-label required">Interaction Title</label>
+                                    <input type="text" class="form-control" id="title" name="title" 
+                                           placeholder="e.g., Weekly Check-in, Medication Administration, Emergency Response" required>
+                                    <div class="invalid-feedback">
+                                        Please provide a title for this interaction.
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4 mb-4">
+                                    <label for="client" class="form-label required">Client</label>
+                                    <select class="form-select" id="client" name="client" required>
+                                        <option value="">Select a client</option>
+                                        <% clients.forEach(function(client) { %>
+                                            <option value="<%= client._id %>">
+                                                <%= client.firstName %> <%= client.lastName %>
+                                                <% if (client.referenceId) { %> (ID: <%= client.referenceId %>)<% } %>
+                                            </option>
+                                        <% }); %>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Please select a client.
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12 mb-4">
+                                    <label class="form-label required">Interaction Type</label>
+                                    <div class="row" id="typeSelection">
+                                        <div class="col-md-2 col-sm-4 col-6">
+                                            <div class="type-option" data-type="visit">
+                                                <i class="fas fa-home type-icon text-primary"></i>
+                                                <div class="type-name">Visit</div>
+                                            </div>
+                                            <input type="radio" name="type" value="visit" class="d-none" required>
+                                        </div>
+                                        <div class="col-md-2 col-sm-4 col-6">
+                                            <div class="type-option" data-type="phone_call">
+                                                <i class="fas fa-phone type-icon text-success"></i>
+                                                <div class="type-name">Phone Call</div>
+                                            </div>
+                                            <input type="radio" name="type" value="phone_call" class="d-none">
+                                        </div>
+                                        <div class="col-md-2 col-sm-4 col-6">
+                                            <div class="type-option" data-type="video_call">
+                                                <i class="fas fa-video type-icon text-info"></i>
+                                                <div class="type-name">Video Call</div>
+                                            </div>
+                                            <input type="radio" name="type" value="video_call" class="d-none">
+                                        </div>
+                                        <div class="col-md-2 col-sm-4 col-6">
+                                            <div class="type-option" data-type="emergency">
+                                                <i class="fas fa-exclamation-triangle type-icon text-danger"></i>
+                                                <div class="type-name">Emergency</div>
+                                            </div>
+                                            <input type="radio" name="type" value="emergency" class="d-none">
+                                        </div>
+                                        <div class="col-md-2 col-sm-4 col-6">
+                                            <div class="type-option" data-type="medication">
+                                                <i class="fas fa-pills type-icon text-warning"></i>
+                                                <div class="type-name">Medication</div>
+                                            </div>
+                                            <input type="radio" name="type" value="medication" class="d-none">
+                                        </div>
+                                        <div class="col-md-2 col-sm-4 col-6">
+                                            <div class="type-option" data-type="assessment">
+                                                <i class="fas fa-clipboard-check type-icon text-purple"></i>
+                                                <div class="type-name">Assessment</div>
+                                            </div>
+                                            <input type="radio" name="type" value="assessment" class="d-none">
+                                        </div>
+                                    </div>
+                                    <div class="invalid-feedback d-block" id="typeError">
+                                        Please select an interaction type.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Time & Location Section -->
+                        <div class="form-section">
+                            <h4 class="form-section-title">
+                                <i class="fas fa-clock me-2"></i>Time & Location
+                            </h4>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label for="startTime" class="form-label required">Start Date & Time</label>
+                                    <input type="datetime-local" class="form-control" id="startTime" name="startTime" required>
+                                    <div class="invalid-feedback">
+                                        Please select a start date and time.
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-4">
+                                    <label for="endTime" class="form-label">End Date & Time</label>
+                                    <input type="datetime-local" class="form-control" id="endTime" name="endTime">
+                                    <div class="form-text">Leave blank if interaction is ongoing</div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-4">
+                                    <label for="location" class="form-label">Location</label>
+                                    <input type="text" class="form-control" id="location" name="location" 
+                                           placeholder="e.g., Client's Home, Clinic, Remote">
+                                </div>
+                                
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label required">Status</label>
+                                    <select class="form-select" name="status" required>
+                                        <option value="draft">Draft</option>
+                                        <option value="in_progress">In Progress</option>
+                                        <option value="completed">Completed</option>
+                                        <option value="cancelled">Cancelled</option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Please select a status.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Description Section -->
+                        <div class="form-section">
+                            <h4 class="form-section-title">
+                                <i class="fas fa-file-alt me-2"></i>Interaction Details
+                            </h4>
+                            
+                            <div class="mb-4">
+                                <label for="description" class="form-label required">Description / Notes</label>
+                                <textarea class="form-control form-textarea" id="description" name="description" 
+                                          placeholder="Provide details about the interaction, observations, client condition, etc." required></textarea>
+                                <div class="invalid-feedback">
+                                    Please provide a description of the interaction.
+                                </div>
+                            </div>
+                            
+                            <!-- Dynamic Tasks Section -->
+                            <div class="mb-4">
+                                <label class="form-label">Tasks Completed</label>
+                                <div id="tasksContainer">
+                                    <!-- Tasks will be added here dynamically -->
+                                </div>
+                                <button type="button" class="btn btn-add mt-2" id="addTaskBtn">
+                                    <i class="fas fa-plus me-1"></i>Add Task
+                                </button>
+                                <input type="hidden" name="tasks" id="tasksInput">
+                            </div>
+                            
+                            <!-- Dynamic Medications Section -->
+                            <div class="mb-4">
+                                <label class="form-label">Medications Administered</label>
+                                <div id="medicationsContainer">
+                                    <!-- Medications will be added here dynamically -->
+                                </div>
+                                <button type="button" class="btn btn-add mt-2" id="addMedicationBtn">
+                                    <i class="fas fa-plus me-1"></i>Add Medication
+                                </button>
+                                <input type="hidden" name="medications" id="medicationsInput">
+                            </div>
+                        </div>
+
+                        <!-- Attachments Section -->
+                        <div class="form-section">
+                            <h4 class="form-section-title">
+                                <i class="fas fa-paperclip me-2"></i>Attachments
+                            </h4>
+                            
+                            <div class="alert alert-warning mb-4">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Allowed file types: JPG, PNG, PDF, DOC, DOCX. Maximum file size: 5MB each. Maximum 5 files.
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="attachments" class="form-label">Upload Files</label>
+                                <input type="file" class="form-control" id="attachments" name="attachments" 
+                                       accept=".jpg,.jpeg,.png,.pdf,.doc,.docx" multiple>
+                                <div class="form-text">You can select multiple files</div>
+                            </div>
+                            
+                            <div id="filePreview" class="file-preview d-none">
+                                <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                                <p class="text-muted mb-0">Selected files will appear here</p>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="d-flex justify-content-between align-items-center mt-5 pt-4 border-top">
+                            <a href="/interactions" class="btn btn-lg btn-secondary">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-lg btn-primary">
+                                <i class="fas fa-save me-2"></i>Save Interaction
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+        <!-- Create Interaction Content End -->
+
+        <!--Footer Start-->
+        <footer class="site-footer">
+            <div class="site-footer-bg" style="background-image: url(/assets/images/backgrounds/site-footer-bg.jpg)"></div>
+            <div class="site-footer-bg-overly"></div>
+            <div class="container">
+                <div class="site-footer__top">
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-2">
+                            <div class="site-footer__top-logo">
+                                <a href="/"><img src="/assets/images/resources/footer-logo-1.jpg" alt=""></a>
+                            </div>
+                        </div>
+                        <div class="col-xl-8 col-lg-10">
+                            <div class="site-footer__top-right">
+                                <div class="site-footer__call-and-social">
+                                    <div class="site-footer__call">
+                                        <p>Care System <a href="tel:+1234567890">Emergency: 123-456-7890</a></p>
+                                    </div>
+                                    <div class="site-footer__social">
+                                        <a href="#"><i class="fab fa-twitter"></i></a>
+                                        <a href="#"><i class="fab fa-facebook"></i></a>
+                                        <a href="#"><i class="fab fa-pinterest-p"></i></a>
+                                        <a href="#"><i class="fab fa-instagram"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="site-footer__bottom">
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="100ms">
+                            <div class="footer-widget__column footer-widget__contact">
+                                <h3 class="footer-widget__title">Contact</h3>
+                                <p class="footer-widget__contact-text">Care System Headquarters<br>123 Health Street, NY, USA</p>
+                                <h5 class="footer-widget__contact-phone-and-email">
+                                    <a href="mailto:support@caresystem.com" class="footer-widget__contact-email">support@caresystem.com</a><br>
+                                    <a href="tel:+1234567890" class="footer-widget__contact-phone">+1 234 567 890</a>
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="200ms">
+                            <div class="footer-widget__column footer-widget__links clearfix">
+                                <h3 class="footer-widget__title">Quick Links</h3>
+                                <ul class="footer-widget__links-list list-unstyled">
+                                    <li><a href="/dashboard">Dashboard</a></li>
+                                    <li><a href="/clients">Clients</a></li>
+                                    <li><a href="/interactions">Interactions</a></li>
+                                    <li><a href="/reports">Reports</a></li>
+                                    <li><a href="/profile">Profile</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="300ms">
+                            <div class="footer-widget__column footer-widget__newsletter">
+                                <h3 class="footer-widget__title">System Status</h3>
+                                <div class="system-status">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>All Systems</span>
+                                        <span class="text-success">Operational</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Database</span>
+                                        <span class="text-success">Online</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Interaction Logging</span>
+                                        <span class="text-success">Active</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Last Updated</span>
+                                        <span>Just now</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="site-footer__copy-right">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="site-footer__copy-right-inner">
+                                <p class="site-footer__copy-right-text">© <%= new Date().getFullYear() %> Care System. All rights reserved.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!--Footer End-->
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav__wrapper">
+        <div class="mobile-nav__overlay mobile-nav__toggler"></div>
+        <div class="mobile-nav__content">
+            <span class="mobile-nav__close mobile-nav__toggler"><i class="fa fa-times"></i></span>
+            <div class="logo-box">
+                <a href="/" aria-label="logo image"><img src="/assets/images/resources/logo-3.png" width="155" alt="" /></a>
+            </div>
+            <div class="mobile-nav__container"></div>
+            <ul class="mobile-nav__contact list-unstyled">
+                <li>
+                    <i class="fa fa-envelope"></i>
+                    <a href="mailto:support@caresystem.com">support@caresystem.com</a>
+                </li>
+                <li>
+                    <i class="fa fa-phone-alt"></i>
+                    <a href="tel:+1234567890">+1 234 567 890</a>
+                </li>
+            </ul>
+            <div class="mobile-nav__top">
+                <div class="mobile-nav__social">
+                    <a href="#" class="fab fa-twitter"></a>
+                    <a href="#" class="fab fa-facebook-square"></a>
+                    <a href="#" class="fab fa-pinterest-p"></a>
+                    <a href="#" class="fab fa-instagram"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Popup -->
+    <div class="search-popup">
+        <div class="search-popup__overlay search-toggler"></div>
+        <div class="search-popup__content">
+            <form action="#">
+                <label for="search" class="sr-only">search here</label>
+                <input type="text" id="search" placeholder="Search Here..." />
+                <button type="submit" aria-label="search submit" class="thm-btn">
+                    <i class="icon-magnifying-glass"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <a href="#" data-target="html" class="scroll-to-target scroll-to-top"><i class="fa fa-angle-up"></i></a>
+
+    <!-- JavaScript -->
+    <script src="/assets/vendors/jquery/jquery-3.6.0.min.js"></script>
+    <script src="/assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/vendors/jarallax/jarallax.min.js"></script>
+    <script src="/assets/vendors/jquery-ajaxchimp/jquery.ajaxchimp.min.js"></script>
+    <script src="/assets/vendors/jquery-appear/jquery.appear.min.js"></script>
+    <script src="/assets/vendors/jquery-circle-progress/jquery.circle-progress.min.js"></script>
+    <script src="/assets/vendors/jquery-magnific-popup/jquery.magnific-popup.min.js"></script>
+    <script src="/assets/vendors/jquery-validate/jquery.validate.min.js"></script>
+    <script src="/assets/vendors/nouislider/nouislider.min.js"></script>
+    <script src="/assets/vendors/odometer/odometer.min.js"></script>
+    <script src="/assets/vendors/swiper/swiper.min.js"></script>
+    <script src="/assets/vendors/tiny-slider/tiny-slider.min.js"></script>
+    <script src="/assets/vendors/wnumb/wNumb.min.js"></script>
+    <script src="/assets/vendors/wow/wow.js"></script>
+    <script src="/assets/vendors/isotope/isotope.js"></script>
+    <script src="/assets/vendors/countdown/countdown.min.js"></script>
+    <script src="/assets/vendors/owl-carousel/owl.carousel.min.js"></script>
+    <script src="/assets/vendors/twentytwenty/twentytwenty.js"></script>
+    <script src="/assets/vendors/twentytwenty/jquery.event.move.js"></script>
+    <script src="/assets/vendors/bxslider/jquery.bxslider.min.js"></script>
+    <script src="/assets/vendors/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="/assets/vendors/vegas/vegas.min.js"></script>
+    <script src="/assets/vendors/jquery-ui/jquery-ui.js"></script>
+    <script src="/assets/vendors/timepicker/timePicker.js"></script>
+    
+    <!-- template js -->
+    <script src="/assets/js/sominx.js"></script>
+    
+    <!-- Custom Create Interaction Script -->
+    <script>
+        $(document).ready(function() {
+            // Initialize WOW.js
+            if ($('.wow').length) {
+                new WOW().init();
+            }
+            
+            // Set default date/time to now for start time
+            const now = new Date();
+            const timezoneOffset = now.getTimezoneOffset() * 60000;
+            const localISOTime = new Date(now - timezoneOffset).toISOString().slice(0, 16);
+            $('#startTime').val(localISOTime);
+            
+            // Set end time to 1 hour from now
+            const endTime = new Date(now.getTime() + 60 * 60 * 1000);
+            const endISOTime = new Date(endTime - timezoneOffset).toISOString().slice(0, 16);
+            $('#endTime').val(endISOTime);
+            
+            // Type selection
+            $('#typeSelection .type-option').click(function() {
+                const type = $(this).data('type');
+                $('#typeSelection .type-option').removeClass('active');
+                $(this).addClass('active');
+                $(this).find('input[type="radio"]').prop('checked', true).trigger('change');
+                $('#typeError').hide();
+            });
+            
+            // Task management
+            let taskCounter = 0;
+            const tasks = [];
+            
+            $('#addTaskBtn').click(function() {
+                taskCounter++;
+                const taskId = 'task_' + taskCounter;
+                const taskHtml = `
+                    <div class="task-item" id="${taskId}">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <input type="text" class="form-control task-input" placeholder="Enter task description..." data-id="${taskId}">
+                            </div>
+                            <div class="col-auto">
+                                <button type="button" class="remove-btn remove-task" data-id="${taskId}">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                $('#tasksContainer').append(taskHtml);
+                updateTasksArray();
+            });
+            
+            // Remove task
+            $(document).on('click', '.remove-task', function() {
+                const taskId = $(this).data('id');
+                $('#' + taskId).remove();
+                updateTasksArray();
+            });
+            
+            // Update task input on change
+            $(document).on('input', '.task-input', function() {
+                updateTasksArray();
+            });
+            
+            function updateTasksArray() {
+                tasks.length = 0; // Clear array
+                $('.task-input').each(function() {
+                    const value = $(this).val().trim();
+                    if (value) {
+                        tasks.push(value);
+                    }
+                });
+                $('#tasksInput').val(JSON.stringify(tasks));
+            }
+            
+            // Medication management
+            let medCounter = 0;
+            const medications = [];
+            
+            $('#addMedicationBtn').click(function() {
+                medCounter++;
+                const medId = 'medication_' + medCounter;
+                const medHtml = `
+                    <div class="medication-item" id="${medId}">
+                        <div class="row">
+                            <div class="col-md-4 mb-2">
+                                <input type="text" class="form-control medication-name" placeholder="Medication name" data-id="${medId}">
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <input type="text" class="form-control medication-dosage" placeholder="Dosage (e.g., 10mg)" data-id="${medId}">
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <input type="text" class="form-control medication-frequency" placeholder="Frequency (e.g., Daily)" data-id="${medId}">
+                            </div>
+                            <div class="col-md-2 mb-2 text-end">
+                                <button type="button" class="remove-btn remove-medication" data-id="${medId}">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                $('#medicationsContainer').append(medHtml);
+                updateMedicationsArray();
+            });
+            
+            // Remove medication
+            $(document).on('click', '.remove-medication', function() {
+                const medId = $(this).data('id');
+                $('#' + medId).remove();
+                updateMedicationsArray();
+            });
+            
+            // Update medication input on change
+            $(document).on('input', '.medication-name, .medication-dosage, .medication-frequency', function() {
+                updateMedicationsArray();
+            });
+            
+            function updateMedicationsArray() {
+                medications.length = 0; // Clear array
+                
+                // Group medication fields
+                const medItems = {};
+                $('.medication-item').each(function() {
+                    const medId = $(this).attr('id');
+                    medItems[medId] = {
+                        name: $(this).find('.medication-name').val().trim(),
+                        dosage: $(this).find('.medication-dosage').val().trim(),
+                        frequency: $(this).find('.medication-frequency').val().trim()
+                    };
+                });
+                
+                // Add non-empty medications to array
+                for (const medId in medItems) {
+                    const med = medItems[medId];
+                    if (med.name || med.dosage || med.frequency) {
+                        medications.push(med);
+                    }
+                }
+                
+                $('#medicationsInput').val(JSON.stringify(medications));
+            }
+            
+            // File preview
+            $('#attachments').on('change', function() {
+                const files = $(this)[0].files;
+                const filePreview = $('#filePreview');
+                
+                if (files.length > 0) {
+                    filePreview.removeClass('d-none');
+                    filePreview.empty();
+                    
+                    // Check file count
+                    if (files.length > 5) {
+                        filePreview.html(`
+                            <div class="alert alert-danger">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Maximum 5 files allowed. Please select fewer files.
+                            </div>
+                        `);
+                        $(this).val('');
+                        return;
+                    }
+                    
+                    // Check file sizes and types
+                    let validFiles = true;
+                    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                    const maxSize = 5 * 1024 * 1024; // 5MB
+                    
+                    for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+                        
+                        // Check file type
+                        if (!allowedTypes.includes(file.type)) {
+                            validFiles = false;
+                            filePreview.html(`
+                                <div class="alert alert-danger">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    File "${file.name}" has an invalid type. Only JPG, PNG, PDF, DOC, and DOCX files are allowed.
+                                </div>
+                            `);
+                            $(this).val('');
+                            break;
+                        }
+                        
+                        // Check file size
+                        if (file.size > maxSize) {
+                            validFiles = false;
+                            filePreview.html(`
+                                <div class="alert alert-danger">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    File "${file.name}" is too large. Maximum file size is 5MB.
+                                </div>
+                            `);
+                            $(this).val('');
+                            break;
+                        }
+                    }
+                    
+                    if (validFiles) {
+                        // Show file list
+                        filePreview.html('<h6 class="mb-3">Selected Files:</h6>');
+                        for (let i = 0; i < files.length; i++) {
+                            const file = files[i];
+                            const fileSize = (file.size / 1024 / 1024).toFixed(2); // MB
+                            const fileItem = `
+                                <div class="file-item">
+                                    <i class="fas fa-file text-primary"></i>
+                                    <span class="file-name">${file.name}</span>
+                                    <small class="text-muted">${fileSize} MB</small>
+                                </div>
+                            `;
+                            filePreview.append(fileItem);
+                        }
+                    }
+                } else {
+                    filePreview.addClass('d-none');
+                }
+            });
+            
+            // Form validation
+            $('form.needs-validation').on('submit', function(event) {
+                // Check if type is selected
+                const typeSelected = $('input[name="type"]:checked').length > 0;
+                if (!typeSelected) {
+                    $('#typeError').show();
+                    event.preventDefault();
+                    event.stopPropagation();
+                } else {
+                    $('#typeError').hide();
+                }
+                
+                // Check if tasks and medications are properly serialized
+                updateTasksArray();
+                updateMedicationsArray();
+                
+                // Check file count
+                const files = $('#attachments')[0].files;
+                if (files.length > 5) {
+                    alert('Maximum 5 files allowed. Please select fewer files.');
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                
+                if (!this.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                
+                $(this).addClass('was-validated');
+            });
+            
+            // Show loading on submit
+            $('form').on('submit', function() {
+                const submitBtn = $(this).find('button[type="submit"]');
+                const originalText = submitBtn.html();
+                submitBtn.html('<i class="fas fa-spinner fa-spin me-2"></i>Saving...').prop('disabled', true);
+                
+                // Re-enable button after 10 seconds in case of error
+                setTimeout(() => {
+                    submitBtn.html(originalText).prop('disabled', false);
+                }, 10000);
+            });
+            
+            // Add one empty task and medication by default
+            $('#addTaskBtn').click();
+            $('#addMedicationBtn').click();
+        });
+    </script>
+</body>
+</html>

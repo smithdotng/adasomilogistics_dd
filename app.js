@@ -141,7 +141,7 @@ app.use(session({
         ttl: 24 * 60 * 60 // 1 day
     }),
     cookie: {
-        httpOnly: true,
+        httpOnly: false,
         secure: process.env.NODE_ENV === 'production',
         maxAge: 24 * 60 * 60 * 1000 // 1 day
     }

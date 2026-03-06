@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= title %> || Care Management System</title>
+    <title><%= title %> || CareShed Provider Dashboard</title>
     
     <!-- favicons Icons -->
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-touch-icon.png" />
@@ -252,6 +252,31 @@
             display: block;
         }
 
+        /* Mobile Logout Button */
+        .mobile-nav__logout {
+            margin-top: 20px;
+            padding: 15px 20px;
+            background: rgba(220, 53, 69, 0.2);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .mobile-nav__logout a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            display: block;
+        }
+
+        .mobile-nav__logout a i {
+            margin-right: 10px;
+        }
+
+        .mobile-nav__logout:hover {
+            background: rgba(220, 53, 69, 0.3);
+        }
+
         .mobile-nav__contact {
             list-style: none;
             padding: 20px 0;
@@ -463,51 +488,51 @@
                 <div class="main-menu-wrapper__left">
                     <div class="main-menu-wrapper__logo">
                         <a href="/provider/dashboard">
-                            <img src="/assets/images/resources/care-logo-white.png" alt="Care System">
+                            <img src="/assets/images/resources/careshed-logo-white.png" alt="CareShed">
                         </a>
                     </div>
                     <div class="main-menu-wrapper__main-menu">
                         <a href="#" class="mobile-nav__toggler" id="mobileNavToggler">
                             <i class="fa fa-bars"></i>
                         </a>
-                        <!-- In the main-menu__list section, update the Clients dropdown and add Finance dropdown -->
-<ul class="main-menu__list">
-    <li class="current"><a href="/provider/dashboard">Dashboard</a></li>
-    <li class="dropdown">
-        <a href="#">Operators</a>
-        <ul>
-            <li><a href="/provider/operators">All Operators</a></li>
-            <li><a href="/provider/operators/create">Add Operator</a></li>
-            <li><a href="/provider/schedule">Schedule</a></li>
-        </ul>
-    </li>
-    <li class="dropdown">
-        <a href="#">Clients</a>
-        <ul>
-            <li><a href="/provider/clients">All Clients</a></li>
-            <li><a href="/provider/clients/create">Add Client</a></li>
-            <li><a href="/provider/care-plans">Care Plans</a></li> <!-- Added Care Plans -->
-        </ul>
-    </li>
-    <li><a href="/provider/schedule">Schedule</a></li>
-    <li class="dropdown">
-        <a href="#">Finance</a> <!-- New Finance dropdown -->
-        <ul>
-            <li><a href="/provider/payments/dashboard">Payroll Dashboard</a></li>
-            <li><a href="/provider/payments/timesheets">Timesheets</a></li>
-        </ul>
-    </li>
-    <li><a href="/provider/interactions">Interactions</a></li>
-    <li><a href="/provider/reports">Reports</a></li>
-    <li class="dropdown">
-        <a href="#">Settings</a>
-        <ul>
-            <li><a href="/provider/settings">Profile</a></li>
-            <li><a href="/provider/settings/billing">Billing</a></li>
-            <li><a href="/provider/settings/team">Team</a></li>
-        </ul>
-    </li>
-</ul>
+                        <!-- Desktop Menu with updated terminology -->
+                        <ul class="main-menu__list">
+                            <li class="current"><a href="/provider/dashboard">Dashboard</a></li>
+                            <li class="dropdown">
+                                <a href="#">Support Workers</a>
+                                <ul>
+                                    <li><a href="/provider/operators">All Support Workers</a></li>
+                                    <li><a href="/provider/operators/create">Add Support Worker</a></li>
+                                    <li><a href="/provider/schedule">Schedule</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#">Support Users</a>
+                                <ul>
+                                    <li><a href="/provider/clients">All Support Users</a></li>
+                                    <li><a href="/provider/clients/create">Add Support User</a></li>
+                                    <li><a href="/provider/care-plans">Care Plans</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="/provider/schedule">Schedule</a></li>
+                            <li class="dropdown">
+                                <a href="#">Finance</a>
+                                <ul>
+                                    <li><a href="/provider/payments/dashboard">Payroll Dashboard</a></li>
+                                    <li><a href="/provider/payments/timesheets">Timesheets</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="/provider/interactions">Interactions</a></li>
+                            <li><a href="/provider/reports">Reports</a></li>
+                            <li class="dropdown">
+                                <a href="#">Settings</a>
+                                <ul>
+                                    <li><a href="/provider/settings">Profile</a></li>
+                                    <li><a href="/provider/settings/billing">Billing</a></li>
+                                    <li><a href="/provider/settings/team">Team</a></li>
+                                </ul>
+                            </li>
+                        </ul>
                     </div>
                 </div>
                 <div class="main-menu-wrapper__right">
@@ -535,38 +560,44 @@
     <!-- Mobile Menu Overlay -->
     <div class="mobile-nav__overlay" id="mobileNavOverlay"></div>
 
-    <!-- Mobile Menu -->
+    <!-- Mobile Menu with updated terminology and logout button -->
     <div class="mobile-nav__wrapper" id="mobileNav">
         <div class="mobile-nav__content">
             <span class="mobile-nav__close" id="mobileNavClose"><i class="fa fa-times"></i></span>
             <div class="logo-box">
-                <img src="/assets/images/resources/care-logo-white.png" alt="Care System">
+                <img src="/assets/images/resources/careshed-logo-white.png" alt="CareShed">
             </div>
-            <!-- In the mobile-nav__container section -->
-<div class="mobile-nav__container">
-    <ul>
-        <li><a href="/provider/dashboard">Dashboard</a></li>
-        <li><a href="/provider/operators">All Operators</a></li>
-        <li><a href="/provider/operators/create">Add Operator</a></li>
-        <li><a href="/provider/clients">All Clients</a></li>
-        <li><a href="/provider/clients/create">Add Client</a></li>
-        <li><a href="/provider/care-plans">Care Plans</a></li> <!-- Added -->
-        <li><a href="/provider/schedule">Schedule</a></li>
-        <li><a href="/provider/payments/dashboard">Payroll</a></li> <!-- Added -->
-        <li><a href="/provider/payments/timesheets">Timesheets</a></li> <!-- Added -->
-        <li><a href="/provider/reports">Reports</a></li>
-    </ul>
-</div>
+            <!-- Mobile Navigation with updated terminology -->
+            <div class="mobile-nav__container">
+                <ul>
+                    <li><a href="/provider/dashboard">Dashboard</a></li>
+                    <li><a href="/provider/operators">All Support Workers</a></li>
+                    <li><a href="/provider/operators/create">Add Support Worker</a></li>
+                    <li><a href="/provider/clients">All Support Users</a></li>
+                    <li><a href="/provider/clients/create">Add Support User</a></li>
+                    <li><a href="/provider/care-plans">Care Plans</a></li>
+                    <li><a href="/provider/schedule">Schedule</a></li>
+                    <li><a href="/provider/payments/dashboard">Payroll</a></li>
+                    <li><a href="/provider/payments/timesheets">Timesheets</a></li>
+                    <li><a href="/provider/reports">Reports</a></li>
+                </ul>
+            </div>
             <ul class="mobile-nav__contact">
                 <li>
                     <i class="fa fa-envelope"></i>
-                    <a href="mailto:support@caresystem.co.uk">support@caresystem.co.uk</a>
+                    <a href="mailto:support@careshed.co.uk">support@careshed.co.uk</a>
                 </li>
                 <li>
                     <i class="fa fa-phone-alt"></i>
                     <a href="tel:02012345678">Emergency Support</a>
                 </li>
             </ul>
+            <!-- Mobile Logout Button -->
+            <div class="mobile-nav__logout">
+                <a href="/logout" onclick="return confirm('Are you sure you want to logout?')">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
             <div class="mobile-nav__social">
                 <a href="#"><i class="fab fa-facebook"></i></a>
                 <a href="#"><i class="fab fa-twitter"></i></a>
@@ -604,7 +635,7 @@
     <!-- Dashboard Content -->
     <section class="dashboard-content">
         <div class="container">
-            <!-- Stats Cards -->
+            <!-- Stats Cards with updated terminology -->
             <div class="row">
                 <div class="col-xl-3 col-lg-6">
                     <div class="stats-card primary">
@@ -612,7 +643,7 @@
                             <i class="fas fa-users"></i>
                         </div>
                         <h3 class="stats-number"><%= stats.totalClients %></h3>
-                        <p>Total Clients</p>
+                        <p>Total Support Users</p>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-6">
@@ -621,7 +652,7 @@
                             <i class="fas fa-user-md"></i>
                         </div>
                         <h3 class="stats-number"><%= stats.totalOperators %></h3>
-                        <p>Active Operators</p>
+                        <p>Active Support Workers</p>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-6">
@@ -644,7 +675,7 @@
                 </div>
             </div>
 
-            <!-- Quick Actions -->
+            <!-- Quick Actions with updated terminology -->
             <div class="row mt-4">
                 <div class="col-12">
                     <h4>Quick Actions</h4>
@@ -654,7 +685,7 @@
                         <div class="icon">
                             <i class="fas fa-user-plus"></i>
                         </div>
-                        <h5>Add Operator</h5>
+                        <h5>Add Support Worker</h5>
                     </a>
                 </div>
                 <div class="col-xl-2 col-lg-4 col-md-6">
@@ -662,7 +693,7 @@
                         <div class="icon">
                             <i class="fas fa-user-plus"></i>
                         </div>
-                        <h5>Add Client</h5>
+                        <h5>Add Support User</h5>
                     </a>
                 </div>
                 <div class="col-xl-2 col-lg-4 col-md-6">
@@ -673,16 +704,15 @@
                         <h5>Create Schedule</h5>
                     </a>
                 </div>
-                <!-- Add this to the quick actions section -->
-<div class="col-xl-2 col-lg-4 col-md-6">
-    <a href="/provider/payments/dashboard" class="quick-action-card">
-        <div class="icon">
-            <i class="fas fa-pound-sign"></i>
-        </div>
-        <h5>Payroll</h5>
-        <p>Manage payments & timesheets</p>
-    </a>
-</div>
+                <div class="col-xl-2 col-lg-4 col-md-6">
+                    <a href="/provider/payments/dashboard" class="quick-action-card">
+                        <div class="icon">
+                            <i class="fas fa-pound-sign"></i>
+                        </div>
+                        <h5>Payroll</h5>
+                        <p>Manage payments & timesheets</p>
+                    </a>
+                </div>
             </div>
 
             <!-- Recent Interactions -->
@@ -713,7 +743,7 @@
                 <div class="col-lg-4">
                     <div class="content-card">
                         <div class="card-header">
-                            <h4>Top Operators</h4>
+                            <h4>Top Support Workers</h4>
                         </div>
                         <% if (operatorStats && operatorStats.length > 0) { %>
                             <% operatorStats.forEach(operator => { %>
@@ -739,7 +769,7 @@
     <!-- Footer -->
     <footer class="site-footer">
         <div class="container text-center">
-            <p>© <%= new Date().getFullYear() %> Care System. All rights reserved.</p>
+            <p>© <%= new Date().getFullYear() %> CareShed. All rights reserved.</p>
         </div>
     </footer>
 

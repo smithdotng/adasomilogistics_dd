@@ -11,11 +11,9 @@ const methodOverride = require('method-override');
 const multer = require('multer');
 const fs = require('fs');
 const cron = require('node-cron');
+const moment = require('moment'); // ADD THIS LINE - Import moment
 const { sendDailySummary } = require('./services/emailService');
 const websiteRoutes = require('./routes/website');
-
-
-
 
 // Import routes
 const authRoutes = require('./routes/auth');
@@ -27,77 +25,6 @@ const apiRoutes = require('./routes/api');
 const paymentRoutes = require('./routes/paymentRoutes');
 
 const app = express();
-
-// Database connection
-mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(() => {
-    console.log('MongoDB Connected');
-    
-    // Schedule daily summary emails at 8 PM every day
-    cron.schedule('0 20 * * *', async () => {
-        console.log('Sending daily summaries...');
-        try {
-            const User = require('./models/User');
-            const providers = await User.find({ 
-                role: 'service_provider',
-                'providerInfo.subscription.status': { $in: ['active', 'trial'] }
-            });
-            
-            for (const provider of providers) {
-                // Get provider's daily stats
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                
-                const completedVisits = await require('./models/Interaction').countDocuments({
-                    providerId: provider._id,
-                    status: 'completed',
-                    actualEnd: { $gte: today }
-                });
-                
-                const activeOperators = await require('./models/User').countDocuments({
-                    role: 'operator',
-                    providerId: provider._id,
-                    isActive: true
-                });
-                
-                const clientsSeen = await require('./models/Interaction').distinct('clientId', {
-                    providerId: provider._id,
-                    actualEnd: { $gte: today }
-                });
-                
-                const recentInteractions = await require('./models/Interaction').find({
-                    providerId: provider._id,
-                    actualEnd: { $gte: today }
-                })
-                .populate('clientId', 'firstName lastName')
-                .populate('operatorId', 'firstName lastName')
-                .limit(5);
-                
-                await sendDailySummary(provider.email, {
-                    providerName: provider.providerInfo.companyName,
-                    date: moment().format('MMMM D, YYYY'),
-                    completedVisits,
-                    activeOperators,
-                    clientsSeen: clientsSeen.length,
-                    recentInteractions: recentInteractions.map(i => ({
-                        time: moment(i.actualEnd).format('h:mm A'),
-                        client: `${i.clientId.firstName} ${i.clientId.lastName}`,
-                        operator: `${i.operatorId.firstName} ${i.operatorId.lastName}`,
-                        type: i.type
-                    })),
-                    dashboardUrl: `${process.env.APP_URL}/provider/dashboard`
-                });
-            }
-        } catch (error) {
-            console.error('Error sending daily summaries:', error);
-        }
-    });
-}).catch(err => {
-    console.error('MongoDB connection error:', err);
-    process.exit(1);
-});
 
 // Create upload directories if they don't exist
 const createUploadDirectories = () => {
@@ -119,21 +46,78 @@ const createUploadDirectories = () => {
     });
 };
 
-// Call this function after database connection
+// Database connection - SINGLE CONNECTION (removed duplicate)
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => {
     console.log('MongoDB Connected');
     createUploadDirectories(); // Create upload directories
-    // ... rest of your connection code
+    
+    // Schedule daily summary emails at 8 PM every day
+    cron.schedule('0 20 * * *', async () => {
+        console.log('Sending daily summaries...');
+        try {
+            const User = require('./models/User');
+            const Interaction = require('./models/Interaction');
+            const providers = await User.find({ 
+                role: 'service_provider',
+                'providerInfo.subscription.status': { $in: ['active', 'trial'] }
+            });
+            
+            for (const provider of providers) {
+                // Get provider's daily stats
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                const completedVisits = await Interaction.countDocuments({
+                    providerId: provider._id,
+                    status: 'completed',
+                    actualEnd: { $gte: today }
+                });
+                
+                const activeOperators = await User.countDocuments({
+                    role: 'operator',
+                    providerId: provider._id,
+                    isActive: true
+                });
+                
+                const clientsSeen = await Interaction.distinct('clientId', {
+                    providerId: provider._id,
+                    actualEnd: { $gte: today }
+                });
+                
+                const recentInteractions = await Interaction.find({
+                    providerId: provider._id,
+                    actualEnd: { $gte: today }
+                })
+                .populate('clientId', 'firstName lastName')
+                .populate('operatorId', 'firstName lastName')
+                .limit(5);
+                
+                await sendDailySummary(provider.email, {
+                    providerName: provider.providerInfo.companyName,
+                    date: moment().format('MMMM D, YYYY'),
+                    completedVisits,
+                    activeOperators,
+                    clientsSeen: clientsSeen.length,
+                    recentInteractions: recentInteractions.map(i => ({
+                        time: moment(i.actualEnd).format('h:mm A'),
+                        client: i.clientId ? `${i.clientId.firstName || ''} ${i.clientId.lastName || ''}` : 'Unknown',
+                        operator: i.operatorId ? `${i.operatorId.firstName || ''} ${i.operatorId.lastName || ''}` : 'Unknown',
+                        type: i.type || 'Unknown'
+                    })),
+                    dashboardUrl: `${process.env.APP_URL || 'http://localhost:3000'}/provider/dashboard`
+                });
+            }
+        } catch (error) {
+            console.error('Error sending daily summaries:', error);
+        }
+    });
 }).catch(err => {
     console.error('MongoDB connection error:', err);
     process.exit(1);
 });
-
-
-
 
 // Middleware
 app.use(helmet({
@@ -146,7 +130,6 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/assets', express.static(path.join(__dirname, 'public/assets')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
 
 // Session configuration
 app.use(session({
@@ -186,46 +169,19 @@ app.use((req, res, next) => {
     res.locals.info = req.flash('info');
     res.locals.warning = req.flash('warning');
     res.locals.currentUrl = req.originalUrl;
-    res.locals.moment = require('moment'); 
+    res.locals.moment = moment; // Use the imported moment
     next();
 });
 
-// Root route - show landing page or redirect based on role
-/* app.get('/', (req, res) => {
-    // If user is logged in, redirect to their dashboard
-    if (req.session.user) {
-        switch(req.session.user.role) {
-            case 'service_provider':
-                return res.redirect('/provider/dashboard');
-            case 'operator':
-                return res.redirect('/operator/dashboard');
-            case 'client':
-                return res.redirect('/client/dashboard');
-            case 'guardian':
-                return res.redirect('/guardian/dashboard');
-            case 'super_admin':
-                return res.redirect('/admin/dashboard');
-            default:
-                return res.redirect('/login');
-        }
-    }
-    
-    // Otherwise show the landing page
-    res.render('index', { 
-        title: 'Care Management System - Complete Care Management Platform for UK Providers'
-    });
-}); */
-
-// Routes
-app.use('/', authRoutes);
+// Routes - ORDER MATTERS! Place more specific routes first
+app.use('/', authRoutes); // Login, register, etc.
+app.use('/', websiteRoutes); // Landing pages
 app.use('/provider', providerRoutes);
 app.use('/operator', operatorRoutes);
 app.use('/client', clientRoutes);
 app.use('/guardian', guardianRoutes);
 app.use('/api', apiRoutes);
 app.use('/provider/payments', paymentRoutes);
-app.use('/', websiteRoutes); 
-
 
 // 404 handler
 app.use((req, res) => {
@@ -272,8 +228,11 @@ app.use((err, req, res, next) => {
     });
 });
 
+// Add this after your routes but before 404 handler
+
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
     console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
     console.log(`Visit http://localhost:${PORT} to access the application`);
@@ -290,3 +249,16 @@ process.on('SIGTERM', () => {
         });
     });
 });
+
+process.on('SIGINT', () => {
+    console.log('SIGINT signal received: closing HTTP server');
+    server.close(() => {
+        console.log('HTTP server closed');
+        mongoose.connection.close(false, () => {
+            console.log('MongoDB connection closed');
+            process.exit(0);
+        });
+    });
+});
+
+module.exports = app;

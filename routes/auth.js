@@ -17,32 +17,69 @@ router.get('/login', (req, res) => {
 });
 
 // Login handler
+// Login handler - UPDATED WITH DEBUGGING
 router.post('/login', async (req, res) => {
+    console.log('=========================================');
+    console.log('LOGIN ATTEMPT at:', new Date().toISOString());
+    console.log('Request body:', { ...req.body, password: '[REDACTED]' });
+    console.log('IP:', req.ip);
+    console.log('=========================================');
+    
     try {
         const { email, password, remember } = req.body;
         
-        // Find user
-        const user = await User.findOne({ email: email.toLowerCase() });
+        if (!email || !password) {
+            console.log('Missing email or password');
+            req.flash('error', 'Please provide both email and password');
+            return res.redirect('/login');
+        }
+        
+        console.log('Looking for user with email:', email.toLowerCase());
+        
+        // Find user - explicitly select password field
+        const user = await User.findOne({ email: email.toLowerCase() }).select('+password');
         
         if (!user) {
+            console.log('❌ User not found for email:', email.toLowerCase());
             req.flash('error', 'Invalid email or password');
             return res.redirect('/login');
         }
         
+        console.log('✅ User found:', {
+            id: user._id,
+            email: user.email,
+            role: user.role,
+            isActive: user.isActive,
+            hasPassword: !!user.password,
+            passwordLength: user.password ? user.password.length : 0
+        });
+        
         // Check if account is locked
-        if (user.isLocked()) {
+        if (user.isLocked && user.isLocked()) {
+            console.log('❌ Account is locked until:', user.lockUntil);
             req.flash('error', 'Account is locked due to too many failed attempts. Please try again later.');
             return res.redirect('/login');
         }
         
         // Verify password
+        console.log('Comparing password...');
         const isValid = await user.comparePassword(password);
+        console.log('Password valid:', isValid);
         
         if (!isValid) {
-            await user.incLoginAttempts();
+            console.log('❌ Invalid password for user:', user.email);
+            
+            // Increment login attempts if the method exists
+            if (user.incLoginAttempts) {
+                await user.incLoginAttempts();
+                console.log('Login attempts incremented');
+            }
+            
             req.flash('error', 'Invalid email or password');
             return res.redirect('/login');
         }
+        
+        console.log('✅ Password correct! Logging in user...');
         
         // Reset login attempts on successful login
         user.loginAttempts = 0;
@@ -50,6 +87,7 @@ router.post('/login', async (req, res) => {
         user.lastLogin = new Date();
         user.lastLoginIp = req.ip;
         await user.save();
+        console.log('User login stats updated');
         
         // Set session
         req.session.user = {
@@ -62,36 +100,42 @@ router.post('/login', async (req, res) => {
             providerInfo: user.providerInfo
         };
         
+        console.log('Session set:', req.session.user);
+        
         // Set session expiry if remember me is checked
         if (remember) {
             req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000; // 30 days
+            console.log('Remember me set for 30 days');
         }
         
         req.flash('success', `Welcome back, ${user.firstName}!`);
+        console.log('Login successful, redirecting based on role:', user.role);
         
         // Redirect based on role
         switch(user.role) {
             case 'service_provider':
-                res.redirect('/provider/dashboard');
-                break;
+                console.log('Redirecting to provider dashboard');
+                return res.redirect('/provider/dashboard');
             case 'operator':
-                res.redirect('/operator/dashboard');
-                break;
+                console.log('Redirecting to operator dashboard');
+                return res.redirect('/operator/dashboard');
             case 'client':
-                res.redirect('/client/dashboard');
-                break;
+                console.log('Redirecting to client dashboard');
+                return res.redirect('/client/dashboard');
             case 'guardian':
-                res.redirect('/guardian/dashboard');
-                break;
+                console.log('Redirecting to guardian dashboard');
+                return res.redirect('/guardian/dashboard');
             case 'super_admin':
-                res.redirect('/admin/dashboard');
-                break;
+                console.log('Redirecting to admin dashboard');
+                return res.redirect('/admin/dashboard');
             default:
-                res.redirect('/');
+                console.log('Redirecting to home');
+                return res.redirect('/');
         }
     } catch (error) {
-        console.error('Login error:', error);
-        req.flash('error', 'An error occurred during login');
+        console.error('❌ Login error:', error);
+        console.error('Error stack:', error.stack);
+        req.flash('error', 'An error occurred during login. Please try again.');
         res.redirect('/login');
     }
 });

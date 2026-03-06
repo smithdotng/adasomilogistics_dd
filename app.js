@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
-const MongoStore = require('connect-mongo');
+const { MongoStore } = require('connect-mongo');
 const flash = require('express-flash');
 const helmet = require('helmet');
 const compression = require('compression');
@@ -11,7 +11,7 @@ const methodOverride = require('method-override');
 const multer = require('multer');
 const fs = require('fs');
 const cron = require('node-cron');
-const moment = require('moment'); // ADD THIS LINE - Import moment
+const moment = require('moment');
 const { sendDailySummary } = require('./services/emailService');
 const websiteRoutes = require('./routes/website');
 
@@ -46,82 +46,80 @@ const createUploadDirectories = () => {
     });
 };
 
-// Database connection - SINGLE CONNECTION (removed duplicate)
-mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(() => {
-    console.log('MongoDB Connected');
-    createUploadDirectories(); // Create upload directories
-    
-    // Schedule daily summary emails at 8 PM every day
-    cron.schedule('0 20 * * *', async () => {
-        console.log('Sending daily summaries...');
-        try {
-            const User = require('./models/User');
-            const Interaction = require('./models/Interaction');
-            const providers = await User.find({ 
-                role: 'service_provider',
-                'providerInfo.subscription.status': { $in: ['active', 'trial'] }
-            });
-            
-            for (const provider of providers) {
-                // Get provider's daily stats
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                
-                const completedVisits = await Interaction.countDocuments({
-                    providerId: provider._id,
-                    status: 'completed',
-                    actualEnd: { $gte: today }
+// Database connection - FIXED: Removed deprecated options
+mongoose.connect(process.env.MONGODB_URI)
+    .then(() => {
+        console.log('MongoDB Connected');
+        createUploadDirectories();
+        
+        // Schedule daily summary emails at 8 PM every day
+        cron.schedule('0 20 * * *', async () => {
+            console.log('Sending daily summaries...');
+            try {
+                const User = require('./models/User');
+                const Interaction = require('./models/Interaction');
+                const providers = await User.find({ 
+                    role: 'service_provider',
+                    'providerInfo.subscription.status': { $in: ['active', 'trial'] }
                 });
                 
-                const activeOperators = await User.countDocuments({
-                    role: 'operator',
-                    providerId: provider._id,
-                    isActive: true
-                });
-                
-                const clientsSeen = await Interaction.distinct('clientId', {
-                    providerId: provider._id,
-                    actualEnd: { $gte: today }
-                });
-                
-                const recentInteractions = await Interaction.find({
-                    providerId: provider._id,
-                    actualEnd: { $gte: today }
-                })
-                .populate('clientId', 'firstName lastName')
-                .populate('operatorId', 'firstName lastName')
-                .limit(5);
-                
-                await sendDailySummary(provider.email, {
-                    providerName: provider.providerInfo.companyName,
-                    date: moment().format('MMMM D, YYYY'),
-                    completedVisits,
-                    activeOperators,
-                    clientsSeen: clientsSeen.length,
-                    recentInteractions: recentInteractions.map(i => ({
-                        time: moment(i.actualEnd).format('h:mm A'),
-                        client: i.clientId ? `${i.clientId.firstName || ''} ${i.clientId.lastName || ''}` : 'Unknown',
-                        operator: i.operatorId ? `${i.operatorId.firstName || ''} ${i.operatorId.lastName || ''}` : 'Unknown',
-                        type: i.type || 'Unknown'
-                    })),
-                    dashboardUrl: `${process.env.APP_URL || 'http://localhost:3000'}/provider/dashboard`
-                });
+                for (const provider of providers) {
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    
+                    const completedVisits = await Interaction.countDocuments({
+                        providerId: provider._id,
+                        status: 'completed',
+                        actualEnd: { $gte: today }
+                    });
+                    
+                    const activeOperators = await User.countDocuments({
+                        role: 'operator',
+                        providerId: provider._id,
+                        isActive: true
+                    });
+                    
+                    const clientsSeen = await Interaction.distinct('clientId', {
+                        providerId: provider._id,
+                        actualEnd: { $gte: today }
+                    });
+                    
+                    const recentInteractions = await Interaction.find({
+                        providerId: provider._id,
+                        actualEnd: { $gte: today }
+                    })
+                    .populate('clientId', 'firstName lastName')
+                    .populate('operatorId', 'firstName lastName')
+                    .limit(5);
+                    
+                    await sendDailySummary(provider.email, {
+                        providerName: provider.providerInfo.companyName,
+                        date: moment().format('MMMM D, YYYY'),
+                        completedVisits,
+                        activeOperators,
+                        clientsSeen: clientsSeen.length,
+                        recentInteractions: recentInteractions.map(i => ({
+                            time: moment(i.actualEnd).format('h:mm A'),
+                            client: i.clientId ? `${i.clientId.firstName || ''} ${i.clientId.lastName || ''}` : 'Unknown',
+                            operator: i.operatorId ? `${i.operatorId.firstName || ''} ${i.operatorId.lastName || ''}` : 'Unknown',
+                            type: i.type || 'Unknown'
+                        })),
+                        dashboardUrl: `${process.env.APP_URL || 'http://localhost:3000'}/provider/dashboard`
+                    });
+                }
+            } catch (error) {
+                console.error('Error sending daily summaries:', error);
             }
-        } catch (error) {
-            console.error('Error sending daily summaries:', error);
-        }
+        });
+    })
+    .catch(err => {
+        console.error('MongoDB connection error:', err);
+        process.exit(1);
     });
-}).catch(err => {
-    console.error('MongoDB connection error:', err);
-    process.exit(1);
-});
 
 // Middleware
 app.use(helmet({
-    contentSecurityPolicy: false, // Disable for development
+    contentSecurityPolicy: false,
 }));
 app.use(compression());
 app.use(methodOverride('_method'));
@@ -131,20 +129,25 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/assets', express.static(path.join(__dirname, 'public/assets')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Session configuration
+// Session configuration - FIXED for connect-mongo
 app.use(session({
     secret: process.env.SESSION_SECRET || 'your-secret-key-change-in-production',
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
         mongoUrl: process.env.MONGODB_URI,
-        ttl: 24 * 60 * 60 // 1 day
+        ttl: 24 * 60 * 60,
+        autoRemove: 'native',
+        touchAfter: 24 * 3600
     }),
     cookie: {
-        httpOnly: false,
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: 24 * 60 * 60 * 1000 // 1 day
-    }
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production' && process.env.USE_HTTPS === 'true',
+        sameSite: 'lax',
+        maxAge: 24 * 60 * 60 * 1000
+    },
+    name: 'careshed.sid',
+    proxy: process.env.NODE_ENV === 'production'
 }));
 
 app.use(flash());
@@ -152,7 +155,7 @@ app.use(flash());
 // File upload middleware
 const fileUpload = require('express-fileupload');
 app.use(fileUpload({
-    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+    limits: { fileSize: 5 * 1024 * 1024 },
     abortOnLimit: true,
     responseOnLimit: 'File size limit exceeded'
 }));
@@ -169,19 +172,76 @@ app.use((req, res, next) => {
     res.locals.info = req.flash('info');
     res.locals.warning = req.flash('warning');
     res.locals.currentUrl = req.originalUrl;
-    res.locals.moment = moment; // Use the imported moment
+    res.locals.moment = moment;
     next();
 });
 
-// Routes - ORDER MATTERS! Place more specific routes first
-app.use('/', authRoutes); // Login, register, etc.
-app.use('/', websiteRoutes); // Landing pages
+// Root route
+app.get('/', (req, res) => {
+    console.log('ROOT ROUTE - Session user:', req.session?.user ? 'exists' : 'null');
+    
+    if (req.session && req.session.user) {
+        console.log('User logged in, redirecting to dashboard for role:', req.session.user.role);
+        
+        req.session.save((err) => {
+            if (err) {
+                console.error('Error saving session:', err);
+            }
+            
+            switch(req.session.user.role) {
+                case 'service_provider':
+                    return res.redirect('/provider/dashboard');
+                case 'operator':
+                    return res.redirect('/operator/dashboard');
+                case 'client':
+                    return res.redirect('/client/dashboard');
+                case 'guardian':
+                    return res.redirect('/guardian/dashboard');
+                case 'super_admin':
+                    return res.redirect('/admin/dashboard');
+                default:
+                    return res.redirect('/login');
+            }
+        });
+        return;
+    }
+    
+    console.log('No user in session, showing landing page');
+    res.render('index', { 
+        title: 'CareShed - Complete Care Management Platform for UK Providers'
+    });
+});
+
+// Routes
+app.use('/', authRoutes);
+app.use('/', websiteRoutes);
 app.use('/provider', providerRoutes);
 app.use('/operator', operatorRoutes);
 app.use('/client', clientRoutes);
 app.use('/guardian', guardianRoutes);
 app.use('/api', apiRoutes);
 app.use('/provider/payments', paymentRoutes);
+
+// Session test route
+app.get('/session-test', (req, res) => {
+    if (!req.session.views) {
+        req.session.views = 1;
+        req.session.save((err) => {
+            if (err) {
+                return res.send('Error saving session: ' + err.message);
+            }
+            res.send(`Session created! Session ID: ${req.session.id}. Refresh the page to see the counter increase.`);
+        });
+    } else {
+        req.session.views++;
+        req.session.save((err) => {
+            if (err) {
+                return res.send('Error updating session: ' + err.message);
+            }
+            res.send(`You have visited this page ${req.session.views} times. Session ID: ${req.session.id}`);
+        });
+    }
+});
 
 // 404 handler
 app.use((req, res) => {
@@ -196,7 +256,6 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
     console.error('Error:', err.stack);
     
-    // Handle multer file upload errors
     if (err instanceof multer.MulterError) {
         if (err.code === 'LIMIT_FILE_SIZE') {
             req.flash('error', 'File too large. Maximum file size is 5MB.');
@@ -206,19 +265,16 @@ app.use((err, req, res, next) => {
         return res.redirect('back');
     }
     
-    // Handle validation errors
     if (err.name === 'ValidationError') {
         req.flash('error', 'Validation error: ' + err.message);
         return res.redirect('back');
     }
     
-    // Handle duplicate key errors
     if (err.code === 11000) {
         req.flash('error', 'Duplicate entry: This record already exists.');
         return res.redirect('back');
     }
     
-    // Handle other errors
     res.status(err.status || 500).render('error', { 
         title: 'Server Error',
         message: process.env.NODE_ENV === 'production' 
@@ -227,9 +283,6 @@ app.use((err, req, res, next) => {
         error: process.env.NODE_ENV === 'development' ? err : {}
     });
 });
-
-// Add this after your routes but before 404 handler
-
 
 const PORT = process.env.PORT || 3000;
 const server = app.listen(PORT, () => {
@@ -243,10 +296,15 @@ process.on('SIGTERM', () => {
     console.log('SIGTERM signal received: closing HTTP server');
     server.close(() => {
         console.log('HTTP server closed');
-        mongoose.connection.close(false, () => {
-            console.log('MongoDB connection closed');
-            process.exit(0);
-        });
+        mongoose.connection.close(false)
+            .then(() => {
+                console.log('MongoDB connection closed');
+                process.exit(0);
+            })
+            .catch(err => {
+                console.error('Error closing MongoDB connection:', err);
+                process.exit(1);
+            });
     });
 });
 
@@ -254,10 +312,15 @@ process.on('SIGINT', () => {
     console.log('SIGINT signal received: closing HTTP server');
     server.close(() => {
         console.log('HTTP server closed');
-        mongoose.connection.close(false, () => {
-            console.log('MongoDB connection closed');
-            process.exit(0);
-        });
+        mongoose.connection.close(false)
+            .then(() => {
+                console.log('MongoDB connection closed');
+                process.exit(0);
+            })
+            .catch(err => {
+                console.error('Error closing MongoDB connection:', err);
+                process.exit(1);
+            });
     });
 });
 

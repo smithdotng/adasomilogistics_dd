@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
-const path = require('path'); // Add this line
-const fs = require('fs'); // Add this for file system operations
+const path = require('path');
+const fs = require('fs');
 
 // Login page
 router.get('/login', (req, res) => {
@@ -10,14 +10,13 @@ router.get('/login', (req, res) => {
         return res.redirect('/');
     }
     res.render('login', { 
-        title: 'Login',
+        title: 'Login - CareShed',
         error: req.flash('error'),
         success: req.flash('success')
     });
 });
 
-// Login handler
-// Login handler - UPDATED WITH DEBUGGING
+// Login handler - FIXED WITH SESSION SAVE
 router.post('/login', async (req, res) => {
     console.log('=========================================');
     console.log('LOGIN ATTEMPT at:', new Date().toISOString());
@@ -36,7 +35,6 @@ router.post('/login', async (req, res) => {
         
         console.log('Looking for user with email:', email.toLowerCase());
         
-        // Find user - explicitly select password field
         const user = await User.findOne({ email: email.toLowerCase() }).select('+password');
         
         if (!user) {
@@ -54,14 +52,12 @@ router.post('/login', async (req, res) => {
             passwordLength: user.password ? user.password.length : 0
         });
         
-        // Check if account is locked
         if (user.isLocked && user.isLocked()) {
             console.log('❌ Account is locked until:', user.lockUntil);
             req.flash('error', 'Account is locked due to too many failed attempts. Please try again later.');
             return res.redirect('/login');
         }
         
-        // Verify password
         console.log('Comparing password...');
         const isValid = await user.comparePassword(password);
         console.log('Password valid:', isValid);
@@ -69,7 +65,6 @@ router.post('/login', async (req, res) => {
         if (!isValid) {
             console.log('❌ Invalid password for user:', user.email);
             
-            // Increment login attempts if the method exists
             if (user.incLoginAttempts) {
                 await user.incLoginAttempts();
                 console.log('Login attempts incremented');
@@ -81,7 +76,6 @@ router.post('/login', async (req, res) => {
         
         console.log('✅ Password correct! Logging in user...');
         
-        // Reset login attempts on successful login
         user.loginAttempts = 0;
         user.lockUntil = undefined;
         user.lastLogin = new Date();
@@ -89,7 +83,6 @@ router.post('/login', async (req, res) => {
         await user.save();
         console.log('User login stats updated');
         
-        // Set session
         req.session.user = {
             _id: user._id,
             email: user.email,
@@ -100,38 +93,46 @@ router.post('/login', async (req, res) => {
             providerInfo: user.providerInfo
         };
         
-        console.log('Session set:', req.session.user);
-        
-        // Set session expiry if remember me is checked
         if (remember) {
-            req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000; // 30 days
+            req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000;
             console.log('Remember me set for 30 days');
         }
         
         req.flash('success', `Welcome back, ${user.firstName}!`);
         console.log('Login successful, redirecting based on role:', user.role);
         
-        // Redirect based on role
-        switch(user.role) {
-            case 'service_provider':
-                console.log('Redirecting to provider dashboard');
-                return res.redirect('/provider/dashboard');
-            case 'operator':
-                console.log('Redirecting to operator dashboard');
-                return res.redirect('/operator/dashboard');
-            case 'client':
-                console.log('Redirecting to client dashboard');
-                return res.redirect('/client/dashboard');
-            case 'guardian':
-                console.log('Redirecting to guardian dashboard');
-                return res.redirect('/guardian/dashboard');
-            case 'super_admin':
-                console.log('Redirecting to admin dashboard');
-                return res.redirect('/admin/dashboard');
-            default:
-                console.log('Redirecting to home');
-                return res.redirect('/');
-        }
+        // Force session save before redirect
+        req.session.save((err) => {
+            if (err) {
+                console.error('Error saving session:', err);
+                req.flash('error', 'Session error. Please try again.');
+                return res.redirect('/login');
+            }
+            
+            console.log('Session saved successfully');
+            
+            switch(user.role) {
+                case 'service_provider':
+                    console.log('Redirecting to provider dashboard');
+                    return res.redirect('/provider/dashboard');
+                case 'operator':
+                    console.log('Redirecting to operator dashboard');
+                    return res.redirect('/operator/dashboard');
+                case 'client':
+                    console.log('Redirecting to client dashboard');
+                    return res.redirect('/client/dashboard');
+                case 'guardian':
+                    console.log('Redirecting to guardian dashboard');
+                    return res.redirect('/guardian/dashboard');
+                case 'super_admin':
+                    console.log('Redirecting to admin dashboard');
+                    return res.redirect('/admin/dashboard');
+                default:
+                    console.log('Redirecting to home');
+                    return res.redirect('/');
+            }
+        });
+        
     } catch (error) {
         console.error('❌ Login error:', error);
         console.error('Error stack:', error.stack);
@@ -153,7 +154,7 @@ router.get('/logout', (req, res) => {
 // Forgot password page
 router.get('/forgot-password', (req, res) => {
     res.render('forgot-password', {
-        title: 'Forgot Password',
+        title: 'Forgot Password - CareShed',
         error: req.flash('error'),
         success: req.flash('success')
     });
@@ -171,15 +172,12 @@ router.post('/forgot-password', async (req, res) => {
             return res.redirect('/forgot-password');
         }
         
-        // Generate reset token
         const resetToken = Math.random().toString(36).slice(-8) + 
                           Math.random().toString(36).slice(-8).toUpperCase();
         
         user.passwordResetToken = resetToken;
-        user.passwordResetExpires = Date.now() + 3600000; // 1 hour
+        user.passwordResetExpires = Date.now() + 3600000;
         await user.save();
-        
-        // TODO: Send email with reset link
         
         req.flash('success', 'Password reset instructions have been sent to your email');
         res.redirect('/login');
@@ -193,13 +191,12 @@ router.post('/forgot-password', async (req, res) => {
 // Register page
 router.get('/register', (req, res) => {
     res.render('register', {
-        title: 'Register',
+        title: 'Register - CareShed',
         error: req.flash('error'),
         success: req.flash('success')
     });
 });
 
-// Register handler
 // Register handler
 router.post('/register', async (req, res) => {
     console.log('POST /register called');
@@ -220,7 +217,6 @@ router.post('/register', async (req, res) => {
         
         console.log('Processing registration for:', email);
         
-        // Validation
         if (password !== confirmPassword) {
             console.log('Password mismatch');
             req.flash('error', 'Passwords do not match');
@@ -233,7 +229,6 @@ router.post('/register', async (req, res) => {
             return res.redirect('/register');
         }
         
-        // Check if user exists
         const existingUser = await User.findOne({ email: email.toLowerCase() });
         if (existingUser) {
             console.log('User already exists:', email);
@@ -247,7 +242,6 @@ router.post('/register', async (req, res) => {
             return res.redirect('/register');
         }
         
-        // Process service types
         let serviceTypesArray = [];
         if (serviceTypes) {
             serviceTypesArray = Array.isArray(serviceTypes) ? serviceTypes : [serviceTypes];
@@ -256,10 +250,8 @@ router.post('/register', async (req, res) => {
             serviceTypesArray.push(otherServices);
         }
 
-        // Format phone number
         let formattedPhone = phone;
         if (phone && !phone.startsWith('+44')) {
-            // Remove any non-digit characters
             const digits = phone.replace(/\D/g, '');
             if (digits.startsWith('0')) {
                 formattedPhone = '+44' + digits.substring(1);
@@ -270,7 +262,6 @@ router.post('/register', async (req, res) => {
 
         console.log('Creating user...');
         
-        // Create provider account
         const user = new User({
             email: email.toLowerCase(),
             password,
@@ -303,7 +294,7 @@ router.post('/register', async (req, res) => {
                     plan: 'professional',
                     status: 'trial',
                     startDate: new Date(),
-                    expiryDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days
+                    expiryDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
                     maxOperators: 20,
                     maxClients: 100
                 }
@@ -318,14 +309,12 @@ router.post('/register', async (req, res) => {
         await user.save();
         console.log('User created successfully with ID:', user._id);
 
-        // Handle file upload if present
         if (req.files && req.files.cqcCertificate) {
             console.log('Processing CQC certificate upload');
             
             try {
                 const cqcCertificate = req.files.cqcCertificate;
                 
-                // Validate file type
                 const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
                 if (!allowedTypes.includes(cqcCertificate.mimetype)) {
                     console.log('Invalid file type:', cqcCertificate.mimetype);
@@ -333,37 +322,29 @@ router.post('/register', async (req, res) => {
                     return res.redirect('/register');
                 }
                 
-                // Generate safe filename
                 const fileExtension = cqcCertificate.name.split('.').pop();
                 const fileName = `${user._id}_cqc.${fileExtension}`;
                 const uploadPath = path.join(__dirname, '../uploads/cqc/', fileName);
                 
-                // Ensure directory exists
                 const uploadDir = path.join(__dirname, '../uploads/cqc/');
                 if (!fs.existsSync(uploadDir)) {
                     fs.mkdirSync(uploadDir, { recursive: true });
                     console.log('Created upload directory:', uploadDir);
                 }
                 
-                // Move file to upload directory
                 await cqcCertificate.mv(uploadPath);
                 console.log('File uploaded to:', uploadPath);
                 
-                // Save file path to user record
                 user.providerInfo.cqcCertificate = `/uploads/cqc/${fileName}`;
                 await user.save();
                 console.log('CQC certificate path saved to user record');
                 
             } catch (uploadError) {
                 console.error('File upload error:', uploadError);
-                // Don't fail registration if file upload fails, just log it
                 req.flash('info', 'Registration successful but file upload failed. You can upload your CQC certificate later from your dashboard.');
             }
         }
 
-        // TODO: Send welcome email
-        // await sendWelcomeEmail(user.email, { firstName, companyName });
-        
         console.log('Registration successful, redirecting to login');
         req.flash('success', 'Registration successful! Please check your email to verify your account, then login.');
         res.redirect('/login');
@@ -371,7 +352,6 @@ router.post('/register', async (req, res) => {
     } catch (error) {
         console.error('Registration error:', error);
         
-        // Handle specific MongoDB errors
         if (error.code === 11000) {
             req.flash('error', 'Email already registered');
         } else if (error.name === 'ValidationError') {

@@ -18,18 +18,11 @@ const userSchema = new mongoose.Schema({
         enum: ['super_admin', 'service_provider', 'operator', 'client', 'guardian', 'family_member'],
         required: true
     },
-    firstName: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    lastName: {
-        type: String,
-        required: true,
-        trim: true
-    },
+    firstName: { type: String, required: true, trim: true },
+    lastName:  { type: String, required: true, trim: true },
     profileImage: String,
     phone: String,
+
     address: {
         street: String,
         city: String,
@@ -37,8 +30,7 @@ const userSchema = new mongoose.Schema({
         postcode: String,
         country: { type: String, default: 'UK' }
     },
-    
-    // Multi-tenant relationship - Every user belongs to a provider
+
     providerId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -46,12 +38,14 @@ const userSchema = new mongoose.Schema({
             return this.role !== 'super_admin' && this.role !== 'service_provider';
         }
     },
-    
-    // Service Provider specific fields
+
+    // ────────────────────────────────────────────────
+    // Service Provider specific
+    // ────────────────────────────────────────────────
     providerInfo: {
         companyName: String,
         companyRegNumber: String,
-        cqcLocationId: String, // Care Quality Commission ID
+        cqcLocationId: String,
         cqcRating: {
             type: String,
             enum: ['outstanding', 'good', 'requires-improvement', 'inadequate']
@@ -63,9 +57,10 @@ const userSchema = new mongoose.Schema({
         },
         logo: String,
         website: String,
+        serviceTypes: [String],
         subscription: {
-            plan: { 
-                type: String, 
+            plan: {
+                type: String,
                 enum: ['basic', 'professional', 'enterprise', 'trial'],
                 default: 'trial'
             },
@@ -85,10 +80,13 @@ const userSchema = new mongoose.Schema({
             accountNumber: String,
             sortCode: String,
             vatNumber: String
-        }
+        },
+        icoNumber: String
     },
-    
-    // Operator (Carer) specific fields
+
+    // ────────────────────────────────────────────────
+    // Operator (Carer) specific
+    // ────────────────────────────────────────────────
     operatorInfo: {
         employeeId: { type: String, unique: true, sparse: true },
         dateOfBirth: Date,
@@ -126,7 +124,7 @@ const userSchema = new mongoose.Schema({
         assignedClients: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
         maxClients: { type: Number, default: 5 },
         hourlyRate: Number,
-        travelRadius: Number, // in miles
+        travelRadius: Number,
         hasVehicle: { type: Boolean, default: false },
         emergencyContact: {
             name: String,
@@ -146,6 +144,34 @@ const userSchema = new mongoose.Schema({
             enum: ['permanent', 'temporary', 'zero_hours', 'agency'],
             default: 'permanent'
         },
+        paymentInfo: {
+            payRate: Number,
+            overtimeRate: Number,
+            weekendRate: Number,
+            bankHolidayRate: Number,
+            nightRate: Number,
+            payFrequency: {
+                type: String,
+                enum: ['weekly', 'bi-weekly', 'monthly'],
+                default: 'weekly'
+            },
+            paymentMethod: {
+                type: String,
+                enum: ['bank_transfer', 'cheque', 'cash'],
+                default: 'bank_transfer'
+            },
+            taxCode: String,
+            niNumber: String,
+            pensionEnrolled: { type: Boolean, default: false },
+            pensionContribution: Number,
+            studentLoan: { type: Boolean, default: false },
+            studentLoanPlan: { type: String, enum: ['plan1', 'plan2', 'plan4', 'postgrad'] },
+            attachments: [{
+                name: String,
+                url: String,
+                uploadedAt: Date
+            }]
+        },
         payrollInfo: {
             payRate: Number,
             taxCode: String,
@@ -153,51 +179,13 @@ const userSchema = new mongoose.Schema({
             bankAccount: String,
             sortCode: String
         },
+        timesheets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Timesheet' }],
+        payments:    [{ type: mongoose.Schema.Types.ObjectId, ref: 'Payment' }]
+    },
 
-         // Payment & Rate Information
-    paymentInfo: {
-        payRate: Number, // hourly rate
-        overtimeRate: Number, // rate for overtime (usually 1.5x or 2x)
-        weekendRate: Number, // enhanced rate for weekends
-        bankHolidayRate: Number, // enhanced rate for bank holidays
-        payFrequency: {
-            type: String,
-            enum: ['weekly', 'bi-weekly', 'monthly'],
-            default: 'weekly'
-        },
-        paymentMethod: {
-            type: String,
-            enum: ['bank_transfer', 'cheque', 'cash'],
-            default: 'bank_transfer'
-        },
-        taxCode: String,
-        niNumber: String, // National Insurance number
-        pensionEnrolled: { type: Boolean, default: false },
-        pensionContribution: Number, // percentage
-        studentLoan: { type: Boolean, default: false },
-        studentLoanPlan: { type: String, enum: ['plan1', 'plan2', 'plan4', 'postgrad'] },
-        attachments: [{
-            name: String,
-            url: String,
-            uploadedAt: Date
-        }]
-    },
-    
-    // Timesheet Tracking
-    timesheets: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Timesheet'
-    }],
-    
-    // Payment History
-    payments: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Payment'
-    }]
-        
-    },
-    
-    // Client (Patient) specific fields
+    // ────────────────────────────────────────────────
+    // Client (Patient) specific
+    // ────────────────────────────────────────────────
     clientInfo: {
         nhsNumber: String,
         dateOfBirth: Date,
@@ -207,8 +195,7 @@ const userSchema = new mongoose.Schema({
         roomNumber: String,
         primaryLanguage: { type: String, default: 'English' },
         communicationNeeds: String,
-        
-        // Medical Information
+
         gpDetails: {
             name: String,
             surgery: String,
@@ -216,17 +203,20 @@ const userSchema = new mongoose.Schema({
             phone: String,
             email: String
         },
+
         medicalConditions: [{
             name: String,
             diagnosedDate: Date,
             severity: { type: String, enum: ['mild', 'moderate', 'severe'] },
             notes: String
         }],
+
         allergies: [{
             allergen: String,
             reaction: String,
             severity: { type: String, enum: ['mild', 'moderate', 'severe', 'anaphylactic'] }
         }],
+
         medications: [{
             name: String,
             dosage: String,
@@ -244,22 +234,19 @@ const userSchema = new mongoose.Schema({
                 address: String
             }
         }],
-        
-        // Care Team
+
         primaryCarer: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
         secondaryCarers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
         carePlan: { type: mongoose.Schema.Types.ObjectId, ref: 'CarePlan' },
-        
-        // Emergency Contacts
+
         emergencyContacts: [{
-            name: String,
+            name: { type: String, required: true },
             relationship: String,
             phone: String,
             email: String,
             isPrimary: { type: Boolean, default: false }
         }],
-        
-        // Guardians/Family
+
         guardians: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
         familyMembers: [{
             name: String,
@@ -268,18 +255,22 @@ const userSchema = new mongoose.Schema({
             email: String,
             canAccessPortal: { type: Boolean, default: false }
         }],
-        
-        // Care Package
+
         carePackage: {
-            type: { type: String, enum: ['domiciliary', 'residential', 'nursing', 'supported_living'] },
-            fundedBy: { type: String, enum: ['local_authority', 'ccg', 'self_funded', 'mixed'] },
+            type: {
+                type: String,
+                enum: ['domiciliary', 'residential', 'nursing', 'supported_living']
+            },
+            fundedBy: {
+                type: String,
+                enum: ['local_authority', 'ccg', 'self_funded', 'mixed']
+            },
             fundingAuthority: String,
             weeklyHours: Number,
             startDate: Date,
             reviewDate: Date
         },
-        
-        // Risk Assessments
+
         riskAssessments: [{
             type: String,
             date: Date,
@@ -290,15 +281,17 @@ const userSchema = new mongoose.Schema({
             nextReviewDate: Date
         }]
     },
-    
-    // Guardian/Family specific fields
+
+    // ────────────────────────────────────────────────
+    // Guardian / Family specific
+    // ────────────────────────────────────────────────
     guardianInfo: {
         relationship: String,
         phone: String,
         alternateEmail: String,
         address: String,
         isEmergencyContact: { type: Boolean, default: false },
-        hasPOA: { type: Boolean, default: false }, // Power of Attorney
+        hasPOA: { type: Boolean, default: false },
         poaType: { type: String, enum: ['health', 'finance', 'both'] },
         clientsMonitored: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
         notificationPreferences: {
@@ -308,66 +301,101 @@ const userSchema = new mongoose.Schema({
             incidentAlerts: { type: Boolean, default: true }
         }
     },
-    
+
+    // ────────────────────────────────────────────────
     // Common fields
-    isActive: { type: Boolean, default: true },
-    emailVerified: { type: Boolean, default: false },
+    // ────────────────────────────────────────────────
+    isActive:           { type: Boolean, default: true },
+    emailVerified:      { type: Boolean, default: false },
     emailVerificationToken: String,
     passwordResetToken: String,
     passwordResetExpires: Date,
     lastLogin: Date,
     lastLoginIp: String,
-    loginAttempts: { type: Number, default: 0 },
+    loginAttempts:      { type: Number, default: 0 },
     lockUntil: Date,
-    twoFactorEnabled: { type: Boolean, default: false },
+    twoFactorEnabled:   { type: Boolean, default: false },
     twoFactorSecret: String,
+
     notificationSettings: {
         email: { type: Boolean, default: true },
-        sms: { type: Boolean, default: false },
-        push: { type: Boolean, default: true }
+        sms:   { type: Boolean, default: false },
+        push:  { type: Boolean, default: true }
     },
+
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }
+}, {
+    timestamps: true   // automatically handles createdAt/updatedAt if you want mongoose to manage them
 });
 
-// Indexes for performance
-userSchema.index({ email: 1 });
+// ────────────────────────────────────────────────
+// Indexes
+// ────────────────────────────────────────────────
 userSchema.index({ role: 1 });
 userSchema.index({ providerId: 1 });
-userSchema.index({ 'operatorInfo.employeeId': 1 });
 userSchema.index({ 'clientInfo.nhsNumber': 1 });
+userSchema.index({ role: 1, isActive: 1 });
+userSchema.index({ providerId: 1, role: 1 });
+userSchema.index({ email: 1 }); // already unique, but explicit index helps
 
-// Password hashing middleware
-userSchema.pre('save', async function(next) {
-    if (!this.isModified('password')) return next();
-    this.password = await bcrypt.hash(this.password, 12);
-    this.updatedAt = Date.now();
-    next();
+// ────────────────────────────────────────────────
+// Pre-save hook – modern async/await style
+// ────────────────────────────────────────────────
+userSchema.pre('save', async function() {
+    if (!this.isModified('password')) return;
+
+    try {
+        const salt = await bcrypt.genSalt(12);
+        this.password = await bcrypt.hash(this.password, salt);
+        // updatedAt is already handled by timestamps: true or manually if preferred
+    } catch (err) {
+        throw err; // Mongoose will catch and pass to error handler
+    }
 });
 
-// Compare password method
+// ────────────────────────────────────────────────
+// Methods
+// ────────────────────────────────────────────────
 userSchema.methods.comparePassword = async function(candidatePassword) {
-    return await bcrypt.compare(candidatePassword, this.password);
+    return bcrypt.compare(candidatePassword, this.password);
 };
 
-// Check if account is locked
 userSchema.methods.isLocked = function() {
     return !!(this.lockUntil && this.lockUntil > Date.now());
 };
 
-// Increment login attempts
-userSchema.methods.incLoginAttempts = function() {
+userSchema.methods.incLoginAttempts = async function() {
     if (this.lockUntil && this.lockUntil < Date.now()) {
-        return this.updateOne({
-            $set: { loginAttempts: 1 },
-            $unset: { lockUntil: 1 }
-        });
+        this.loginAttempts = 1;
+        this.lockUntil = undefined;
+    } else {
+        this.loginAttempts = (this.loginAttempts || 0) + 1;
+        if (this.loginAttempts >= 5) {
+            this.lockUntil = Date.now() + 2 * 60 * 60 * 1000; // 2 hours
+        }
     }
-    const updates = { $inc: { loginAttempts: 1 } };
-    if (this.loginAttempts + 1 >= 5 && !this.isLocked()) {
-        updates.$set = { lockUntil: Date.now() + 2 * 60 * 60 * 1000 }; // Lock for 2 hours
-    }
-    return this.updateOne(updates);
+    await this.save();
 };
+
+// ────────────────────────────────────────────────
+// Virtuals
+// ────────────────────────────────────────────────
+userSchema.virtual('fullName').get(function() {
+    return `${this.firstName} ${this.lastName}`;
+});
+
+userSchema.virtual('age').get(function() {
+    if (this.role !== 'client' || !this.clientInfo?.dateOfBirth) return null;
+    const today = new Date();
+    const birth = new Date(this.clientInfo.dateOfBirth);
+    let age = today.getFullYear() - birth.getFullYear();
+    const m = today.getMonth() - birth.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+    return age;
+});
+
+userSchema.set('toJSON',   { virtuals: true });
+userSchema.set('toObject', { virtuals: true });
 
 module.exports = mongoose.model('User', userSchema);

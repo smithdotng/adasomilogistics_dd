@@ -71,7 +71,7 @@ exports.postLogin = async (req, res) => {
     } else if (user.role === 'admin') {
         res.redirect('/admin/dashboard');
     } else {
-        res.redirect('/operator/dashboard');
+        res.redirect('/support-worker/dashboard');
     }
     
   } catch (error) {

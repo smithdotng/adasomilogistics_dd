@@ -72,7 +72,7 @@
             box-shadow: 0px 20px 80px 0px rgba(0, 0, 0, 0.1);
         }
         
-        .dashboard-stats-box.client-info {
+        .dashboard-stats-box.service-user-info {
             border-left-color: var(--guardian-primary);
         }
         
@@ -84,7 +84,7 @@
             border-left-color: var(--guardian-info);
         }
         
-        .dashboard-stats-box.operator-assigned {
+        .dashboard-stats-box.support-worker-assigned {
             border-left-color: var(--guardian-warning);
         }
         
@@ -99,7 +99,7 @@
             margin-bottom: 20px;
         }
         
-        .stats-icon.client-info {
+        .stats-icon.service-user-info {
             background: linear-gradient(45deg, var(--guardian-primary) 0%, #6bc4c9 100%);
             color: white;
         }
@@ -114,7 +114,7 @@
             color: white;
         }
         
-        .stats-icon.operator-assigned {
+        .stats-icon.support-worker-assigned {
             background: linear-gradient(45deg, var(--guardian-warning) 0%, #f8c471 100%);
             color: white;
         }
@@ -232,7 +232,7 @@
             color: #a0a0a0;
         }
         
-        .client-info-card {
+        .service-user-info-card {
             background: #fff;
             border-radius: 10px;
             box-shadow: 0px 10px 60px 0px rgba(0, 0, 0, 0.07);
@@ -403,20 +403,20 @@
             margin-top: 10px;
         }
         
-        .client-name-display {
+        .service-user-name-display {
             font-size: 32px;
             font-weight: 700;
             color: #213360;
             margin-bottom: 10px;
         }
         
-        .client-relationship {
+        .service-user-relationship {
             color: var(--guardian-primary);
             font-weight: 600;
             margin-bottom: 20px;
         }
         
-        /* Status colors for client status */
+        /* Status colors for service-user status */
         .status-badge {
             padding: 6px 15px;
             border-radius: 20px;
@@ -462,7 +462,7 @@
                                 <a href="#" class="mobile-nav__toggler"><i class="fa fa-bars"></i></a>
                                 <ul class="main-menu__list">
                                     <li class="current"><a href="/guardian/dashboard">Dashboard</a></li>
-                                    <li><a href="/guardian/client">Client Information</a></li>
+                                    <li><a href="/guardian/service-user">Service User Information</a></li>
                                     <li><a href="/guardian/interactions">Interactions</a></li>
                                     <li><a href="/guardian/documents">Documents</a></li>
                                     <li><a href="/guardian/change-password">Settings</a></li>
@@ -503,7 +503,7 @@
                     <div class="row align-items-center">
                         <div class="col-md-8">
                             <h3>Welcome back, <%= user.fullName %></h3>
-                            <p>You are the <%= user.role === 'guardian' && user.guardianInfo && user.guardianInfo.relationship ? user.guardianInfo.relationship.toLowerCase() : 'guardian' %> of <%= client.firstName %> <%= client.lastName %></p>
+                            <p>You are the <%= user.role === 'guardian' && user.guardianInfo && user.guardianInfo.relationship ? user.guardianInfo.relationship.toLowerCase() : 'guardian' %> of <%= serviceUser.firstName %> <%= serviceUser.lastName %></p>
                             <div class="user-role-badge">
                                 <i class="fas fa-user-shield me-2"></i>GUARDIAN
                             </div>
@@ -515,21 +515,21 @@
                     </div>
                 </div>
 
-                <!-- Client Overview -->
+                <!-- Service User Overview -->
                 <div class="row mb-5">
                     <div class="col-12">
-                        <div class="client-name-display">
-                            <%= client.firstName %> <%= client.lastName %>
+                        <div class="service-user-name-display">
+                            <%= serviceUser.firstName %> <%= serviceUser.lastName %>
                         </div>
-                        <div class="client-relationship">
+                        <div class="service-user-relationship">
                             <i class="fas fa-user-friends me-2"></i>
                             <%= user.role === 'guardian' && user.guardianInfo && user.guardianInfo.relationship ? 
                                user.guardianInfo.relationship.charAt(0).toUpperCase() + user.guardianInfo.relationship.slice(1) : 
                                'Guardian' %>
                             <span class="mx-3">•</span>
-                            <span class="status-badge status-<%= client.status %>">
+                            <span class="status-badge status-<%= serviceUser.status %>">
                                 <i class="fas fa-circle me-1" style="font-size: 8px;"></i>
-                                <%= client.status %>
+                                <%= serviceUser.status %>
                             </span>
                         </div>
                     </div>
@@ -538,15 +538,15 @@
                 <!-- Statistics Cards -->
                 <div class="row mb-5">
                     <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="100ms">
-                        <div class="dashboard-stats-box client-info">
-                            <div class="stats-icon client-info">
+                        <div class="dashboard-stats-box service-user-info">
+                            <div class="stats-icon service-user-info">
                                 <i class="fas fa-user"></i>
                             </div>
-                            <h3 class="stats-number"><%= client.age %></h3>
-                            <p class="stats-label">Client Age</p>
+                            <h3 class="stats-number"><%= serviceUser.age %></h3>
+                            <p class="stats-label">Service User Age</p>
                             <p class="stats-subtext">
                                 <i class="fas fa-birthday-cake me-1"></i> 
-                                <%= moment(client.dateOfBirth).format('MMM D, YYYY') %>
+                                <%= moment(serviceUser.dateOfBirth).format('MMM D, YYYY') %>
                             </p>
                         </div>
                     </div>
@@ -556,11 +556,11 @@
                             <div class="stats-icon care-level">
                                 <i class="fas fa-heartbeat"></i>
                             </div>
-                            <h3 class="stats-number text-capitalize"><%= client.careInfo.careLevel %></h3>
+                            <h3 class="stats-number text-capitalize"><%= serviceUser.careInfo.careLevel %></h3>
                             <p class="stats-label">Care Level</p>
                             <p class="stats-subtext">
                                 <i class="fas fa-stethoscope me-1"></i> 
-                                <%= client.careInfo.careType || 'Standard Care' %>
+                                <%= serviceUser.careInfo.careType || 'Standard Care' %>
                             </p>
                         </div>
                     </div>
@@ -580,22 +580,22 @@
                     </div>
 
                     <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="400ms">
-                        <div class="dashboard-stats-box operator-assigned">
-                            <div class="stats-icon operator-assigned">
+                        <div class="dashboard-stats-box support-worker-assigned">
+                            <div class="stats-icon support-worker-assigned">
                                 <i class="fas fa-user-md"></i>
                             </div>
                             <h3 class="stats-number">
-                                <% if (client.assignedOperator && client.assignedOperator.firstName) { %>
-                                    <%= client.assignedOperator.firstName.charAt(0) %><%= client.assignedOperator.lastName.charAt(0) %>
+                                <% if (serviceUser.assignedSupportWorker && serviceUser.assignedSupportWorker.firstName) { %>
+                                    <%= serviceUser.assignedSupportWorker.firstName.charAt(0) %><%= serviceUser.assignedSupportWorker.lastName.charAt(0) %>
                                 <% } else { %>
                                     --
                                 <% } %>
                             </h3>
-                            <p class="stats-label">Assigned Operator</p>
+                            <p class="stats-label">Assigned Support Worker</p>
                             <p class="stats-subtext">
                                 <i class="fas fa-headset me-1"></i> 
-                                <% if (client.assignedOperator) { %>
-                                    <%= client.assignedOperator.firstName %> <%= client.assignedOperator.lastName %>
+                                <% if (serviceUser.assignedSupportWorker) { %>
+                                    <%= serviceUser.assignedSupportWorker.firstName %> <%= serviceUser.assignedSupportWorker.lastName %>
                                 <% } else { %>
                                     Not assigned
                                 <% } %>
@@ -609,27 +609,27 @@
                     <div class="col-12">
                         <div class="dashboard-section-title">
                             <h2>Quick Actions</h2>
-                            <p>Common tasks for managing your client</p>
+                            <p>Common tasks for managing your service user</p>
                         </div>
                         
                         <div class="row g-4">
                             <div class="col-xl-2 col-lg-4 col-md-6">
-                                <a href="/guardian/interactions/create?clientId=<%= client._id %>" class="quick-action-card wow fadeInUp" data-wow-delay="100ms">
+                                <a href="/guardian/interactions/create?serviceUserId=<%= serviceUser._id %>" class="quick-action-card wow fadeInUp" data-wow-delay="100ms">
                                 
                                     <div class="action-icon">
                                         <i class="fas fa-plus-circle"></i>
                                     </div>
                                     <h5>Log Interaction</h5>
-                                    <p>Record client activity</p>
+                                    <p>Record service user activity</p>
                                 </a>
                             </div>
 
                             <div class="col-xl-2 col-lg-4 col-md-6">
-                                <a href="/guardian/client" class="quick-action-card wow fadeInUp" data-wow-delay="200ms">
+                                <a href="/guardian/service-user" class="quick-action-card wow fadeInUp" data-wow-delay="200ms">
                                     <div class="action-icon">
                                         <i class="fas fa-user-circle"></i>
                                     </div>
-                                    <h5>Client Details</h5>
+                                    <h5>Service User Details</h5>
                                     <p>View full information</p>
                                 </a>
                             </div>
@@ -650,7 +650,7 @@
                                         <i class="fas fa-file-alt"></i>
                                     </div>
                                     <h5>Documents</h5>
-                                    <p>View client files</p>
+                                    <p>View service user files</p>
                                 </a>
                             </div>
 
@@ -684,7 +684,7 @@
                         <div class="recent-activities-card wow fadeInUp" data-wow-delay="100ms">
                             <div class="dashboard-section-title" style="padding: 30px 30px 0;">
                                 <h2>Recent Activities</h2>
-                                <p>Latest interactions with <%= client.firstName %></p>
+                                <p>Latest interactions with <%= serviceUser.firstName %></p>
                             </div>
                             
                             <div class="activities-list">
@@ -732,7 +732,7 @@
                                     <div class="empty-state">
                                         <i class="fas fa-clipboard-list"></i>
                                         <p>No recent activities recorded</p>
-                                        <a href="/guardian/interactions/create?clientId=<%= client._id %>" class="thm-btn mt-3">Log First Interaction</a>
+                                        <a href="/guardian/interactions/create?serviceUserId=<%= serviceUser._id %>" class="thm-btn mt-3">Log First Interaction</a>
                                     </div>
                                 <% } %>
                             </div>
@@ -745,23 +745,23 @@
                         </div>
                     </div>
 
-                    <!-- Client Information Sidebar -->
+                    <!-- Service User Information Sidebar -->
                     <div class="col-xl-4">
-                        <!-- Client Information Card -->
-                        <div class="client-info-card wow fadeInUp" data-wow-delay="200ms">
+                        <!-- Service User Information Card -->
+                        <div class="service-user-info-card wow fadeInUp" data-wow-delay="200ms">
                             <div class="dashboard-section-title" style="padding: 0; margin-bottom: 20px;">
-                                <h2>Client Information</h2>
+                                <h2>Service User Information</h2>
                             </div>
                             
                             <div class="info-item">
                                 <h6>Medical Information</h6>
-                                <p><%= client.medicalInfo.conditions || 'No conditions specified' %></p>
-                                <% if (client.medicalInfo.allergies) { %>
+                                <p><%= serviceUser.medicalInfo.conditions || 'No conditions specified' %></p>
+                                <% if (serviceUser.medicalInfo.allergies) { %>
                                     <div class="info-badge badge-medical">
                                         <i class="fas fa-allergies me-1"></i> Allergies
                                     </div>
                                 <% } %>
-                                <% if (client.medicalInfo.disabilities && client.medicalInfo.disabilities.length > 0) { %>
+                                <% if (serviceUser.medicalInfo.disabilities && serviceUser.medicalInfo.disabilities.length > 0) { %>
                                     <div class="info-badge badge-medical">
                                         <i class="fas fa-wheelchair me-1"></i> Special Needs
                                     </div>
@@ -770,19 +770,19 @@
                             
                             <div class="info-item">
                                 <h6>Care Plan</h6>
-                                <p><%= client.careInfo.carePlan || 'Standard care plan' %></p>
-                                <% if (client.careInfo.careLevel) { %>
+                                <p><%= serviceUser.careInfo.carePlan || 'Standard care plan' %></p>
+                                <% if (serviceUser.careInfo.careLevel) { %>
                                     <div class="info-badge badge-care">
-                                        <i class="fas fa-heartbeat me-1"></i> <%= client.careInfo.careLevel %> Care
+                                        <i class="fas fa-heartbeat me-1"></i> <%= serviceUser.careInfo.careLevel %> Care
                                     </div>
                                 <% } %>
                             </div>
                             
                             <div class="info-item">
                                 <h6>Daily Routine & Activities</h6>
-                                <p><%= client.careInfo.dailyRoutine || 'Routine not specified' %></p>
-                                <% if (client.careInfo.preferredActivities && client.careInfo.preferredActivities.length > 0) { %>
-                                    <% client.careInfo.preferredActivities.slice(0, 3).forEach(activity => { %>
+                                <p><%= serviceUser.careInfo.dailyRoutine || 'Routine not specified' %></p>
+                                <% if (serviceUser.careInfo.preferredActivities && serviceUser.careInfo.preferredActivities.length > 0) { %>
+                                    <% serviceUser.careInfo.preferredActivities.slice(0, 3).forEach(activity => { %>
                                         <div class="info-badge badge-activity">
                                             <i class="fas fa-running me-1"></i> <%= activity %>
                                         </div>
@@ -792,8 +792,8 @@
                             
                             <div class="info-item">
                                 <h6>Dietary Restrictions</h6>
-                                <% if (client.careInfo.dietaryRestrictions && client.careInfo.dietaryRestrictions.length > 0) { %>
-                                    <% client.careInfo.dietaryRestrictions.forEach(restriction => { %>
+                                <% if (serviceUser.careInfo.dietaryRestrictions && serviceUser.careInfo.dietaryRestrictions.length > 0) { %>
+                                    <% serviceUser.careInfo.dietaryRestrictions.forEach(restriction => { %>
                                         <div class="info-badge badge-dietary">
                                             <i class="fas fa-utensils me-1"></i> <%= restriction %>
                                         </div>
@@ -804,7 +804,7 @@
                             </div>
 
                             <!-- Emergency Contact -->
-                            <% if (client.contact.emergencyContact && client.contact.emergencyContact.name) { %>
+                            <% if (serviceUser.contact.emergencyContact && serviceUser.contact.emergencyContact.name) { %>
                             <div class="emergency-contact-card">
                                 <h5><i class="fas fa-exclamation-triangle me-2"></i>Emergency Contact</h5>
                                 <div class="contact-detail">
@@ -812,8 +812,8 @@
                                         <i class="fas fa-user"></i>
                                     </div>
                                     <div class="contact-info">
-                                        <h6><%= client.contact.emergencyContact.name %></h6>
-                                        <p><%= client.contact.emergencyContact.relationship %></p>
+                                        <h6><%= serviceUser.contact.emergencyContact.name %></h6>
+                                        <p><%= serviceUser.contact.emergencyContact.relationship %></p>
                                     </div>
                                 </div>
                                 <div class="contact-detail">
@@ -821,17 +821,17 @@
                                         <i class="fas fa-phone"></i>
                                     </div>
                                     <div class="contact-info">
-                                        <h6><%= client.contact.emergencyContact.phone %></h6>
+                                        <h6><%= serviceUser.contact.emergencyContact.phone %></h6>
                                         <p>Phone Number</p>
                                     </div>
                                 </div>
-                                <% if (client.contact.emergencyContact.email) { %>
+                                <% if (serviceUser.contact.emergencyContact.email) { %>
                                 <div class="contact-detail">
                                     <div class="contact-icon">
                                         <i class="fas fa-envelope"></i>
                                     </div>
                                     <div class="contact-info">
-                                        <h6><%= client.contact.emergencyContact.email %></h6>
+                                        <h6><%= serviceUser.contact.emergencyContact.email %></h6>
                                         <p>Email Address</p>
                                     </div>
                                 </div>
@@ -845,7 +845,7 @@
                 <!-- Additional Information -->
                 <div class="row mt-5">
                     <div class="col-12">
-                        <div class="client-info-card wow fadeInUp" data-wow-delay="400ms">
+                        <div class="service-user-info-card wow fadeInUp" data-wow-delay="400ms">
                             <div class="dashboard-section-title" style="padding: 0; margin-bottom: 30px;">
                                 <h2>Care Team Information</h2>
                             </div>
@@ -853,18 +853,18 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="info-item">
-                                        <h6>Assigned Operator</h6>
-                                        <% if (client.assignedOperator) { %>
-                                            <p><strong><%= client.assignedOperator.firstName %> <%= client.assignedOperator.lastName %></strong></p>
-                                            <% if (client.assignedOperator.email) { %>
-                                                <p><i class="fas fa-envelope me-2"></i><%= client.assignedOperator.email %></p>
+                                        <h6>Assigned Support Worker</h6>
+                                        <% if (serviceUser.assignedSupportWorker) { %>
+                                            <p><strong><%= serviceUser.assignedSupportWorker.firstName %> <%= serviceUser.assignedSupportWorker.lastName %></strong></p>
+                                            <% if (serviceUser.assignedSupportWorker.email) { %>
+                                                <p><i class="fas fa-envelope me-2"></i><%= serviceUser.assignedSupportWorker.email %></p>
                                             <% } %>
-                                            <% if (client.assignedOperator.phone) { %>
-                                                <p><i class="fas fa-phone me-2"></i><%= client.assignedOperator.phone %></p>
+                                            <% if (serviceUser.assignedSupportWorker.phone) { %>
+                                                <p><i class="fas fa-phone me-2"></i><%= serviceUser.assignedSupportWorker.phone %></p>
                                             <% } %>
                                         <% } else { %>
-                                            <p>No operator assigned yet</p>
-                                            <p class="text-muted small">Contact administration to assign an operator</p>
+                                            <p>No support worker assigned yet</p>
+                                            <p class="text-muted small">Contact administration to assign an support worker</p>
                                         <% } %>
                                     </div>
                                 </div>
@@ -872,8 +872,8 @@
                                 <div class="col-md-6">
                                     <div class="info-item">
                                         <h6>Additional Guardians</h6>
-                                        <% if (client.guardians && client.guardians.length > 0) { %>
-                                            <% let otherGuardians = client.guardians.filter(g => g.email !== user.email); %>
+                                        <% if (serviceUser.guardians && serviceUser.guardians.length > 0) { %>
+                                            <% let otherGuardians = serviceUser.guardians.filter(g => g.email !== user.email); %>
                                             <% if (otherGuardians.length > 0) { %>
                                                 <% otherGuardians.slice(0, 2).forEach(guardian => { %>
                                                     <p>
@@ -916,11 +916,11 @@
                             <div class="site-footer__top-right">
                                 <div class="site-footer__call-and-social">
                                     <div class="site-footer__call">
-                                        <p>Guardian Portal <a href="tel:<%= client.contact.emergencyContact.phone || '123-456-7890' %>">Emergency: <%= client.contact.emergencyContact.phone || '123-456-7890' %></a></p>
+                                        <p>Guardian Portal <a href="tel:<%= serviceUser.contact.emergencyContact.phone || '123-456-7890' %>">Emergency: <%= serviceUser.contact.emergencyContact.phone || '123-456-7890' %></a></p>
                                     </div>
                                     <div class="site-footer__social">
-                                        <a href="mailto:<%= client.assignedOperator ? client.assignedOperator.email : 'support@caresystem.com' %>" title="Email Care Team"><i class="fas fa-envelope"></i></a>
-                                        <a href="tel:<%= client.assignedOperator ? client.assignedOperator.phone : '' %>" title="Call Care Team"><i class="fas fa-phone"></i></a>
+                                        <a href="mailto:<%= serviceUser.assignedSupportWorker ? serviceUser.assignedSupportWorker.email : 'support@caresystem.com' %>" title="Email Care Team"><i class="fas fa-envelope"></i></a>
+                                        <a href="tel:<%= serviceUser.assignedSupportWorker ? serviceUser.assignedSupportWorker.phone : '' %>" title="Call Care Team"><i class="fas fa-phone"></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -933,22 +933,22 @@
                             <div class="footer-widget__column footer-widget__contact">
                                 <h3 class="footer-widget__title">Contact Care Team</h3>
                                 <p class="footer-widget__contact-text">
-                                    <% if (client.assignedOperator) { %>
-                                        <%= client.assignedOperator.firstName %> <%= client.assignedOperator.lastName %><br>
-                                        Assigned Care Operator
+                                    <% if (serviceUser.assignedSupportWorker) { %>
+                                        <%= serviceUser.assignedSupportWorker.firstName %> <%= serviceUser.assignedSupportWorker.lastName %><br>
+                                        Assigned Care Support Worker
                                     <% } else { %>
                                         Care System Support Team<br>
                                         123 Health Street, NY, USA
                                     <% } %>
                                 </p>
                                 <h5 class="footer-widget__contact-phone-and-email">
-                                    <% if (client.assignedOperator && client.assignedOperator.email) { %>
-                                        <a href="mailto:<%= client.assignedOperator.email %>" class="footer-widget__contact-email"><%= client.assignedOperator.email %></a><br>
+                                    <% if (serviceUser.assignedSupportWorker && serviceUser.assignedSupportWorker.email) { %>
+                                        <a href="mailto:<%= serviceUser.assignedSupportWorker.email %>" class="footer-widget__contact-email"><%= serviceUser.assignedSupportWorker.email %></a><br>
                                     <% } else { %>
                                         <a href="mailto:support@caresystem.com" class="footer-widget__contact-email">support@caresystem.com</a><br>
                                     <% } %>
-                                    <% if (client.assignedOperator && client.assignedOperator.phone) { %>
-                                        <a href="tel:<%= client.assignedOperator.phone %>" class="footer-widget__contact-phone"><%= client.assignedOperator.phone %></a>
+                                    <% if (serviceUser.assignedSupportWorker && serviceUser.assignedSupportWorker.phone) { %>
+                                        <a href="tel:<%= serviceUser.assignedSupportWorker.phone %>" class="footer-widget__contact-phone"><%= serviceUser.assignedSupportWorker.phone %></a>
                                     <% } else { %>
                                         <a href="tel:+1234567890" class="footer-widget__contact-phone">+1 234 567 890</a>
                                     <% } %>
@@ -960,7 +960,7 @@
                                 <h3 class="footer-widget__title">Quick Links</h3>
                                 <ul class="footer-widget__links-list list-unstyled">
                                     <li><a href="/guardian/dashboard">Dashboard</a></li>
-                                    <li><a href="/guardian/client">Client Information</a></li>
+                                    <li><a href="/guardian/service-user">Service User Information</a></li>
                                     <li><a href="/guardian/interactions">Interactions</a></li>
                                     <li><a href="/guardian/documents">Documents</a></li>
                                     <li><a href="/guardian/change-password">Settings</a></li>
@@ -969,17 +969,17 @@
                         </div>
                         <div class="col-xl-4 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="300ms">
                             <div class="footer-widget__column footer-widget__newsletter">
-                                <h3 class="footer-widget__title">Client Status</h3>
+                                <h3 class="footer-widget__title">Service User Status</h3>
                                 <div class="system-status">
                                     <div class="d-flex justify-content-between mb-2">
-                                        <span>Client Status</span>
-                                        <span class="text-<%= client.status === 'active' ? 'success' : 'warning' %> text-capitalize">
-                                            <%= client.status %>
+                                        <span>Service User Status</span>
+                                        <span class="text-<%= serviceUser.status === 'active' ? 'success' : 'warning' %> text-capitalize">
+                                            <%= serviceUser.status %>
                                         </span>
                                     </div>
                                     <div class="d-flex justify-content-between mb-2">
                                         <span>Care Level</span>
-                                        <span class="text-capitalize"><%= client.careInfo.careLevel %></span>
+                                        <span class="text-capitalize"><%= serviceUser.careInfo.careLevel %></span>
                                     </div>
                                     <div class="d-flex justify-content-between mb-2">
                                         <span>Last Interaction</span>
@@ -1006,7 +1006,7 @@
                             <div class="site-footer__copy-right-inner">
                                 <p class="site-footer__copy-right-text">© <%= new Date().getFullYear() %> Care System. All rights reserved.</p>
                                 <p class="site-footer__copy-right-text small mt-2">
-                                    Guardian access for: <%= client.firstName %> <%= client.lastName %>
+                                    Guardian access for: <%= serviceUser.firstName %> <%= serviceUser.lastName %>
                                 </p>
                             </div>
                         </div>
@@ -1029,21 +1029,21 @@
             <ul class="mobile-nav__contact list-unstyled">
                 <li>
                     <i class="fa fa-envelope"></i>
-                    <a href="mailto:<%= client.assignedOperator ? client.assignedOperator.email : 'support@caresystem.com' %>">
-                        <%= client.assignedOperator ? client.assignedOperator.email : 'support@caresystem.com' %>
+                    <a href="mailto:<%= serviceUser.assignedSupportWorker ? serviceUser.assignedSupportWorker.email : 'support@caresystem.com' %>">
+                        <%= serviceUser.assignedSupportWorker ? serviceUser.assignedSupportWorker.email : 'support@caresystem.com' %>
                     </a>
                 </li>
                 <li>
                     <i class="fa fa-phone-alt"></i>
-                    <a href="tel:<%= client.contact.emergencyContact.phone || '123-456-7890' %>">
-                        <%= client.contact.emergencyContact.phone || '123-456-7890' %>
+                    <a href="tel:<%= serviceUser.contact.emergencyContact.phone || '123-456-7890' %>">
+                        <%= serviceUser.contact.emergencyContact.phone || '123-456-7890' %>
                     </a>
                 </li>
             </ul>
             <div class="mobile-nav__top">
                 <div class="mobile-nav__social">
-                    <a href="mailto:<%= client.assignedOperator ? client.assignedOperator.email : 'support@caresystem.com' %>" class="fas fa-envelope" title="Email"></a>
-                    <a href="tel:<%= client.contact.emergencyContact.phone || '123-456-7890' %>" class="fas fa-phone" title="Call"></a>
+                    <a href="mailto:<%= serviceUser.assignedSupportWorker ? serviceUser.assignedSupportWorker.email : 'support@caresystem.com' %>" class="fas fa-envelope" title="Email"></a>
+                    <a href="tel:<%= serviceUser.contact.emergencyContact.phone || '123-456-7890' %>" class="fas fa-phone" title="Call"></a>
                 </div>
             </div>
         </div>

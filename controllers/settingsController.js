@@ -5,34 +5,34 @@ const moment = require('moment');
 // Get settings page
 exports.getSettings = async (req, res) => {
     try {
-        const provider = await User.findById(req.session.user._id);
+        const careProvider = await User.findById(req.session.user._id);
         
-        res.render('provider/settings/index', {
+        res.render('careProvider/settings/index', {
             title: 'Profile Settings',
             user: req.session.user,
-            provider,
+            careProvider,
             moment
         });
     } catch (error) {
         console.error('Error loading settings:', error);
         req.flash('error', 'Error loading settings');
-        res.redirect('/provider/dashboard');
+        res.redirect('/care-provider/dashboard');
     }
 };
 
 // Update settings
 exports.updateSettings = async (req, res) => {
     try {
-        const providerId = req.session.user._id;
+        const careProviderId = req.session.user._id;
         
         const updateData = {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             phone: req.body.phone,
-            'providerInfo.companyName': req.body.companyName,
-            'providerInfo.companyRegNumber': req.body.companyRegNumber,
-            'providerInfo.cqcLocationId': req.body.cqcLocationId,
-            'providerInfo.website': req.body.website,
+            'careProviderInfo.companyName': req.body.companyName,
+            'careProviderInfo.companyRegNumber': req.body.companyRegNumber,
+            'careProviderInfo.cqcLocationId': req.body.cqcLocationId,
+            'careProviderInfo.website': req.body.website,
             address: {
                 street: req.body.addressStreet,
                 city: req.body.addressCity,
@@ -45,7 +45,7 @@ exports.updateSettings = async (req, res) => {
         // Handle profile image upload if present
         if (req.files && req.files.profileImage) {
             const profileImage = req.files.profileImage;
-            const uploadPath = path.join(__dirname, '../uploads/profiles/', `${providerId}_profile.${profileImage.name.split('.').pop()}`);
+            const uploadPath = path.join(__dirname, '../uploads/profiles/', `${careProviderId}_profile.${profileImage.name.split('.').pop()}`);
             
             // Ensure directory exists
             const uploadDir = path.join(__dirname, '../uploads/profiles/');
@@ -54,28 +54,28 @@ exports.updateSettings = async (req, res) => {
             }
             
             await profileImage.mv(uploadPath);
-            updateData.profileImage = `/uploads/profiles/${providerId}_profile.${profileImage.name.split('.').pop()}`;
+            updateData.profileImage = `/uploads/profiles/${careProviderId}_profile.${profileImage.name.split('.').pop()}`;
         }
         
         // Update password if provided
         if (req.body.newPassword && req.body.currentPassword) {
-            const provider = await User.findById(providerId);
-            const isValid = await provider.comparePassword(req.body.currentPassword);
+            const careProvider = await User.findById(careProviderId);
+            const isValid = await careProvider.comparePassword(req.body.currentPassword);
             
             if (!isValid) {
                 req.flash('error', 'Current password is incorrect');
-                return res.redirect('/provider/settings');
+                return res.redirect('/care-provider/settings');
             }
             
             if (req.body.newPassword !== req.body.confirmPassword) {
                 req.flash('error', 'New passwords do not match');
-                return res.redirect('/provider/settings');
+                return res.redirect('/care-provider/settings');
             }
             
-            provider.password = req.body.newPassword;
-            await provider.save();
+            careProvider.password = req.body.newPassword;
+            await careProvider.save();
         } else {
-            await User.findByIdAndUpdate(providerId, updateData);
+            await User.findByIdAndUpdate(careProviderId, updateData);
         }
         
         // Update session
@@ -83,59 +83,59 @@ exports.updateSettings = async (req, res) => {
             ...req.session.user,
             firstName: req.body.firstName,
             lastName: req.body.lastName,
-            providerInfo: {
-                ...req.session.user.providerInfo,
+            careProviderInfo: {
+                ...req.session.user.careProviderInfo,
                 companyName: req.body.companyName
             }
         };
         
         req.flash('success', 'Settings updated successfully');
-        res.redirect('/provider/settings');
+        res.redirect('/care-provider/settings');
     } catch (error) {
         console.error('Error updating settings:', error);
         req.flash('error', 'Error updating settings');
-        res.redirect('/provider/settings');
+        res.redirect('/care-provider/settings');
     }
 };
 
 // Get billing page
 exports.getBilling = async (req, res) => {
     try {
-        const provider = await User.findById(req.session.user._id);
+        const careProvider = await User.findById(req.session.user._id);
         
-        if (!provider) {
-            req.flash('error', 'Provider not found');
-            return res.redirect('/provider/settings');
+        if (!careProvider) {
+            req.flash('error', 'Care Provider not found');
+            return res.redirect('/care-provider/settings');
         }
         
         // Get usage statistics
-        const [operatorCount, clientCount] = await Promise.all([
-            User.countDocuments({ role: 'operator', providerId: provider._id }),
-            User.countDocuments({ role: 'client', providerId: provider._id })
+        const [supportWorkerCount, clientCount] = await Promise.all([
+            User.countDocuments({ role: 'support_worker', careProviderId: careProvider._id }),
+            User.countDocuments({ role: 'service_user', careProviderId: careProvider._id })
         ]);
         
         // Calculate percentages for progress bars based on plan limits
         const planLimits = {
-            essential: { operators: 10, clients: 50 },
-            professional: { operators: 30, clients: 200 },
-            enterprise: { operators: 1000, clients: 5000 } // effectively unlimited
+            essential: { supportWorkers: 10, serviceUsers: 50 },
+            professional: { supportWorkers: 30, serviceUsers: 200 },
+            enterprise: { supportWorkers: 1000, serviceUsers: 5000 } // effectively unlimited
         };
         
-        const currentPlan = provider.providerInfo.subscription.plan || 'essential';
+        const currentPlan = careProvider.careProviderInfo.subscription.plan || 'essential';
         const limits = planLimits[currentPlan] || planLimits.essential;
         
-        const operatorsPercentage = Math.min((operatorCount / limits.operators) * 100, 100);
-        const clientsPercentage = Math.min((clientCount / limits.clients) * 100, 100);
+        const operatorsPercentage = Math.min((supportWorkerCount / limits.supportWorkers) * 100, 100);
+        const clientsPercentage = Math.min((clientCount / limits.serviceUsers) * 100, 100);
         
-        res.render('provider/settings/billing', {
+        res.render('careProvider/settings/billing', {
             title: 'Billing & Subscription',
             user: req.session.user,
-            provider,
+            careProvider,
             usage: {
-                operators: operatorCount,
-                clients: clientCount,
-                operatorsLimit: limits.operators,
-                clientsLimit: limits.clients,
+                supportWorkers: supportWorkerCount,
+                serviceUsers: clientCount,
+                operatorsLimit: limits.supportWorkers,
+                clientsLimit: limits.serviceUsers,
                 operatorsPercentage: operatorsPercentage,
                 clientsPercentage: clientsPercentage
             },
@@ -144,35 +144,35 @@ exports.getBilling = async (req, res) => {
     } catch (error) {
         console.error('Error loading billing:', error);
         req.flash('error', 'Error loading billing information');
-        res.redirect('/provider/settings');
+        res.redirect('/care-provider/settings');
     }
 };
 
 // Upgrade subscription
 exports.upgradeSubscription = async (req, res) => {
     try {
-        const providerId = req.session.user._id;
+        const careProviderId = req.session.user._id;
         const { plan } = req.body;
         
         const plans = {
             essential: { 
                 name: 'essential',
-                maxOperators: 10, 
-                maxClients: 50, 
+                maxSupportWorkers: 10, 
+                maxServiceUsers: 50, 
                 price: 99.99,
                 features: ['basic_scheduling', 'interaction_logging', 'email_support']
             },
             professional: { 
                 name: 'professional',
-                maxOperators: 30, 
-                maxClients: 200, 
+                maxSupportWorkers: 30, 
+                maxServiceUsers: 200, 
                 price: 159.99,
                 features: ['advanced_scheduling', 'medication_management', 'guardian_portal', 'priority_support']
             },
             enterprise: { 
                 name: 'enterprise',
-                maxOperators: 1000, 
-                maxClients: 5000, 
+                maxSupportWorkers: 1000, 
+                maxServiceUsers: 5000, 
                 price: 299.99,
                 features: ['unlimited_everything', 'multi_location', 'api_access', 'dedicated_manager']
             }
@@ -181,49 +181,49 @@ exports.upgradeSubscription = async (req, res) => {
         const selectedPlan = plans[plan];
         if (!selectedPlan) {
             req.flash('error', 'Invalid plan selected');
-            return res.redirect('/provider/settings/billing');
+            return res.redirect('/care-provider/settings/billing');
         }
         
         const expiryDate = new Date();
         expiryDate.setMonth(expiryDate.getMonth() + 1); // Monthly billing
         
-        await User.findByIdAndUpdate(providerId, {
-            'providerInfo.subscription': {
+        await User.findByIdAndUpdate(careProviderId, {
+            'careProviderInfo.subscription': {
                 plan: selectedPlan.name,
                 status: 'active',
                 startDate: new Date(),
                 expiryDate,
-                maxOperators: selectedPlan.maxOperators,
-                maxClients: selectedPlan.maxClients,
+                maxSupportWorkers: selectedPlan.maxSupportWorkers,
+                maxServiceUsers: selectedPlan.maxServiceUsers,
                 features: selectedPlan.features
             }
         });
         
         // Update session
-        req.session.user.providerInfo.subscription.plan = selectedPlan.name;
-        req.session.user.providerInfo.subscription.status = 'active';
-        req.session.user.providerInfo.subscription.maxOperators = selectedPlan.maxOperators;
-        req.session.user.providerInfo.subscription.maxClients = selectedPlan.maxClients;
+        req.session.user.careProviderInfo.subscription.plan = selectedPlan.name;
+        req.session.user.careProviderInfo.subscription.status = 'active';
+        req.session.user.careProviderInfo.subscription.maxSupportWorkers = selectedPlan.maxSupportWorkers;
+        req.session.user.careProviderInfo.subscription.maxServiceUsers = selectedPlan.maxServiceUsers;
         
         req.flash('success', `Successfully upgraded to ${plan} plan`);
-        res.redirect('/provider/settings/billing');
+        res.redirect('/care-provider/settings/billing');
     } catch (error) {
         console.error('Error upgrading subscription:', error);
         req.flash('error', 'Error upgrading subscription');
-        res.redirect('/provider/settings/billing');
+        res.redirect('/care-provider/settings/billing');
     }
 };
 
 // Get team settings
 exports.getTeam = async (req, res) => {
     try {
-        // Get team members (operators and admins) for this provider
+        // Get team members (support workers and admins) for this care provider
         const teamMembers = await User.find({
-            providerId: req.session.user._id,
-            role: { $in: ['operator', 'admin'] }
+            careProviderId: req.session.user._id,
+            role: { $in: ['support_worker', 'admin'] }
         }).select('firstName lastName email role isActive');
         
-        res.render('provider/settings/team', {
+        res.render('careProvider/settings/team', {
             title: 'Team Settings',
             user: req.session.user,
             teamMembers,
@@ -232,7 +232,7 @@ exports.getTeam = async (req, res) => {
     } catch (error) {
         console.error('Error loading team settings:', error);
         req.flash('error', 'Error loading team settings');
-        res.redirect('/provider/settings');
+        res.redirect('/care-provider/settings');
     }
 };
 
@@ -245,7 +245,7 @@ exports.inviteTeamMember = async (req, res) => {
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             req.flash('error', 'User with this email already exists');
-            return res.redirect('/provider/settings/team');
+            return res.redirect('/care-provider/settings/team');
         }
         
         // Generate temporary password
@@ -258,8 +258,8 @@ exports.inviteTeamMember = async (req, res) => {
             password: tempPassword,
             firstName,
             lastName,
-            role: role || 'operator',
-            providerId: req.session.user._id,
+            role: role || 'support_worker',
+            careProviderId: req.session.user._id,
             isActive: true,
             emailVerified: false
         });
@@ -269,29 +269,29 @@ exports.inviteTeamMember = async (req, res) => {
         // TODO: Send invitation email with tempPassword
         
         req.flash('success', `Invitation sent to ${email}`);
-        res.redirect('/provider/settings/team');
+        res.redirect('/care-provider/settings/team');
     } catch (error) {
         console.error('Error inviting team member:', error);
         req.flash('error', 'Error sending invitation');
-        res.redirect('/provider/settings/team');
+        res.redirect('/care-provider/settings/team');
     }
 };
 
 // Get notifications settings
 exports.getNotifications = async (req, res) => {
     try {
-        const provider = await User.findById(req.session.user._id);
+        const careProvider = await User.findById(req.session.user._id);
         
-        res.render('provider/settings/notifications', {
+        res.render('careProvider/settings/notifications', {
             title: 'Notification Settings',
             user: req.session.user,
-            provider,
+            careProvider,
             moment
         });
     } catch (error) {
         console.error('Error loading notification settings:', error);
         req.flash('error', 'Error loading notification settings');
-        res.redirect('/provider/settings');
+        res.redirect('/care-provider/settings');
     }
 };
 
@@ -309,18 +309,18 @@ exports.updateNotifications = async (req, res) => {
         });
         
         req.flash('success', 'Notification settings updated');
-        res.redirect('/provider/settings/notifications');
+        res.redirect('/care-provider/settings/notifications');
     } catch (error) {
         console.error('Error updating notification settings:', error);
         req.flash('error', 'Error updating notification settings');
-        res.redirect('/provider/settings/notifications');
+        res.redirect('/care-provider/settings/notifications');
     }
 };
 
 // Get security settings
 exports.getSecurity = async (req, res) => {
     try {
-        res.render('provider/settings/security', {
+        res.render('careProvider/settings/security', {
             title: 'Security Settings',
             user: req.session.user,
             moment
@@ -328,7 +328,7 @@ exports.getSecurity = async (req, res) => {
     } catch (error) {
         console.error('Error loading security settings:', error);
         req.flash('error', 'Error loading security settings');
-        res.redirect('/provider/settings');
+        res.redirect('/care-provider/settings');
     }
 };
 
@@ -343,11 +343,11 @@ exports.updateSecurity = async (req, res) => {
         });
         
         req.flash('success', 'Security settings updated');
-        res.redirect('/provider/settings/security');
+        res.redirect('/care-provider/settings/security');
     } catch (error) {
         console.error('Error updating security settings:', error);
         req.flash('error', 'Error updating security settings');
-        res.redirect('/provider/settings/security');
+        res.redirect('/care-provider/settings/security');
     }
 };
 
@@ -361,7 +361,7 @@ exports.getApi = async (req, res) => {
             await User.findByIdAndUpdate(req.session.user._id, { apiKey });
         }
         
-        res.render('provider/settings/api', {
+        res.render('careProvider/settings/api', {
             title: 'API Settings',
             user: req.session.user,
             apiKey,
@@ -370,7 +370,7 @@ exports.getApi = async (req, res) => {
     } catch (error) {
         console.error('Error loading API settings:', error);
         req.flash('error', 'Error loading API settings');
-        res.redirect('/provider/settings');
+        res.redirect('/care-provider/settings');
     }
 };
 
@@ -381,11 +381,11 @@ exports.regenerateApiKey = async (req, res) => {
         await User.findByIdAndUpdate(req.session.user._id, { apiKey: newApiKey });
         
         req.flash('success', 'API key regenerated successfully');
-        res.redirect('/provider/settings/api');
+        res.redirect('/care-provider/settings/api');
     } catch (error) {
         console.error('Error regenerating API key:', error);
         req.flash('error', 'Error regenerating API key');
-        res.redirect('/provider/settings/api');
+        res.redirect('/care-provider/settings/api');
     }
 };
 

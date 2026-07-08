@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { isAuthenticated, hasRole } = require('../controllers/authController');
 const Interaction = require('../models/Interaction');
-const Client = require('../models/Client');
+const ServiceUser = require('../models/ServiceUser');
 const User = require('../models/User');
 const moment = require('moment');
 
@@ -21,7 +21,7 @@ router.get('/admin/interactions', isAuthenticated, adminMiddleware, async (req, 
         const user = req.session.user;
         
         // Get filter parameters
-        const { type, operator, client: filterClient, status, startDate, endDate } = req.query;
+        const { type, supportWorker, serviceUser: filterClient, status, startDate, endDate } = req.query;
         
         let query = {};
         
@@ -31,11 +31,11 @@ router.get('/admin/interactions', isAuthenticated, adminMiddleware, async (req, 
         }
         
         if (filterClient && filterClient !== 'all') {
-            query.client = filterClient;
+            query.serviceUser = filterClient;
         }
         
-        if (operator && operator !== 'all') {
-            query.operator = operator;
+        if (supportWorker && supportWorker !== 'all') {
+            query.supportWorker = supportWorker;
         }
         
         if (status && status !== 'all') {
@@ -55,20 +55,20 @@ router.get('/admin/interactions', isAuthenticated, adminMiddleware, async (req, 
         
         // Fetch interactions with populated data
         const interactions = await Interaction.find(query)
-            .populate('client', 'firstName lastName referenceId')
-            .populate('operator', 'firstName lastName email')
+            .populate('service_user', 'firstName lastName referenceId')
+            .populate('support_worker', 'firstName lastName email')
             .sort({ startTime: -1 })
             .lean();
         
-        // Get all clients for filter dropdown
-        const clients = await Client.find({})
+        // Get all service users for filter dropdown
+        const serviceUsers = await ServiceUser.find({})
             .select('firstName lastName referenceId')
             .sort({ lastName: 1 })
             .lean();
         
-        // Get all operators for filter dropdown
-        const operators = await User.find({ 
-            role: { $in: ['operator', 'admin'] } 
+        // Get all support workers for filter dropdown
+        const supportWorkers = await User.find({ 
+            role: { $in: ['support_worker', 'admin'] } 
         })
             .select('firstName lastName email')
             .sort({ lastName: 1 })
@@ -109,11 +109,11 @@ router.get('/admin/interactions', isAuthenticated, adminMiddleware, async (req, 
         res.render('admin/interactions', {
             title: 'All Interactions || Care System Admin',
             interactions,
-            clients,
-            operators,
+            serviceUsers,
+            supportWorkers,
             user,
             type: type || 'all',
-            operator: operator || 'all',
+            supportWorker: supportWorker || 'all',
             filterClient: filterClient || 'all',
             status: status || 'all',
             startDate: startDate || '',
@@ -138,8 +138,8 @@ router.get('/admin/interactions/:id', isAuthenticated, adminMiddleware, async (r
         const interactionId = req.params.id;
         
         const interaction = await Interaction.findById(interactionId)
-            .populate('client', 'firstName lastName referenceId dateOfBirth medicalInfo address phone emergencyContact')
-            .populate('operator', 'firstName lastName email phone role')
+            .populate('service_user', 'firstName lastName referenceId dateOfBirth medicalInfo address phone emergencyContact')
+            .populate('support_worker', 'firstName lastName email phone role')
             .lean();
         
         if (!interaction) {
@@ -167,7 +167,7 @@ router.get('/admin/interactions/:id/edit', isAuthenticated, adminMiddleware, asy
         const interactionId = req.params.id;
         
         const interaction = await Interaction.findById(interactionId)
-            .populate('client', 'firstName lastName referenceId')
+            .populate('service_user', 'firstName lastName referenceId')
             .lean();
         
         if (!interaction) {
@@ -175,15 +175,15 @@ router.get('/admin/interactions/:id/edit', isAuthenticated, adminMiddleware, asy
             return res.redirect('/admin/interactions');
         }
         
-        // Get all clients
-        const clients = await Client.find({})
+        // Get all service users
+        const serviceUsers = await ServiceUser.find({})
             .select('firstName lastName referenceId')
             .sort({ lastName: 1 })
             .lean();
         
-        // Get all operators
-        const operators = await User.find({ 
-            role: { $in: ['operator', 'admin'] } 
+        // Get all support workers
+        const supportWorkers = await User.find({ 
+            role: { $in: ['support_worker', 'admin'] } 
         })
             .select('firstName lastName email')
             .sort({ lastName: 1 })
@@ -192,8 +192,8 @@ router.get('/admin/interactions/:id/edit', isAuthenticated, adminMiddleware, asy
         res.render('admin/edit-interaction', {
             title: `Edit Interaction: ${interaction.title}`,
             interaction,
-            clients,
-            operators,
+            serviceUsers,
+            supportWorkers,
             user: req.session.user,
             interactionJSON: JSON.stringify(interaction)
         });
@@ -289,15 +289,15 @@ router.get('/admin/interactions/create', isAuthenticated, adminMiddleware, async
     try {
         const user = req.session.user;
         
-        // Get all clients for dropdown
-        const clients = await Client.find({})
+        // Get all service users for dropdown
+        const serviceUsers = await ServiceUser.find({})
             .select('firstName lastName referenceId')
             .sort({ lastName: 1 })
             .lean();
         
-        // Get all operators for dropdown
-        const operators = await User.find({ 
-            role: { $in: ['operator', 'admin'] } 
+        // Get all support workers for dropdown
+        const supportWorkers = await User.find({ 
+            role: { $in: ['support_worker', 'admin'] } 
         })
             .select('firstName lastName email')
             .sort({ lastName: 1 })
@@ -305,8 +305,8 @@ router.get('/admin/interactions/create', isAuthenticated, adminMiddleware, async
         
         res.render('admin/create-interaction', {
             title: 'Create New Interaction',
-            clients,
-            operators,
+            serviceUsers,
+            supportWorkers,
             user,
             moment
         });
@@ -326,9 +326,9 @@ router.post('/admin/interactions', isAuthenticated, adminMiddleware, async (req,
         
         // Validate required fields
         if (!interactionData.title || !interactionData.description || 
-            !interactionData.client || !interactionData.operator || 
+            !interactionData.serviceUser || !interactionData.supportWorker || 
             !interactionData.type || !interactionData.startTime) {
-            req.flash('error', 'Title, description, client, operator, type, and start time are required');
+            req.flash('error', 'Title, description, service user, support worker, type, and start time are required');
             return res.redirect('/admin/interactions/create');
         }
         

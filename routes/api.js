@@ -13,34 +13,34 @@ router.get('/stats/dashboard', isAuthenticated, async (req, res) => {
         
         let stats = {};
         
-        if (userRole === 'service_provider') {
-            const [totalClients, totalOperators, totalInteractions, activeSchedules] = await Promise.all([
-                User.countDocuments({ role: 'client', providerId: userId, isActive: true }),
-                User.countDocuments({ role: 'operator', providerId: userId, isActive: true }),
-                Interaction.countDocuments({ providerId: userId }),
-                Schedule.countDocuments({ providerId: userId, isActive: true })
+        if (userRole === 'care_provider') {
+            const [totalServiceUsers, totalOperators, totalInteractions, activeSchedules] = await Promise.all([
+                User.countDocuments({ role: 'service_user', careProviderId: userId, isActive: true }),
+                User.countDocuments({ role: 'support_worker', careProviderId: userId, isActive: true }),
+                Interaction.countDocuments({ careProviderId: userId }),
+                Schedule.countDocuments({ careProviderId: userId, isActive: true })
             ]);
             
-            stats = { totalClients, totalOperators, totalInteractions, activeSchedules };
-        } else if (userRole === 'operator') {
-            const [todayVisits, assignedClients, recentInteractions] = await Promise.all([
+            stats = { totalServiceUsers, totalOperators, totalInteractions, activeSchedules };
+        } else if (userRole === 'support_worker') {
+            const [todayVisits, assignedServiceUsers, recentInteractions] = await Promise.all([
                 Interaction.countDocuments({ 
-                    operatorId: userId,
+                    supportWorkerId: userId,
                     scheduledStart: { 
                         $gte: new Date().setHours(0,0,0,0),
                         $lt: new Date().setHours(23,59,59,999)
                     }
                 }),
                 User.countDocuments({ 
-                    'operatorInfo.assignedClients': userId 
+                    'supportWorkerInfo.assignedServiceUsers': userId 
                 }),
                 Interaction.countDocuments({ 
-                    operatorId: userId,
+                    supportWorkerId: userId,
                     createdAt: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) }
                 })
             ]);
             
-            stats = { todayVisits, assignedClients, recentInteractions };
+            stats = { todayVisits, assignedServiceUsers, recentInteractions };
         }
         
         res.json({ success: true, stats });
@@ -50,42 +50,42 @@ router.get('/stats/dashboard', isAuthenticated, async (req, res) => {
     }
 });
 
-// Get clients list for API (for dropdowns, etc.)
-router.get('/clients', isAuthenticated, async (req, res) => {
+// Get service users list for API (for dropdowns, etc.)
+router.get('/service-users', isAuthenticated, async (req, res) => {
     try {
-        const providerId = req.session.user.role === 'service_provider' 
+        const careProviderId = req.session.user.role === 'care_provider' 
             ? req.session.user._id 
-            : req.session.user.providerId;
+            : req.session.user.careProviderId;
         
-        const clients = await User.find({ 
-            role: 'client', 
-            providerId,
+        const serviceUsers = await User.find({ 
+            role: 'service_user', 
+            careProviderId,
             isActive: true 
-        }).select('firstName lastName clientInfo.nhsNumber');
+        }).select('firstName lastName serviceUserInfo.nhsNumber');
         
-        res.json({ success: true, clients });
+        res.json({ success: true, serviceUsers });
     } catch (error) {
-        console.error('API Clients Error:', error);
+        console.error('API Service Users Error:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 });
 
-// Get operators list for API
-router.get('/operators', isAuthenticated, async (req, res) => {
+// Get support workers list for API
+router.get('/support-workers', isAuthenticated, async (req, res) => {
     try {
-        const providerId = req.session.user.role === 'service_provider' 
+        const careProviderId = req.session.user.role === 'care_provider' 
             ? req.session.user._id 
-            : req.session.user.providerId;
+            : req.session.user.careProviderId;
         
-        const operators = await User.find({ 
-            role: 'operator', 
-            providerId,
+        const supportWorkers = await User.find({ 
+            role: 'support_worker', 
+            careProviderId,
             isActive: true 
-        }).select('firstName lastName operatorInfo.employeeId');
+        }).select('firstName lastName supportWorkerInfo.employeeId');
         
-        res.json({ success: true, operators });
+        res.json({ success: true, supportWorkers });
     } catch (error) {
-        console.error('API Operators Error:', error);
+        console.error('API Support Workers Error:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 });
@@ -99,10 +99,10 @@ router.get('/schedule/:date', isAuthenticated, async (req, res) => {
         
         let query = {};
         
-        if (req.session.user.role === 'service_provider') {
-            query.providerId = req.session.user._id;
-        } else if (req.session.user.role === 'operator') {
-            query.operatorId = req.session.user._id;
+        if (req.session.user.role === 'care_provider') {
+            query.careProviderId = req.session.user._id;
+        } else if (req.session.user.role === 'support_worker') {
+            query.supportWorkerId = req.session.user._id;
         }
         
         const schedules = await Schedule.find({
@@ -112,8 +112,8 @@ router.get('/schedule/:date', isAuthenticated, async (req, res) => {
                 { createdAt: { $gte: startOfDay, $lte: endOfDay } }
             ]
         })
-        .populate('clientId', 'firstName lastName')
-        .populate('operatorId', 'firstName lastName')
+        .populate('serviceUserId', 'firstName lastName')
+        .populate('supportWorkerId', 'firstName lastName')
         .sort('startTime');
         
         res.json({ success: true, schedules });
@@ -130,17 +130,17 @@ router.get('/interactions/recent', isAuthenticated, async (req, res) => {
         
         let query = {};
         
-        if (req.session.user.role === 'service_provider') {
-            query.providerId = req.session.user._id;
-        } else if (req.session.user.role === 'operator') {
-            query.operatorId = req.session.user._id;
-        } else if (req.session.user.role === 'client') {
-            query.clientId = req.session.user._id;
+        if (req.session.user.role === 'care_provider') {
+            query.careProviderId = req.session.user._id;
+        } else if (req.session.user.role === 'support_worker') {
+            query.supportWorkerId = req.session.user._id;
+        } else if (req.session.user.role === 'service_user') {
+            query.serviceUserId = req.session.user._id;
         }
         
         const interactions = await Interaction.find(query)
-            .populate('clientId', 'firstName lastName')
-            .populate('operatorId', 'firstName lastName')
+            .populate('serviceUserId', 'firstName lastName')
+            .populate('supportWorkerId', 'firstName lastName')
             .sort('-createdAt')
             .limit(limit);
         
@@ -156,7 +156,7 @@ router.post('/visits/:id/checkin', isAuthenticated, async (req, res) => {
     try {
         const interaction = await Interaction.findOne({
             _id: req.params.id,
-            operatorId: req.session.user._id,
+            supportWorkerId: req.session.user._id,
             status: 'scheduled'
         });
         
@@ -182,7 +182,7 @@ router.post('/visits/:id/checkout', isAuthenticated, async (req, res) => {
     try {
         const interaction = await Interaction.findOne({
             _id: req.params.id,
-            operatorId: req.session.user._id,
+            supportWorkerId: req.session.user._id,
             status: 'in_progress'
         });
         

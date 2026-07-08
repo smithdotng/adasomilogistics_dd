@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Support Workers || Care System Admin</title>
+    
+    <!-- favicons Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicons/favicon-16x16.png" />
+    <link rel="manifest" href="/assets/images/favicons/site.webmanifest" />
+    <meta name="description" content="Care System - Manage Support Workers" />
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <!-- CSS libraries -->
+    <link rel="stylesheet" href="/assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/animate/animate.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/animate/custom-animate.css" />
+    <link rel="stylesheet" href="/assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/jarallax/jarallax.css" />
+    <link rel="stylesheet" href="/assets/vendors/jquery-magnific-popup/jquery.magnific-popup.css" />
+    <link rel="stylesheet" href="/assets/vendors/nouislider/nouislider.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/nouislider/nouislider.pips.css" />
+    <link rel="stylesheet" href="/assets/vendors/odometer/odometer.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/swiper/swiper.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/sominx-icons/style.css">
+    <link rel="stylesheet" href="/assets/vendors/tiny-slider/tiny-slider.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/reey-font/stylesheet.css" />
+    <link rel="stylesheet" href="/assets/vendors/owl-carousel/owl.carousel.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/owl-carousel/owl.theme.default.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/twentytwenty/twentytwenty.css" />
+    <link rel="stylesheet" href="/assets/vendors/bxslider/jquery.bxslider.css" />
+    <link rel="stylesheet" href="/assets/vendors/bootstrap-select/css/bootstrap-select.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/vegas/vegas.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/jquery-ui/jquery-ui.css" />
+    <link rel="stylesheet" href="/assets/vendors/timepicker/timePicker.css" />
+
+    <!-- template styles -->
+    <link rel="stylesheet" href="/assets/css/sominx.css" />
+    <link rel="stylesheet" href="/assets/css/sominx-responsive.css" />
+    
+    <!-- Custom Styles for Support Workers Page -->
+    <style>
+        .support-workers-header {
+            background: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0px 10px 60px 0px rgba(0, 0, 0, 0.07);
+        }
+        
+        .filter-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0px 10px 60px 0px rgba(0, 0, 0, 0.07);
+        }
+        
+        .support-workers-table-card {
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0px 10px 60px 0px rgba(0, 0, 0, 0.07);
+            margin-bottom: 30px;
+        }
+        
+        .support-worker-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        .support-worker-avatar-sm {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-active {
+            background: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+        }
+        
+        .status-inactive {
+            background: rgba(108, 117, 125, 0.1);
+            color: #6c757d;
+        }
+        
+        .role-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .role-admin {
+            background: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+        }
+        
+        .role-support-worker {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .action-btn-view {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+        
+        .action-btn-view:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .action-btn-edit {
+            background: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+        }
+        
+        .action-btn-edit:hover {
+            background: #28a745;
+            color: white;
+        }
+        
+        .action-btn-delete {
+            background: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+        }
+        
+        .action-btn-delete:hover {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .action-btn-disabled {
+            background: rgba(108, 117, 125, 0.1);
+            color: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .empty-state-icon {
+            font-size: 60px;
+            color: #e0e0e0;
+            margin-bottom: 20px;
+        }
+        
+        .table th {
+            font-weight: 600;
+            color: #213360;
+            border-bottom: 2px solid #f0f0f0;
+            padding: 20px 15px;
+            background: #f9f9f9;
+        }
+        
+        .table td {
+            padding: 20px 15px;
+            vertical-align: middle;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .table tbody tr:hover {
+            background: #f9f9f9;
+        }
+        
+        .stat-card {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card h3 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stat-card p {
+            opacity: 0.9;
+            margin-bottom: 0;
+            font-size: 14px;
+        }
+        
+        .form-control, .form-select {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 10px 15px;
+            height: 48px;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .thm-btn {
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="preloader">
+        <img class="preloader__image" width="60" src="/assets/images/loader.png" alt="" />
+    </div>
+    <!-- /.preloader -->
+    
+    <div class="page-wrapper">
+        <!-- Header Start -->
+        <header class="main-header clearfix">
+            <nav class="main-menu clearfix">
+                <div class="main-menu-wrapper clearfix">
+                    <div class="main-menu-wrapper-inner clearfix">
+                        <div class="main-menu-wrapper__left clearfix">
+                            <div class="main-menu-wrapper__logo">
+                                <a href="/"><img src="/assets/images/resources/logo-1.jpg" alt="Care System"></a>
+                            </div>
+                            <div class="main-menu-wrapper__main-menu">
+                                <a href="#" class="mobile-nav__toggler"><i class="fa fa-bars"></i></a>
+                                <ul class="main-menu__list">
+                                    <li><a href="/admin/dashboard">Dashboard</a></li>
+                                    <li class="dropdown">
+                                        <a href="#">Service Users</a>
+                                        <ul>
+                                            <li><a href="/service-users">All Service Users</a></li>
+                                            <li><a href="/service-users/create">Add New Service User</a></li>
+                                            <li><a href="/admin/service-users">Admin View</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown current">
+                                        <a href="#">Support Workers</a>
+                                        <ul>
+                                            <li><a href="/admin/support-workers">Manage Support Workers</a></li>
+                                            <li><a href="/admin/support-workers/create">Add Support Worker</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="#">Interactions</a>
+                                        <ul>
+                                            <li><a href="/interactions">All Interactions</a></li>
+                                            <li><a href="/interactions/create">Log Interaction</a></li>
+                                            <li><a href="/admin/interactions">Admin View</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="/admin/reports">Reports</a></li>
+                                    <li><a href="/admin/settings">Settings</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="main-menu-wrapper__right">
+                            <div class="main-menu-wrapper__call">
+                                <div class="main-menu-wrapper__call-icon">
+                                    <span class="icon-phone-call"></span>
+                                </div>
+                                <div class="main-menu-wrapper__call-number">
+                                    <p>Welcome back</p>
+                                    <a href="/admin/profile"><%= user.fullName %></a>
+                                </div>
+                            </div>
+                            <div class="main-menu-wrapper__search-box">
+                                <a href="/logout" class="main-menu-wrapper__logout" title="Logout">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <!-- Header End -->
+
+        <div class="stricky-header stricked-menu main-menu">
+            <div class="sticky-header__content"></div>
+        </div>
+
+        <!--Page Header Start-->
+        <section class="page-header" style="background-image: url(/assets/images/backgrounds/page-header-bg.jpg);">
+            <div class="container">
+                <div class="page-header__inner">
+                    <ul class="thm-breadcrumb list-unstyled">
+                        <li><a href="/admin/dashboard">Dashboard</a></li>
+                        <li><span>/</span></li>
+                        <li>Manage Support Workers</li>
+                    </ul>
+                    <h2>Manage Support Workers</h2>
+                </div>
+            </div>
+        </section>
+        <!--Page Header End-->
+
+        <!-- Support Workers Content Start -->
+        <section class="support-workers-content pt-80 pb-120">
+            <div class="container">
+                <!-- Header with Stats -->
+                <div class="support-workers-header wow fadeInUp" data-wow-delay="100ms">
+                    <div class="row align-items-center">
+                        <div class="col-lg-8">
+                            <h3 class="mb-3">
+                                <i class="fas fa-users-cog text-primary me-2"></i>
+                                Support Worker Management
+                            </h3>
+                            <p class="text-muted mb-0">Manage your team of support workers, view their status, and assign service users.</p>
+                        </div>
+                        <div class="col-lg-4 text-lg-end">
+                            <a href="/admin/support-workers/create" class="thm-btn">
+                                <i class="fas fa-plus me-2"></i>Add New Support Worker
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="row mb-5 wow fadeInUp" data-wow-delay="200ms">
+                    <div class="col-xl-3 col-lg-6 col-md-6">
+                        <div class="stat-card">
+                            <h3><%= supportWorkers.filter(op => op.isActive).length %></h3>
+                            <p>Active Support Workers</p>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-6 col-md-6">
+                        <div class="stat-card" style="background: linear-gradient(45deg, #28a745 0%, #34d058 100%);">
+                            <h3><%= supportWorkers.filter(op => op.role === 'support_worker').length %></h3>
+                            <p>Regular Support Workers</p>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-6 col-md-6">
+                        <div class="stat-card" style="background: linear-gradient(45deg, #dc3545 0%, #ff6b6b 100%);">
+                            <h3><%= supportWorkers.filter(op => op.role === 'admin').length %></h3>
+                            <p>Administrators</p>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-6 col-md-6">
+                        <div class="stat-card" style="background: linear-gradient(45deg, #fd7e14 0%, #ff9d42 100%);">
+                            <h3><%= assignmentCounts.reduce((total, assign) => total + assign.count, 0) %></h3>
+                            <p>Total Assignments</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filter Card -->
+                <div class="filter-card wow fadeInUp" data-wow-delay="300ms">
+                    <h5 class="mb-4">
+                        <i class="fas fa-filter text-primary me-2"></i>
+                        Filter Support Workers
+                    </h5>
+                    <form method="GET" class="row g-3">
+                        <div class="col-lg-6">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-0">
+                                    <i class="fas fa-search text-muted"></i>
+                                </span>
+                                <input type="text" class="form-control border-start-0 ps-0" 
+                                       name="search" placeholder="Search by name, email or phone..." 
+                                       value="<%= typeof search !== 'undefined' ? search : '' %>">
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <select class="form-select" name="status">
+                                <option value="all">All Status</option>
+                                <option value="active" <%= (typeof status !== 'undefined' && status === 'active') ? 'selected' : '' %>>Active Only</option>
+                                <option value="inactive" <%= (typeof status !== 'undefined' && status === 'inactive') ? 'selected' : '' %>>Inactive Only</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-3">
+                            <button type="submit" class="thm-btn w-100">
+                                <i class="fas fa-search me-2"></i>Apply Filters
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Support Workers Table Card -->
+                <div class="support-workers-table-card wow fadeInUp" data-wow-delay="400ms">
+                    <% if (supportWorkers.length > 0) { %>
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Support Worker</th>
+                                        <th>Contact</th>
+                                        <th>Role</th>
+                                        <th>Status</th>
+                                        <th>Joined</th>
+                                        <th>Assigned Service Users</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% supportWorkers.forEach(supportWorker => { 
+                                        const assignedCount = assignmentCounts.find(a => a._id && a._id.toString() === supportWorker._id.toString())?.count || 0;
+                                    %>
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="support-worker-avatar me-3">
+                                                        <%= supportWorker.firstName.charAt(0) %><%= supportWorker.lastName.charAt(0) %>
+                                                    </div>
+                                                    <div>
+                                                        <h6 class="mb-1"><%= supportWorker.firstName %> <%= supportWorker.lastName %></h6>
+                                                        <small class="text-muted">ID: <%= supportWorker._id.toString().slice(-6) %></small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="contact-info">
+                                                    <div class="mb-1">
+                                                        <i class="fas fa-envelope text-primary me-2"></i>
+                                                        <small><%= supportWorker.email %></small>
+                                                    </div>
+                                                    <% if (supportWorker.phone) { %>
+                                                        <div>
+                                                            <i class="fas fa-phone text-primary me-2"></i>
+                                                            <small><%= supportWorker.phone %></small>
+                                                        </div>
+                                                    <% } %>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="role-badge role-<%= supportWorker.role %>">
+                                                    <i class="fas fa-<%= supportWorker.role === 'admin' ? 'shield-alt' : 'user' %> me-1"></i>
+                                                    <%= supportWorker.role %>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="status-badge status-<%= supportWorker.isActive ? 'active' : 'inactive' %>">
+                                                    <i class="fas fa-<%= supportWorker.isActive ? 'check-circle' : 'times-circle' %> me-1"></i>
+                                                    <%= supportWorker.isActive ? 'Active' : 'Inactive' %>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div class="text-nowrap">
+                                                    <div class="fw-medium"><%= moment(supportWorker.createdAt).format('MMM D, YYYY') %></div>
+                                                    <small class="text-muted"><%= moment(supportWorker.createdAt).format('h:mm A') %></small>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="support-worker-avatar-sm me-2">
+                                                        <%= assignedCount %>
+                                                    </div>
+                                                    <span class="fw-medium"><%= assignedCount %> service users</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <a href="/admin/support-workers/<%= supportWorker._id %>" 
+                                                       class="action-btn action-btn-view" 
+                                                       title="View Details">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <a href="/admin/support-workers/<%= supportWorker._id %>/edit" 
+                                                       class="action-btn action-btn-edit" 
+                                                       title="Edit Support Worker">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <% if (supportWorker.role !== 'admin') { %>
+                                                        <form action="/admin/support-workers/<%= supportWorker._id %>?_method=DELETE" 
+                                                              method="POST" class="d-inline">
+                                                            <button type="submit" 
+                                                                    class="action-btn action-btn-delete confirm-delete" 
+                                                                    title="Delete Support Worker">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    <% } else { %>
+                                                        <button class="action-btn action-btn-disabled" 
+                                                                title="Admin cannot be deleted" 
+                                                                disabled>
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    <% } %>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+                    <% } else { %>
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h4 class="text-muted mb-3">No Support Workers Found</h4>
+                            <p class="text-muted mb-4">
+                                <% if (typeof search !== 'undefined' && search) { %>
+                                    No support workers match your search criteria. Try a different search term.
+                                <% } else if (typeof status !== 'undefined' && status !== 'all') { %>
+                                    No support workers found with the selected status.
+                                <% } else { %>
+                                    You haven't added any support workers yet.
+                                <% } %>
+                            </p>
+                            <a href="/admin/support-workers/create" class="thm-btn">
+                                <i class="fas fa-plus me-2"></i>Add Your First Support Worker
+                            </a>
+                        </div>
+                    <% } %>
+                </div>
+
+                <!-- Pagination or Info -->
+                <% if (supportWorkers.length > 0) { %>
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div class="text-muted">
+                            Showing <%= supportWorkers.length %> support worker<%= supportWorkers.length !== 1 ? 's' : '' %>
+                        </div>
+                        <div>
+                            <a href="/admin/support-workers/create" class="thm-btn">
+                                <i class="fas fa-plus me-2"></i>Add Another Support Worker
+                            </a>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        </section>
+        <!-- Support Workers Content End -->
+
+        <!--Footer Start-->
+        <footer class="site-footer">
+            <div class="site-footer-bg" style="background-image: url(/assets/images/backgrounds/site-footer-bg.jpg)"></div>
+            <div class="site-footer-bg-overly"></div>
+            <div class="container">
+                <div class="site-footer__top">
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-2">
+                            <div class="site-footer__top-logo">
+                                <a href="/"><img src="/assets/images/resources/footer-logo-1.jpg" alt=""></a>
+                            </div>
+                        </div>
+                        <div class="col-xl-8 col-lg-10">
+                            <div class="site-footer__top-right">
+                                <div class="site-footer__call-and-social">
+                                    <div class="site-footer__call">
+                                        <p>Care System Admin Panel <a href="tel:+1234567890">Emergency: 123-456-7890</a></p>
+                                    </div>
+                                    <div class="site-footer__social">
+                                        <a href="#"><i class="fab fa-twitter"></i></a>
+                                        <a href="#"><i class="fab fa-facebook"></i></a>
+                                        <a href="#"><i class="fab fa-pinterest-p"></i></a>
+                                        <a href="#"><i class="fab fa-instagram"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="site-footer__bottom">
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="100ms">
+                            <div class="footer-widget__column footer-widget__contact">
+                                <h3 class="footer-widget__title">Contact</h3>
+                                <p class="footer-widget__contact-text">Care System Headquarters<br>123 Health Street, NY, USA</p>
+                                <h5 class="footer-widget__contact-phone-and-email">
+                                    <a href="mailto:admin@caresystem.com" class="footer-widget__contact-email">admin@caresystem.com</a><br>
+                                    <a href="tel:+1234567890" class="footer-widget__contact-phone">+1 234 567 890</a>
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="200ms">
+                            <div class="footer-widget__column footer-widget__links clearfix">
+                                <h3 class="footer-widget__title">Quick Links</h3>
+                                <ul class="footer-widget__links-list list-unstyled">
+                                    <li><a href="/admin/dashboard">Dashboard</a></li>
+                                    <li><a href="/admin/service-users">Service Users</a></li>
+                                    <li><a href="/admin/support-workers">Support Workers</a></li>
+                                    <li><a href="/admin/interactions">Interactions</a></li>
+                                    <li><a href="/admin/reports">Reports</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="300ms">
+                            <div class="footer-widget__column footer-widget__newsletter">
+                                <h3 class="footer-widget__title">System Status</h3>
+                                <div class="system-status">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>All Systems</span>
+                                        <span class="text-success">Operational</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Database</span>
+                                        <span class="text-success">Online</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Support Worker Services</span>
+                                        <span class="text-success">Active</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Last Updated</span>
+                                        <span><%= moment().format('MMM D, h:mm A') %></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="site-footer__copy-right">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="site-footer__copy-right-inner">
+                                <p class="site-footer__copy-right-text">© <%= new Date().getFullYear() %> Care System. All rights reserved.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!--Footer End-->
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav__wrapper">
+        <div class="mobile-nav__overlay mobile-nav__toggler"></div>
+        <div class="mobile-nav__content">
+            <span class="mobile-nav__close mobile-nav__toggler"><i class="fa fa-times"></i></span>
+            <div class="logo-box">
+                <a href="/" aria-label="logo image"><img src="/assets/images/resources/logo-3.png" width="155" alt="" /></a>
+            </div>
+            <div class="mobile-nav__container"></div>
+            <ul class="mobile-nav__contact list-unstyled">
+                <li>
+                    <i class="fa fa-envelope"></i>
+                    <a href="mailto:admin@caresystem.com">admin@caresystem.com</a>
+                </li>
+                <li>
+                    <i class="fa fa-phone-alt"></i>
+                    <a href="tel:+1234567890">+1 234 567 890</a>
+                </li>
+            </ul>
+            <div class="mobile-nav__top">
+                <div class="mobile-nav__social">
+                    <a href="#" class="fab fa-twitter"></a>
+                    <a href="#" class="fab fa-facebook-square"></a>
+                    <a href="#" class="fab fa-pinterest-p"></a>
+                    <a href="#" class="fab fa-instagram"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Popup -->
+    <div class="search-popup">
+        <div class="search-popup__overlay search-toggler"></div>
+        <div class="search-popup__content">
+            <form action="#">
+                <label for="search" class="sr-only">search here</label>
+                <input type="text" id="search" placeholder="Search Here..." />
+                <button type="submit" aria-label="search submit" class="thm-btn">
+                    <i class="icon-magnifying-glass"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <a href="#" data-target="html" class="scroll-to-target scroll-to-top"><i class="fa fa-angle-up"></i></a>
+
+    <!-- JavaScript -->
+    <script src="/assets/vendors/jquery/jquery-3.6.0.min.js"></script>
+    <script src="/assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/vendors/jarallax/jarallax.min.js"></script>
+    <script src="/assets/vendors/jquery-ajaxchimp/jquery.ajaxchimp.min.js"></script>
+    <script src="/assets/vendors/jquery-appear/jquery.appear.min.js"></script>
+    <script src="/assets/vendors/jquery-circle-progress/jquery.circle-progress.min.js"></script>
+    <script src="/assets/vendors/jquery-magnific-popup/jquery.magnific-popup.min.js"></script>
+    <script src="/assets/vendors/jquery-validate/jquery.validate.min.js"></script>
+    <script src="/assets/vendors/nouislider/nouislider.min.js"></script>
+    <script src="/assets/vendors/odometer/odometer.min.js"></script>
+    <script src="/assets/vendors/swiper/swiper.min.js"></script>
+    <script src="/assets/vendors/tiny-slider/tiny-slider.min.js"></script>
+    <script src="/assets/vendors/wnumb/wNumb.min.js"></script>
+    <script src="/assets/vendors/wow/wow.js"></script>
+    <script src="/assets/vendors/isotope/isotope.js"></script>
+    <script src="/assets/vendors/countdown/countdown.min.js"></script>
+    <script src="/assets/vendors/owl-carousel/owl.carousel.min.js"></script>
+    <script src="/assets/vendors/twentytwenty/twentytwenty.js"></script>
+    <script src="/assets/vendors/twentytwenty/jquery.event.move.js"></script>
+    <script src="/assets/vendors/bxslider/jquery.bxslider.min.js"></script>
+    <script src="/assets/vendors/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="/assets/vendors/vegas/vegas.min.js"></script>
+    <script src="/assets/vendors/jquery-ui/jquery-ui.js"></script>
+    <script src="/assets/vendors/timepicker/timePicker.js"></script>
+    
+    <!-- template js -->
+    <script src="/assets/js/sominx.js"></script>
+    
+    <!-- Custom Support Workers Page Script -->
+    <script>
+        $(document).ready(function() {
+            // Initialize WOW.js
+            if ($('.wow').length) {
+                new WOW().init();
+            }
+            
+            // Confirm deletion
+            $('.confirm-delete').on('click', function(e) {
+                if (!confirm('Are you sure you want to delete this support worker? This action cannot be undone.')) {
+                    e.preventDefault();
+                }
+            });
+            
+            // Handle admin deletion prevention
+            $('.action-btn-disabled').on('click', function(e) {
+                e.preventDefault();
+                alert('Administrator accounts cannot be deleted. Please change the role first.');
+            });
+            
+            // Auto-focus search input if search parameter exists
+            <% if (typeof search !== 'undefined' && search) { %>
+                $('input[name="search"]').focus().select();
+            <% } %>
+            
+            // Add animation to table rows on hover
+            $('table tbody tr').hover(
+                function() {
+                    $(this).css('transition', 'all 0.3s ease');
+                },
+                function() {
+                    $(this).css('transition', 'all 0.3s ease');
+                }
+            );
+        });
+    </script>
+</body>
+</html>

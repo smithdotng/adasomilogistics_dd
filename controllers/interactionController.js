@@ -1,5 +1,5 @@
 const Interaction = require('../models/Interaction');
-const Client = require('../models/Client');
+const ServiceUser = require('../models/ServiceUser');
 const User = require('../models/User');
 const moment = require('moment');
 
@@ -8,18 +8,18 @@ exports.getInteractions = async (req, res) => {
         const user = req.session.user;
         let query = {};
         
-        if (user.role === 'operator') {
-            query.operator = user.id;
+        if (user.role === 'support_worker') {
+            query.supportWorker = user.id;
         }
         
-        const { type, startDate, endDate, client } = req.query;
+        const { type, startDate, endDate, serviceUser } = req.query;
         
         if (type && type !== 'all') {
             query.type = type;
         }
         
-        if (client && client !== 'all') {
-            query.client = client;
+        if (serviceUser && serviceUser !== 'all') {
+            query.serviceUser = serviceUser;
         }
         
         if (startDate && endDate) {
@@ -30,18 +30,18 @@ exports.getInteractions = async (req, res) => {
         }
         
         const interactions = await Interaction.find(query)
-            .populate('client', 'firstName lastName referenceId')
-            .populate('operator', 'firstName lastName')
+            .populate('service_user', 'firstName lastName referenceId')
+            .populate('support_worker', 'firstName lastName')
             .sort({ startTime: -1 });
         
-        const clients = await Client.find(
-            user.role === 'operator' ? { assignedOperator: user.id } : {}
+        const serviceUsers = await ServiceUser.find(
+            user.role === 'support_worker' ? { assignedSupportWorker: user.id } : {}
         ).select('firstName lastName');
         
         res.render('interactions/index', {
             title: 'Interactions',
             interactions,
-            clients,
+            serviceUsers,
             moment
         });
         
@@ -55,19 +55,19 @@ exports.getInteractions = async (req, res) => {
 exports.getCreateInteraction = async (req, res) => {
     try {
         const user = req.session.user;
-        let clientQuery = {};
+        let serviceUserQuery = {};
         
-        if (user.role === 'operator') {
-            clientQuery.assignedOperator = user.id;
+        if (user.role === 'support_worker') {
+            serviceUserQuery.assignedSupportWorker = user.id;
         }
         
-        const clients = await Client.find(clientQuery)
+        const serviceUsers = await ServiceUser.find(serviceUserQuery)
             .select('firstName lastName referenceId')
             .sort({ lastName: 1 });
         
         res.render('interactions/create', {
             title: 'Create New Interaction',
-            clients
+            serviceUsers
         });
         
     } catch (error) {
@@ -82,9 +82,9 @@ exports.createInteraction = async (req, res) => {
         const user = req.session.user;
         const interactionData = req.body;
         
-        // Set operator to current user if not admin
-        if (user.role === 'operator') {
-            interactionData.operator = user.id;
+        // Set support worker to current user if not admin
+        if (user.role === 'support_worker') {
+            interactionData.supportWorker = user.id;
         }
         
         // Parse dates
@@ -133,13 +133,13 @@ exports.getInteractionDetail = async (req, res) => {
         const user = req.session.user;
         
         let query = { _id: interactionId };
-        if (user.role === 'operator') {
-            query.operator = user.id;
+        if (user.role === 'support_worker') {
+            query.supportWorker = user.id;
         }
         
         const interaction = await Interaction.findOne(query)
-            .populate('client', 'firstName lastName referenceId dateOfBirth medicalInfo')
-            .populate('operator', 'firstName lastName email phone');
+            .populate('service_user', 'firstName lastName referenceId dateOfBirth medicalInfo')
+            .populate('support_worker', 'firstName lastName email phone');
         
         if (!interaction) {
             req.flash('error', 'Interaction not found');
@@ -165,31 +165,31 @@ exports.getEditInteraction = async (req, res) => {
         const user = req.session.user;
         
         let query = { _id: interactionId };
-        if (user.role === 'operator') {
-            query.operator = user.id;
+        if (user.role === 'support_worker') {
+            query.supportWorker = user.id;
         }
         
         const interaction = await Interaction.findOne(query)
-            .populate('client', 'firstName lastName');
+            .populate('service_user', 'firstName lastName');
         
         if (!interaction) {
             req.flash('error', 'Interaction not found');
             return res.redirect('/interactions');
         }
         
-        let clientQuery = {};
-        if (user.role === 'operator') {
-            clientQuery.assignedOperator = user.id;
+        let serviceUserQuery = {};
+        if (user.role === 'support_worker') {
+            serviceUserQuery.assignedSupportWorker = user.id;
         }
         
-        const clients = await Client.find(clientQuery)
+        const serviceUsers = await ServiceUser.find(serviceUserQuery)
             .select('firstName lastName referenceId')
             .sort({ lastName: 1 });
         
         res.render('interactions/edit', {
             title: `Edit Interaction: ${interaction.title}`,
             interaction,
-            clients,
+            serviceUsers,
             moment
         });
         
@@ -207,8 +207,8 @@ exports.updateInteraction = async (req, res) => {
         const updateData = req.body;
         
         let query = { _id: interactionId };
-        if (user.role === 'operator') {
-            query.operator = user.id;
+        if (user.role === 'support_worker') {
+            query.supportWorker = user.id;
         }
         
         const interaction = await Interaction.findOne(query);

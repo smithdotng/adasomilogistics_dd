@@ -161,7 +161,7 @@
             color: #dc3545;
         }
         
-        .operator-badge {
+        .support-worker-badge {
             padding: 5px 15px;
             border-radius: 20px;
             font-size: 12px;
@@ -170,7 +170,7 @@
             color: #667eea;
         }
         
-        .client-badge {
+        .service-user-badge {
             padding: 5px 15px;
             border-radius: 20px;
             font-size: 12px;
@@ -321,18 +321,18 @@
                                 <ul class="main-menu__list">
                                     <li><a href="/admin/dashboard">Dashboard</a></li>
                                     <li class="dropdown">
-                                        <a href="#">Clients</a>
+                                        <a href="#">Service Users</a>
                                         <ul>
-                                            <li><a href="/clients">All Clients</a></li>
-                                            <li><a href="/clients/create">Add New Client</a></li>
-                                            <li><a href="/admin/clients">Admin View</a></li>
+                                            <li><a href="/service-users">All Service Users</a></li>
+                                            <li><a href="/service-users/create">Add New Service User</a></li>
+                                            <li><a href="/admin/service-users">Admin View</a></li>
                                         </ul>
                                     </li>
                                     <li class="dropdown">
-                                        <a href="#">Operators</a>
+                                        <a href="#">Support Workers</a>
                                         <ul>
-                                            <li><a href="/admin/operators">Manage Operators</a></li>
-                                            <li><a href="/admin/operators/create">Add Operator</a></li>
+                                            <li><a href="/admin/support-workers">Manage Support Workers</a></li>
+                                            <li><a href="/admin/support-workers/create">Add Support Worker</a></li>
                                         </ul>
                                     </li>
                                     <li class="dropdown current">
@@ -400,7 +400,7 @@
                                 <i class="fas fa-history text-primary me-2"></i>
                                 Interaction Management
                             </h3>
-                            <p class="text-muted mb-0">View all interactions across the system. Filter by type, operator, client, or date range.</p>
+                            <p class="text-muted mb-0">View all interactions across the system. Filter by type, support worker, service user, or date range.</p>
                         </div>
                         <div class="col-lg-4 text-lg-end">
                             <a href="/interactions/create" class="thm-btn">
@@ -490,20 +490,20 @@
                             </select>
                         </div>
                         <div class="col-lg-3">
-                            <select class="form-select" name="operator">
-                                <option value="all">All Operators</option>
-                                <% operators.forEach(function(op) { %>
+                            <select class="form-select" name="support worker">
+                                <option value="all">All Support Workers</option>
+                                <% supportWorkers.forEach(function(op) { %>
                                     <option value="<%= op._id %>" 
-                                            <%= (typeof operator !== 'undefined' && operator === op._id.toString()) ? 'selected' : '' %>>
+                                            <%= (typeof supportWorker !== 'undefined' && supportWorker === op._id.toString()) ? 'selected' : '' %>>
                                         <%= op.firstName %> <%= op.lastName %>
                                     </option>
                                 <% }); %>
                             </select>
                         </div>
                         <div class="col-lg-3">
-                            <select class="form-select" name="client">
-                                <option value="all">All Clients</option>
-                                <% clients.forEach(function(c) { %>
+                            <select class="form-select" name="service user">
+                                <option value="all">All Service Users</option>
+                                <% serviceUsers.forEach(function(c) { %>
                                     <option value="<%= c._id %>" 
                                             <%= (typeof filterClient !== 'undefined' && filterClient === c._id.toString()) ? 'selected' : '' %>>
                                         <%= c.firstName %> <%= c.lastName %>
@@ -547,8 +547,8 @@
                                     <tr>
                                         <th class="time-cell">Date & Time</th>
                                         <th>Interaction</th>
-                                        <th>Client</th>
-                                        <th>Operator</th>
+                                        <th>Service User</th>
+                                        <th>Support Worker</th>
                                         <th>Type</th>
                                         <th>Duration</th>
                                         <th>Status</th>
@@ -567,26 +567,26 @@
                                                 <small class="text-muted"><%= interaction.location || 'No location' %></small>
                                             </td>
                                             <td>
-                                                <% if (interaction.client) { %>
-                                                    <span class="client-badge">
+                                                <% if (interaction.serviceUser) { %>
+                                                    <span class="service-user-badge">
                                                         <i class="fas fa-user me-1"></i>
-                                                        <%= interaction.client.firstName %> <%= interaction.client.lastName %>
-                                                        <% if (interaction.client.referenceId) { %>
-                                                            <br><small class="opacity-75">ID: <%= interaction.client.referenceId %></small>
+                                                        <%= interaction.serviceUser.firstName %> <%= interaction.serviceUser.lastName %>
+                                                        <% if (interaction.serviceUser.referenceId) { %>
+                                                            <br><small class="opacity-75">ID: <%= interaction.serviceUser.referenceId %></small>
                                                         <% } %>
                                                     </span>
                                                 <% } else { %>
-                                                    <span class="badge bg-secondary">Client not found</span>
+                                                    <span class="badge bg-secondary">Service User not found</span>
                                                 <% } %>
                                             </td>
                                             <td>
-                                                <% if (interaction.operator) { %>
-                                                    <span class="operator-badge">
+                                                <% if (interaction.supportWorker) { %>
+                                                    <span class="support-worker-badge">
                                                         <i class="fas fa-user-md me-1"></i>
-                                                        <%= interaction.operator.firstName %> <%= interaction.operator.lastName %>
+                                                        <%= interaction.supportWorker.firstName %> <%= interaction.supportWorker.lastName %>
                                                     </span>
                                                 <% } else { %>
-                                                    <span class="badge bg-secondary">No operator</span>
+                                                    <span class="badge bg-secondary">No support worker</span>
                                                 <% } %>
                                             </td>
                                             <td>
@@ -673,10 +673,10 @@
                                     let message = "No interactions have been logged yet.";
                                     if (typeof type !== 'undefined' && type !== 'all') {
                                         message = "No interactions found with type " + type.replace('_', ' ') + ".";
-                                    } else if (typeof operator !== 'undefined' && operator !== 'all') {
-                                        message = "No interactions found for the selected operator.";
+                                    } else if (typeof supportWorker !== 'undefined' && supportWorker !== 'all') {
+                                        message = "No interactions found for the selected support worker.";
                                     } else if (typeof filterClient !== 'undefined' && filterClient !== 'all') {
-                                        message = "No interactions found for the selected client.";
+                                        message = "No interactions found for the selected service user.";
                                     } else if (typeof status !== 'undefined' && status !== 'all') {
                                         message = "No interactions found with status " + status.replace('_', ' ') + ".";
                                     } else if ((typeof startDate !== 'undefined' && startDate) || (typeof endDate !== 'undefined' && endDate)) {
@@ -700,7 +700,7 @@
                             <% 
                                 let hasFilters = false;
                                 if ((typeof type !== 'undefined' && type !== 'all') || 
-                                    (typeof operator !== 'undefined' && operator !== 'all') || 
+                                    (typeof supportWorker !== 'undefined' && supportWorker !== 'all') || 
                                     (typeof filterClient !== 'undefined' && filterClient !== 'all') || 
                                     (typeof status !== 'undefined' && status !== 'all') ||
                                     (typeof startDate !== 'undefined' && startDate) || 
@@ -769,8 +769,8 @@
                                 <h3 class="footer-widget__title">Quick Links</h3>
                                 <ul class="footer-widget__links-list list-unstyled">
                                     <li><a href="/admin/dashboard">Dashboard</a></li>
-                                    <li><a href="/admin/clients">Clients</a></li>
-                                    <li><a href="/admin/operators">Operators</a></li>
+                                    <li><a href="/admin/service-users">Service Users</a></li>
+                                    <li><a href="/admin/support-workers">Support Workers</a></li>
                                     <li><a href="/admin/interactions">Interactions</a></li>
                                     <li><a href="/admin/reports">Reports</a></li>
                                 </ul>

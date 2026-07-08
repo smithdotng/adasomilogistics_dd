@@ -7,35 +7,35 @@ const { toObjectId } = require('../utils/dbHelpers');
 // Get schedule view
 exports.getSchedule = async (req, res) => {
     try {
-        const providerId = req.session.user.role === 'service_provider' 
+        const careProviderId = req.session.user.role === 'care_provider' 
             ? req.session.user._id 
-            : req.session.user.providerId;
+            : req.session.user.careProviderId;
         
-        const { view, date, operator } = req.query;
+        const { view, date, supportWorker } = req.query;
         const selectedDate = date ? new Date(date) : new Date();
         
-        let query = { providerId, isActive: true };
-        if (operator && operator !== 'all') {
-            query.operatorId = operator;
+        let query = { careProviderId, isActive: true };
+        if (supportWorker && supportWorker !== 'all') {
+            query.supportWorkerId = supportWorker;
         }
         
         const schedules = await Schedule.find(query)
-            .populate('clientId', 'firstName lastName clientInfo.address')
-            .populate('operatorId', 'firstName lastName')
+            .populate('serviceUserId', 'firstName lastName serviceUserInfo.address')
+            .populate('supportWorkerId', 'firstName lastName')
             .sort('startTime');
         
-        // Get operators for filter
-        const operators = await User.find({
-            role: 'operator',
-            providerId,
+        // Get support workers for filter
+        const supportWorkers = await User.find({
+            role: 'support_worker',
+            careProviderId,
             isActive: true
         }).select('firstName lastName');
         
-        res.render('provider/schedule/index', {
+        res.render('careProvider/schedule/index', {
             title: 'Schedule',
             user: req.session.user,
             schedules,
-            operators,
+            supportWorkers,
             selectedDate,
             view: view || 'week',
             moment: require('moment')
@@ -43,47 +43,47 @@ exports.getSchedule = async (req, res) => {
     } catch (error) {
         console.error('Error loading schedule:', error);
         req.flash('error', 'Error loading schedule');
-        res.redirect('/provider/dashboard');
+        res.redirect('/care-provider/dashboard');
     }
 };
 
 // Create Schedule Form
 exports.getCreateSchedule = async (req, res) => {
     try {
-        const providerId = req.session.user.role === 'service_provider' 
+        const careProviderId = req.session.user.role === 'care_provider' 
             ? req.session.user._id 
-            : req.session.user.providerId;
+            : req.session.user.careProviderId;
         
-        // Get active clients and operators
-        const [clients, operators] = await Promise.all([
-            User.find({ role: 'client', providerId, isActive: true })
-                .select('firstName lastName clientInfo'),
-            User.find({ role: 'operator', providerId, isActive: true })
-                .select('firstName lastName operatorInfo')
+        // Get active service users and support workers
+        const [serviceUsers, supportWorkers] = await Promise.all([
+            User.find({ role: 'service_user', careProviderId, isActive: true })
+                .select('firstName lastName serviceUserInfo'),
+            User.find({ role: 'support_worker', careProviderId, isActive: true })
+                .select('firstName lastName supportWorkerInfo')
         ]);
         
-        res.render('provider/schedule/create', {
+        res.render('careProvider/schedule/create', {
             title: 'Create Schedule',
             user: req.session.user,
-            clients,
-            operators
+            serviceUsers,
+            supportWorkers
         });
     } catch (error) {
         console.error('Error loading create schedule form:', error);
         req.flash('error', 'Error loading form');
-        res.redirect('/provider/schedule');
+        res.redirect('/care-provider/schedule');
     }
 };
 
 // Create Schedule
 exports.createSchedule = async (req, res) => {
     try {
-        const providerId = req.session.user.role === 'service_provider' 
+        const careProviderId = req.session.user.role === 'care_provider' 
             ? req.session.user._id 
-            : req.session.user.providerId;
+            : req.session.user.careProviderId;
         
         const {
-            clientId, operatorId, title, type,
+            serviceUserId, supportWorkerId, title, type,
             recurrenceType, startDate, endDate,
             startTime, endTime, duration,
             tasks, notes, specialInstructions
@@ -97,9 +97,9 @@ exports.createSchedule = async (req, res) => {
         })) : [];
         
         const schedule = new Schedule({
-            providerId,
-            clientId,
-            operatorId,
+            careProviderId,
+            serviceUserId,
+            supportWorkerId,
             title,
             type,
             recurrence: {
@@ -130,9 +130,9 @@ exports.createSchedule = async (req, res) => {
             endDateTime.setHours(parseInt(endHours), parseInt(endMinutes), 0);
             
             const interaction = new Interaction({
-                clientId,
-                operatorId,
-                providerId,
+                serviceUserId,
+                supportWorkerId,
+                careProviderId,
                 type: type,
                 title: title || `Scheduled ${type.replace('_', ' ')}`,
                 scheduledStart: scheduledDateTime,
@@ -146,11 +146,11 @@ exports.createSchedule = async (req, res) => {
         }
         
         req.flash('success', 'Schedule created successfully');
-        res.redirect('/provider/schedule');
+        res.redirect('/care-provider/schedule');
     } catch (error) {
         console.error('Error creating schedule:', error);
         req.flash('error', 'Error creating schedule');
-        res.redirect('/provider/schedule/create');
+        res.redirect('/care-provider/schedule/create');
     }
 };
 
@@ -158,18 +158,18 @@ exports.createSchedule = async (req, res) => {
 exports.getScheduleDetails = async (req, res) => {
     try {
         const scheduleId = req.params.id;
-        const providerId = req.session.user.role === 'service_provider' 
+        const careProviderId = req.session.user.role === 'care_provider' 
             ? req.session.user._id 
-            : req.session.user.providerId;
+            : req.session.user.careProviderId;
         
-        const schedule = await Schedule.findOne({ _id: scheduleId, providerId })
-            .populate('clientId', 'firstName lastName clientInfo.address')
-            .populate('operatorId', 'firstName lastName operatorInfo')
+        const schedule = await Schedule.findOne({ _id: scheduleId, careProviderId })
+            .populate('serviceUserId', 'firstName lastName serviceUserInfo.address')
+            .populate('supportWorkerId', 'firstName lastName supportWorkerInfo')
             .populate('createdBy', 'firstName lastName');
         
         if (!schedule) {
             req.flash('error', 'Schedule not found');
-            return res.redirect('/provider/schedule');
+            return res.redirect('/care-provider/schedule');
         }
         
         // Find related interactions
@@ -177,12 +177,12 @@ exports.getScheduleDetails = async (req, res) => {
         today.setHours(0, 0, 0, 0);
         
         const interactions = await Interaction.find({
-            clientId: schedule.clientId._id,
-            operatorId: schedule.operatorId._id,
+            serviceUserId: schedule.serviceUserId._id,
+            supportWorkerId: schedule.supportWorkerId._id,
             scheduledStart: { $gte: today }
         }).sort('scheduledStart');
         
-        res.render('provider/schedule/show', {
+        res.render('careProvider/schedule/show', {
             title: 'Schedule Details',
             user: req.session.user,
             schedule,
@@ -192,7 +192,7 @@ exports.getScheduleDetails = async (req, res) => {
     } catch (error) {
         console.error('Error loading schedule:', error);
         req.flash('error', 'Error loading schedule');
-        res.redirect('/provider/schedule');
+        res.redirect('/care-provider/schedule');
     }
 };
 
@@ -200,9 +200,9 @@ exports.getScheduleDetails = async (req, res) => {
 exports.updateSchedule = async (req, res) => {
     try {
         const scheduleId = req.params.id;
-        const providerId = req.session.user.role === 'service_provider' 
+        const careProviderId = req.session.user.role === 'care_provider' 
             ? req.session.user._id 
-            : req.session.user.providerId;
+            : req.session.user.careProviderId;
         
         const updateData = {
             title: req.body.title,
@@ -218,22 +218,22 @@ exports.updateSchedule = async (req, res) => {
         };
         
         const schedule = await Schedule.findOneAndUpdate(
-            { _id: scheduleId, providerId },
+            { _id: scheduleId, careProviderId },
             updateData,
             { new: true }
         );
         
         if (!schedule) {
             req.flash('error', 'Schedule not found');
-            return res.redirect('/provider/schedule');
+            return res.redirect('/care-provider/schedule');
         }
         
         req.flash('success', 'Schedule updated successfully');
-        res.redirect(`/provider/schedule/${scheduleId}`);
+        res.redirect(`/care-provider/schedule/${scheduleId}`);
     } catch (error) {
         console.error('Error updating schedule:', error);
         req.flash('error', 'Error updating schedule');
-        res.redirect(`/provider/schedule/${req.params.id}`);
+        res.redirect(`/care-provider/schedule/${req.params.id}`);
     }
 };
 
@@ -241,21 +241,21 @@ exports.updateSchedule = async (req, res) => {
 exports.deleteSchedule = async (req, res) => {
     try {
         const scheduleId = req.params.id;
-        const providerId = req.session.user.role === 'service_provider' 
+        const careProviderId = req.session.user.role === 'care_provider' 
             ? req.session.user._id 
-            : req.session.user.providerId;
+            : req.session.user.careProviderId;
         
         // Soft delete - just mark as inactive
         await Schedule.findOneAndUpdate(
-            { _id: scheduleId, providerId },
+            { _id: scheduleId, careProviderId },
             { isActive: false, updatedBy: req.session.user._id }
         );
         
         req.flash('success', 'Schedule deleted successfully');
-        res.redirect('/provider/schedule');
+        res.redirect('/care-provider/schedule');
     } catch (error) {
         console.error('Error deleting schedule:', error);
         req.flash('error', 'Error deleting schedule');
-        res.redirect('/provider/schedule');
+        res.redirect('/care-provider/schedule');
     }
 };

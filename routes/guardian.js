@@ -48,36 +48,36 @@ router.use(hasRole(['guardian']));
 router.get('/dashboard', async (req, res) => {
   try {
     const user = req.session.user;
-    const Client = require('../models/Client');
+    const ServiceUser = require('../models/ServiceUser');
     const Interaction = require('../models/Interaction');
     
-    // Get accessible client IDs
+    // Get accessible service user IDs
     const accessibleClientIds = user.clientAccess || [];
     if (user.assignedClient && !accessibleClientIds.includes(user.assignedClient.toString())) {
       accessibleClientIds.push(user.assignedClient.toString());
     }
     
-    // Get clients
-    const clients = await Client.find({ 
+    // Get service users
+    const serviceUsers = await ServiceUser.find({ 
       _id: { $in: accessibleClientIds },
       status: 'active'
     })
-    .populate('assignedOperator', 'firstName lastName email phone')
+    .populate('assignedSupportWorker', 'firstName lastName email phone')
     .select('firstName lastName referenceId status dateOfBirth guardians');
     
-    if (!clients || clients.length === 0) {
+    if (!serviceUsers || serviceUsers.length === 0) {
       return res.render('guardian/dashboard', {
         title: 'Guardian Dashboard',
         user: req.session.user,
         stats: {
-          totalClients: 0,
+          totalServiceUsers: 0,
           todayInteractions: 0,
           totalInteractions: 0,
           pendingFollowUps: 0
         },
         recentInteractions: [],
         upcomingInteractions: [],
-        clients: [],
+        serviceUsers: [],
         moment: moment
       });
     }
@@ -94,30 +94,30 @@ router.get('/dashboard', async (req, res) => {
       pendingFollowUps,
       todayInteractions
     ] = await Promise.all([
-      Interaction.countDocuments({ client: { $in: accessibleClientIds } }),
+      Interaction.countDocuments({ serviceUser: { $in: accessibleClientIds } }),
       Interaction.countDocuments({ 
-        client: { $in: accessibleClientIds },
+        serviceUser: { $in: accessibleClientIds },
         createdBy: user.id,
         createdByRole: 'guardian'
       }),
       Interaction.countDocuments({
-        client: { $in: accessibleClientIds },
+        serviceUser: { $in: accessibleClientIds },
         requiresFollowUp: true,
         followUpCompleted: false
       }),
       Interaction.countDocuments({
-        client: { $in: accessibleClientIds },
+        serviceUser: { $in: accessibleClientIds },
         startTime: { $gte: today, $lt: tomorrow }
       })
     ]);
     
     // Get recent interactions
     const recentInteractions = await Interaction.find({
-      client: { $in: accessibleClientIds }
+      serviceUser: { $in: accessibleClientIds }
     })
-    .populate('client', 'firstName lastName referenceId')
+    .populate('service_user', 'firstName lastName referenceId')
     .populate('createdBy', 'firstName lastName role')
-    .populate('operator', 'firstName lastName')
+    .populate('support_worker', 'firstName lastName')
     .sort({ startTime: -1 })
     .limit(10);
     
@@ -126,32 +126,32 @@ router.get('/dashboard', async (req, res) => {
     nextWeek.setDate(nextWeek.getDate() + 7);
     
     const upcomingInteractions = await Interaction.find({
-      client: { $in: accessibleClientIds },
+      serviceUser: { $in: accessibleClientIds },
       startTime: { 
         $gte: new Date(),
         $lte: nextWeek
       },
       status: { $in: ['scheduled', 'pending_approval'] }
     })
-    .populate('client', 'firstName lastName')
+    .populate('service_user', 'firstName lastName')
     .populate('createdBy', 'firstName lastName')
     .sort({ startTime: 1 })
     .limit(5);
     
-    // Get primary client
-    const primaryClient = clients.find(client => {
-      return client.guardians && client.guardians.some(guardian => 
+    // Get primary service user
+    const primaryClient = serviceUsers.find(serviceUser => {
+      return serviceUser.guardians && serviceUser.guardians.some(guardian => 
         guardian.userAccount && 
         guardian.userAccount.toString() === user.id &&
         guardian.isPrimary
       );
-    }) || clients[0];
+    }) || serviceUsers[0];
     
     res.render('guardian/dashboard', {
       title: 'Guardian Dashboard',
       user: req.session.user,
       stats: {
-        totalClients: clients.length,
+        totalServiceUsers: serviceUsers.length,
         todayInteractions,
         totalInteractions,
         guardianInteractions,
@@ -159,7 +159,7 @@ router.get('/dashboard', async (req, res) => {
       },
       recentInteractions,
       upcomingInteractions,
-      clients,
+      serviceUsers,
       primaryClient,
       moment: moment
     });
@@ -171,41 +171,41 @@ router.get('/dashboard', async (req, res) => {
   }
 });
 
-// View Client Details
-router.get('/client/:id?', async (req, res) => {
+// View Service User Details
+router.get('/service-user/:id?', async (req, res) => {
   try {
     const user = req.session.user;
-    const clientId = req.params.id || user.assignedClient;
-    const Client = require('../models/Client');
+    const serviceUserId = req.params.id || user.assignedClient;
+    const ServiceUser = require('../models/ServiceUser');
     
-    // Check if guardian has access to this client
-    if (!user.clientAccess.includes(clientId) && 
-        user.assignedClient.toString() !== clientId) {
-      req.flash('error', 'Access denied to this client');
+    // Check if guardian has access to this service user
+    if (!user.clientAccess.includes(serviceUserId) && 
+        user.assignedClient.toString() !== serviceUserId) {
+      req.flash('error', 'Access denied to this service user');
       return res.redirect('/guardian/dashboard');
     }
     
-    const client = await Client.findById(clientId)
-      .populate('assignedOperator', 'firstName lastName email phone')
+    const serviceUser = await ServiceUser.findById(serviceUserId)
+      .populate('assignedSupportWorker', 'firstName lastName email phone')
       .populate('createdBy', 'firstName lastName')
       .populate('guardians.userAccount', 'firstName lastName email phone');
     
-    if (!client) {
-      req.flash('error', 'Client not found');
+    if (!serviceUser) {
+      req.flash('error', 'Service User not found');
       return res.redirect('/guardian/dashboard');
     }
     
-    // Get guardian info for this client
-    const guardianInfo = client.guardians.find(g => 
+    // Get guardian info for this service user
+    const guardianInfo = serviceUser.guardians.find(g => 
       g.userAccount && g.userAccount._id.toString() === user.id
     );
     
-    // Get interaction statistics for this client
+    // Get interaction statistics for this service user
     const Interaction = require('../models/Interaction');
     const interactionStats = await Interaction.aggregate([
       {
         $match: {
-          client: client._id,
+          serviceUser: serviceUser._id,
           startTime: { $gte: new Date(new Date().setMonth(new Date().getMonth() - 1)) }
         }
       },
@@ -217,17 +217,17 @@ router.get('/client/:id?', async (req, res) => {
       }
     ]);
     
-    res.render('guardian/client-detail', {
-      title: `${client.firstName} ${client.lastName} - Client Details`,
-      client,
+    res.render('guardian/service-user-detail', {
+      title: `${serviceUser.firstName} ${serviceUser.lastName} - Service User Details`,
+      serviceUser,
       guardianInfo,
       interactionStats,
       moment: moment
     });
     
   } catch (error) {
-    console.error('View client error:', error);
-    req.flash('error', 'Error loading client information');
+    console.error('View service user error:', error);
+    req.flash('error', 'Error loading service user information');
     res.redirect('/guardian/dashboard');
   }
 });
@@ -236,32 +236,32 @@ router.get('/client/:id?', async (req, res) => {
 router.get('/interactions/create', async (req, res) => {
   try {
     const user = req.session.user;
-    const clientId = req.query.clientId || user.assignedClient;
-    const Client = require('../models/Client');
+    const serviceUserId = req.query.serviceUserId || user.assignedClient;
+    const ServiceUser = require('../models/ServiceUser');
     
-    if (!clientId) {
-      req.flash('error', 'No client specified');
+    if (!serviceUserId) {
+      req.flash('error', 'No service user specified');
       return res.redirect('/guardian/dashboard');
     }
     
     // Check access
-    if (!user.clientAccess.includes(clientId) && 
-        user.assignedClient.toString() !== clientId) {
-      req.flash('error', 'Access denied to this client');
+    if (!user.clientAccess.includes(serviceUserId) && 
+        user.assignedClient.toString() !== serviceUserId) {
+      req.flash('error', 'Access denied to this service user');
       return res.redirect('/guardian/dashboard');
     }
     
-    const client = await Client.findById(clientId)
+    const serviceUser = await ServiceUser.findById(serviceUserId)
       .select('firstName lastName referenceId');
     
-    if (!client) {
-      req.flash('error', 'Client not found');
+    if (!serviceUser) {
+      req.flash('error', 'Service User not found');
       return res.redirect('/guardian/dashboard');
     }
     
     res.render('guardian/log-interaction', {
       title: 'Log New Interaction',
-      client,
+      serviceUser,
       interactionTypes: [
         'phone_call', 'visit', 'video_call', 'email', 
         'family_meeting', 'guardian_update', 'care_coordination'
@@ -293,10 +293,10 @@ router.post('/interactions', upload.array('attachments', 5), async (req, res) =>
   try {
     const user = req.session.user;
     const Interaction = require('../models/Interaction');
-    const Client = require('../models/Client');
+    const ServiceUser = require('../models/ServiceUser');
     
     const {
-      clientId,
+      serviceUserId,
       type,
       guardianInteractionType,
       title,
@@ -319,17 +319,17 @@ router.post('/interactions', upload.array('attachments', 5), async (req, res) =>
       visibility
     } = req.body;
     
-    // Validate client access
-    if (!user.clientAccess.includes(clientId) && 
-        user.assignedClient.toString() !== clientId) {
-      req.flash('error', 'Unauthorized to log interaction for this client');
+    // Validate service user access
+    if (!user.clientAccess.includes(serviceUserId) && 
+        user.assignedClient.toString() !== serviceUserId) {
+      req.flash('error', 'Unauthorized to log interaction for this service user');
       return res.redirect('/guardian/dashboard');
     }
     
     // Validate required fields
-    if (!clientId || !type || !title || !description || !startTime) {
+    if (!serviceUserId || !type || !title || !description || !startTime) {
       req.flash('error', 'Please fill in all required fields');
-      return res.redirect(`/guardian/interactions/create?clientId=${clientId}`);
+      return res.redirect(`/guardian/interactions/create?serviceUserId=${serviceUserId}`);
     }
     
     // Parse dates
@@ -344,16 +344,16 @@ router.post('/interactions', upload.array('attachments', 5), async (req, res) =>
       endTimeDate = new Date(startTimeDate.getTime() + (30 * 60000)); // Default 30 minutes
     }
     
-    // Check if client exists
-    const client = await Client.findById(clientId);
-    if (!client) {
-      req.flash('error', 'Client not found');
+    // Check if service user exists
+    const serviceUser = await ServiceUser.findById(serviceUserId);
+    if (!serviceUser) {
+      req.flash('error', 'Service User not found');
       return res.redirect('/guardian/dashboard');
     }
     
     // Prepare interaction data
     const interactionData = {
-      client: clientId,
+      serviceUser: serviceUserId,
       createdBy: user.id,
       createdByRole: 'guardian',
       type,
@@ -426,24 +426,24 @@ router.post('/interactions', upload.array('attachments', 5), async (req, res) =>
     const interaction = new Interaction(interactionData);
     await interaction.save();
     
-    // Update client's last interaction date
-    await Client.findByIdAndUpdate(clientId, {
+    // Update service user's last interaction date
+    await ServiceUser.findByIdAndUpdate(serviceUserId, {
       $set: { lastInteraction: new Date() }
     });
     
-    // Send notification to operator if needed
+    // Send notification to support worker if needed
     if (interactionData.requiresFollowUp || 
         satisfactionLevel === 'unsatisfied' || 
         satisfactionLevel === 'very_unsatisfied') {
       try {
         const emailService = require('../utils/emailService');
-        const operator = await require('../models/User').findById(client.assignedOperator);
+        const supportWorker = await require('../models/User').findById(serviceUser.assignedSupportWorker);
         
-        if (operator && operator.email) {
+        if (supportWorker && supportWorker.email) {
           await emailService.sendInteractionNotification(
-            operator.email,
-            operator.firstName,
-            client.fullName,
+            supportWorker.email,
+            supportWorker.firstName,
+            serviceUser.fullName,
             interaction.title,
             interaction.description,
             `${req.protocol}://${req.get('host')}/interactions/${interaction._id}`
@@ -473,9 +473,9 @@ router.get('/interactions', async (req, res) => {
     const skip = (page - 1) * limit;
     
     const Interaction = require('../models/Interaction');
-    const Client = require('../models/Client');
+    const ServiceUser = require('../models/ServiceUser');
     
-    // Get accessible client IDs
+    // Get accessible service user IDs
     const accessibleClientIds = user.clientAccess || [];
     if (user.assignedClient) {
       accessibleClientIds.push(user.assignedClient.toString());
@@ -485,7 +485,7 @@ router.get('/interactions', async (req, res) => {
     const query = {
       $or: [
         {
-          client: { $in: accessibleClientIds },
+          serviceUser: { $in: accessibleClientIds },
           $or: [
             { visibility: { $in: ['all', 'guardians_only'] } },
             {
@@ -498,8 +498,8 @@ router.get('/interactions', async (req, res) => {
     };
     
     // Apply filters
-    if (req.query.clientId && accessibleClientIds.includes(req.query.clientId)) {
-      query.client = req.query.clientId;
+    if (req.query.serviceUserId && accessibleClientIds.includes(req.query.serviceUserId)) {
+      query.serviceUser = req.query.serviceUserId;
     }
     
     if (req.query.type) {
@@ -530,9 +530,9 @@ router.get('/interactions', async (req, res) => {
     
     // Get interactions with pagination
     const interactions = await Interaction.find(query)
-      .populate('client', 'firstName lastName referenceId')
+      .populate('service_user', 'firstName lastName referenceId')
       .populate('createdBy', 'firstName lastName role')
-      .populate('operator', 'firstName lastName')
+      .populate('support_worker', 'firstName lastName')
       .populate('guardianVerification.guardianId', 'firstName lastName')
       .sort({ startTime: -1 })
       .skip(skip)
@@ -540,14 +540,14 @@ router.get('/interactions', async (req, res) => {
     
     const total = await Interaction.countDocuments(query);
     
-    // Get accessible clients for filter dropdown
-    const clients = await Client.find({ _id: { $in: accessibleClientIds } })
+    // Get accessible service users for filter dropdown
+    const serviceUsers = await ServiceUser.find({ _id: { $in: accessibleClientIds } })
       .select('firstName lastName referenceId');
     
     res.render('guardian/interactions', {
       title: 'Interactions',
       interactions,
-      clients,
+      serviceUsers,
       moment: moment,
       page,
       limit,
@@ -573,9 +573,9 @@ router.get('/interactions/:id', async (req, res) => {
     const Interaction = require('../models/Interaction');
     
     const interaction = await Interaction.findById(interactionId)
-      .populate('client', 'firstName lastName referenceId dateOfBirth')
+      .populate('service_user', 'firstName lastName referenceId dateOfBirth')
       .populate('createdBy', 'firstName lastName role email phone')
-      .populate('operator', 'firstName lastName email phone')
+      .populate('support_worker', 'firstName lastName email phone')
       .populate('guardianVerification.guardianId', 'firstName lastName')
       .populate('visibleToGuardians', 'firstName lastName email');
     
@@ -586,8 +586,8 @@ router.get('/interactions/:id', async (req, res) => {
     
     // Check if guardian can view this interaction
     const canView = interaction.canGuardianView(user.id);
-    const hasAccess = user.clientAccess.includes(interaction.client._id.toString()) ||
-                     user.assignedClient?.toString() === interaction.client._id.toString();
+    const hasAccess = user.clientAccess.includes(interaction.serviceUser._id.toString()) ||
+                     user.assignedClient?.toString() === interaction.serviceUser._id.toString();
     
     if (!canView || !hasAccess) {
       req.flash('error', 'Access denied to this interaction');
@@ -623,9 +623,9 @@ router.post('/interactions/:id/verify', async (req, res) => {
       return res.redirect('/guardian/interactions');
     }
     
-    // Check if guardian has access to this client
-    const hasAccess = user.clientAccess.includes(interaction.client.toString()) ||
-                     user.assignedClient?.toString() === interaction.client.toString();
+    // Check if guardian has access to this service user
+    const hasAccess = user.clientAccess.includes(interaction.serviceUser.toString()) ||
+                     user.assignedClient?.toString() === interaction.serviceUser.toString();
     
     if (!hasAccess) {
       req.flash('error', 'Access denied');
@@ -650,9 +650,9 @@ router.get('/schedule', async (req, res) => {
   try {
     const user = req.session.user;
     const Interaction = require('../models/Interaction');
-    const Client = require('../models/Client');
+    const ServiceUser = require('../models/ServiceUser');
     
-    // Get accessible client IDs
+    // Get accessible service user IDs
     const accessibleClientIds = user.clientAccess || [];
     if (user.assignedClient) {
       accessibleClientIds.push(user.assignedClient.toString());
@@ -680,17 +680,17 @@ router.get('/schedule', async (req, res) => {
     
     // Get scheduled interactions
     const schedule = await Interaction.find({
-      client: { $in: accessibleClientIds },
+      serviceUser: { $in: accessibleClientIds },
       startTime: { $gte: startDate, $lte: endDate },
       status: { $in: ['scheduled', 'pending_approval'] }
     })
-    .populate('client', 'firstName lastName')
+    .populate('service_user', 'firstName lastName')
     .populate('createdBy', 'firstName lastName role')
-    .populate('operator', 'firstName lastName')
+    .populate('support_worker', 'firstName lastName')
     .sort({ startTime: 1 });
     
-    // Get accessible clients
-    const clients = await Client.find({ _id: { $in: accessibleClientIds } })
+    // Get accessible service users
+    const serviceUsers = await ServiceUser.find({ _id: { $in: accessibleClientIds } })
       .select('firstName lastName');
     
     // Group by date for calendar view
@@ -707,7 +707,7 @@ router.get('/schedule', async (req, res) => {
       title: 'Schedule',
       schedule,
       scheduleByDate,
-      clients,
+      serviceUsers,
       moment: moment,
       currentMonth,
       currentYear,
@@ -728,26 +728,26 @@ router.get('/schedule', async (req, res) => {
 router.get('/documents', async (req, res) => {
   try {
     const user = req.session.user;
-    const Client = require('../models/Client');
+    const ServiceUser = require('../models/ServiceUser');
     
-    // Get accessible client IDs
+    // Get accessible service user IDs
     const accessibleClientIds = user.clientAccess || [];
     if (user.assignedClient) {
       accessibleClientIds.push(user.assignedClient.toString());
     }
     
-    const clients = await Client.find({ _id: { $in: accessibleClientIds } })
+    const serviceUsers = await ServiceUser.find({ _id: { $in: accessibleClientIds } })
       .select('firstName lastName referenceId documents');
     
-    // Flatten documents with client info
+    // Flatten documents with service user info
     const allDocuments = [];
-    clients.forEach(client => {
-      if (client.documents && client.documents.length > 0) {
-        client.documents.forEach(doc => {
+    serviceUsers.forEach(serviceUser => {
+      if (serviceUser.documents && serviceUser.documents.length > 0) {
+        serviceUser.documents.forEach(doc => {
           allDocuments.push({
             ...doc.toObject(),
-            clientName: client.fullName,
-            clientId: client._id
+            clientName: serviceUser.fullName,
+            serviceUserId: serviceUser._id
           });
         });
       }
@@ -764,10 +764,10 @@ router.get('/documents', async (req, res) => {
     });
     
     res.render('guardian/documents', {
-      title: 'Client Documents',
+      title: 'Service User Documents',
       documents: allDocuments,
       documentsByType,
-      clients,
+      serviceUsers,
       moment: moment,
       user: req.session.user
     });
@@ -780,14 +780,14 @@ router.get('/documents', async (req, res) => {
 });
 
 // Download Document
-router.get('/documents/download/:clientId/:filename', async (req, res) => {
+router.get('/documents/download/:serviceUserId/:filename', async (req, res) => {
   try {
     const user = req.session.user;
-    const { clientId, filename } = req.params;
+    const { serviceUserId, filename } = req.params;
     
     // Check access
-    if (!user.clientAccess.includes(clientId) && 
-        user.assignedClient.toString() !== clientId) {
+    if (!user.clientAccess.includes(serviceUserId) && 
+        user.assignedClient.toString() !== serviceUserId) {
       req.flash('error', 'Access denied to this document');
       return res.redirect('/guardian/documents');
     }
@@ -813,28 +813,28 @@ router.get('/profile', async (req, res) => {
   try {
     const user = req.session.user;
     const User = require('../models/User');
-    const Client = require('../models/Client');
+    const ServiceUser = require('../models/ServiceUser');
     
     // Get full user data
     const currentUser = await User.findById(user.id)
       .select('-password -passwordResetToken -passwordResetExpires');
     
-    // Get client information
-    let clients = [];
+    // Get service user information
+    let serviceUsers = [];
     if (user.assignedClient || user.clientAccess.length > 0) {
-      const clientIds = [...user.clientAccess];
+      const serviceUserIds = [...user.clientAccess];
       if (user.assignedClient) {
-        clientIds.push(user.assignedClient);
+        serviceUserIds.push(user.assignedClient);
       }
       
-      clients = await Client.find({ _id: { $in: clientIds } })
+      serviceUsers = await ServiceUser.find({ _id: { $in: serviceUserIds } })
         .select('firstName lastName referenceId status dateOfBirth');
     }
     
     res.render('guardian/profile', {
       title: 'My Profile',
       user: currentUser,
-      clients,
+      serviceUsers,
       moment: moment
     });
     
@@ -937,7 +937,7 @@ router.get('/notifications', async (req, res) => {
     const user = req.session.user;
     const Interaction = require('../models/Interaction');
     
-    // Get accessible client IDs
+    // Get accessible service user IDs
     const accessibleClientIds = user.clientAccess || [];
     if (user.assignedClient) {
       accessibleClientIds.push(user.assignedClient.toString());
@@ -945,22 +945,22 @@ router.get('/notifications', async (req, res) => {
     
     // Get interactions requiring attention
     const pendingInteractions = await Interaction.find({
-      client: { $in: accessibleClientIds },
+      serviceUser: { $in: accessibleClientIds },
       requiresFollowUp: true,
       followUpCompleted: false
     })
-    .populate('client', 'firstName lastName')
+    .populate('service_user', 'firstName lastName')
     .populate('createdBy', 'firstName lastName')
     .sort({ startTime: -1 })
     .limit(20);
     
     // Get unverified interactions
     const unverifiedInteractions = await Interaction.find({
-      client: { $in: accessibleClientIds },
+      serviceUser: { $in: accessibleClientIds },
       'guardianVerification.verified': false,
-      createdByRole: 'operator'
+      createdByRole: 'support_worker'
     })
-    .populate('client', 'firstName lastName')
+    .populate('service_user', 'firstName lastName')
     .populate('createdBy', 'firstName lastName')
     .sort({ startTime: -1 })
     .limit(20);
@@ -986,7 +986,7 @@ router.get('/interactions/export', async (req, res) => {
     const user = req.session.user;
     const Interaction = require('../models/Interaction');
     
-    // Get accessible client IDs
+    // Get accessible service user IDs
     const accessibleClientIds = user.clientAccess || [];
     if (user.assignedClient) {
       accessibleClientIds.push(user.assignedClient.toString());
@@ -994,7 +994,7 @@ router.get('/interactions/export', async (req, res) => {
     
     // Build query
     const query = {
-      client: { $in: accessibleClientIds },
+      serviceUser: { $in: accessibleClientIds },
       $or: [
         { visibility: { $in: ['all', 'guardians_only'] } },
         {
@@ -1013,7 +1013,7 @@ router.get('/interactions/export', async (req, res) => {
     }
     
     const interactions = await Interaction.find(query)
-      .populate('client', 'firstName lastName referenceId')
+      .populate('service_user', 'firstName lastName referenceId')
       .populate('createdBy', 'firstName lastName role')
       .sort({ startTime: -1 });
     
@@ -1021,8 +1021,8 @@ router.get('/interactions/export', async (req, res) => {
     const csvData = interactions.map(interaction => ({
       Date: interaction.startTime.toISOString().split('T')[0],
       Time: interaction.startTime.toTimeString().split(' ')[0],
-      'Client Name': `${interaction.client.firstName} ${interaction.client.lastName}`,
-      'Client ID': interaction.client.referenceId,
+      'Service User Name': `${interaction.serviceUser.firstName} ${interaction.serviceUser.lastName}`,
+      'Service User ID': interaction.serviceUser.referenceId,
       'Interaction Type': interaction.type,
       Title: interaction.title,
       Description: interaction.description.substring(0, 100) + '...',

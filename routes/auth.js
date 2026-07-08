@@ -89,8 +89,8 @@ router.post('/login', async (req, res) => {
             firstName: user.firstName,
             lastName: user.lastName,
             role: user.role,
-            providerId: user.providerId,
-            providerInfo: user.providerInfo
+            careProviderId: user.careProviderId,
+            careProviderInfo: user.careProviderInfo
         };
         
         if (remember) {
@@ -112,15 +112,15 @@ router.post('/login', async (req, res) => {
             console.log('Session saved successfully');
             
             switch(user.role) {
-                case 'service_provider':
-                    console.log('Redirecting to provider dashboard');
-                    return res.redirect('/provider/dashboard');
-                case 'operator':
-                    console.log('Redirecting to operator dashboard');
-                    return res.redirect('/operator/dashboard');
-                case 'client':
-                    console.log('Redirecting to client dashboard');
-                    return res.redirect('/client/dashboard');
+                case 'care_provider':
+                    console.log('Redirecting to care provider dashboard');
+                    return res.redirect('/care-provider/dashboard');
+                case 'support_worker':
+                    console.log('Redirecting to support worker dashboard');
+                    return res.redirect('/support-worker/dashboard');
+                case 'service_user':
+                    console.log('Redirecting to service user dashboard');
+                    return res.redirect('/service-user/dashboard');
                 case 'guardian':
                     console.log('Redirecting to guardian dashboard');
                     return res.redirect('/guardian/dashboard');
@@ -268,7 +268,7 @@ router.post('/register', async (req, res) => {
             firstName,
             lastName,
             phone: formattedPhone,
-            role: 'service_provider',
+            role: 'care_provider',
             address: {
                 street: addressStreet,
                 city: addressCity,
@@ -276,7 +276,7 @@ router.post('/register', async (req, res) => {
                 postcode: addressPostcode,
                 country: 'UK'
             },
-            providerInfo: {
+            careProviderInfo: {
                 companyName,
                 companyRegNumber,
                 companyType: companyType || 'limited_company',
@@ -285,7 +285,7 @@ router.post('/register', async (req, res) => {
                 cqcLocationId: cqcRegistered === 'yes' ? cqcLocationId : null,
                 cqcRating: cqcRating || null,
                 insuranceDetails: {
-                    provider: insuranceProvider || '',
+                    careProvider: insuranceProvider || '',
                     policyNumber: insurancePolicyNumber || '',
                     expiryDate: insuranceExpiryDate ? new Date(insuranceExpiryDate) : null
                 },
@@ -295,8 +295,8 @@ router.post('/register', async (req, res) => {
                     status: 'trial',
                     startDate: new Date(),
                     expiryDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
-                    maxOperators: 20,
-                    maxClients: 100
+                    maxSupportWorkers: 20,
+                    maxServiceUsers: 100
                 }
             },
             emailVerified: false,
@@ -335,7 +335,7 @@ router.post('/register', async (req, res) => {
                 await cqcCertificate.mv(uploadPath);
                 console.log('File uploaded to:', uploadPath);
                 
-                user.providerInfo.cqcCertificate = `/uploads/cqc/${fileName}`;
+                user.careProviderInfo.cqcCertificate = `/uploads/cqc/${fileName}`;
                 await user.save();
                 console.log('CQC certificate path saved to user record');
                 

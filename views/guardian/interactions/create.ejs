@@ -192,7 +192,7 @@
             padding: 15px;
         }
         
-        .client-info-box {
+        .service-user-info-box {
             background: rgba(74, 139, 143, 0.05);
             border: 1px solid rgba(74, 139, 143, 0.2);
             border-radius: 8px;
@@ -200,7 +200,7 @@
             margin-bottom: 20px;
         }
         
-        .client-info-box h5 {
+        .service-user-info-box h5 {
             color: var(--guardian-primary);
             margin-bottom: 10px;
         }
@@ -273,7 +273,7 @@
                                 <a href="#" class="mobile-nav__toggler"><i class="fa fa-bars"></i></a>
                                 <ul class="main-menu__list">
                                     <li><a href="/guardian/dashboard">Dashboard</a></li>
-                                    <li><a href="/guardian/client">Client Information</a></li>
+                                    <li><a href="/guardian/service-user">Service User Information</a></li>
                                     <li class="current"><a href="/guardian/interactions">Interactions</a></li>
                                     <li><a href="/guardian/documents">Documents</a></li>
                                     <li><a href="/guardian/change-password">Settings</a></li>
@@ -324,9 +324,9 @@
                         <div class="col-lg-8">
                             <h3 class="mb-3">
                                 <i class="fas fa-plus-circle text-primary me-2"></i>
-                                Log Interaction for <%= client.firstName %> <%= client.lastName %>
+                                Log Interaction for <%= serviceUser.firstName %> <%= serviceUser.lastName %>
                             </h3>
-                            <p class="text-muted mb-0">Record details of your interaction with <%= client.firstName %>. All fields marked with * are required.</p>
+                            <p class="text-muted mb-0">Record details of your interaction with <%= serviceUser.firstName %>. All fields marked with * are required.</p>
                         </div>
                         <div class="col-lg-4 text-lg-end">
                             <a href="/guardian/interactions" class="thm-btn" style="background: #6c757d;">
@@ -353,25 +353,25 @@
 
                 <div class="interaction-form-card wow fadeInUp" data-wow-delay="200ms">
                     <form action="/guardian/interactions" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
-                        <!-- Client Information -->
-                        <div class="client-info-box">
-                            <h5><i class="fas fa-user me-2"></i>Client Information</h5>
+                        <!-- Service User Information -->
+                        <div class="service-user-info-box">
+                            <h5><i class="fas fa-user me-2"></i>Service User Information</h5>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <p class="mb-1"><strong>Name:</strong> <%= client.firstName %> <%= client.lastName %></p>
-                                    <p class="mb-1"><strong>Age:</strong> <%= client.age %></p>
+                                    <p class="mb-1"><strong>Name:</strong> <%= serviceUser.firstName %> <%= serviceUser.lastName %></p>
+                                    <p class="mb-1"><strong>Age:</strong> <%= serviceUser.age %></p>
                                 </div>
                                 <div class="col-md-6">
                                     <p class="mb-1"><strong>Status:</strong> 
-                                        <span class="badge bg-<%= client.status === 'active' ? 'success' : 'warning' %>">
-                                            <%= client.status %>
+                                        <span class="badge bg-<%= serviceUser.status === 'active' ? 'success' : 'warning' %>">
+                                            <%= serviceUser.status %>
                                         </span>
                                     </p>
-                                    <p class="mb-0"><strong>Care Level:</strong> <%= client.careInfo.careLevel %></p>
+                                    <p class="mb-0"><strong>Care Level:</strong> <%= serviceUser.careInfo.careLevel %></p>
                                 </div>
                             </div>
-                            <input type="hidden" name="client" value="<%= client._id %>">
-                            <input type="hidden" name="operator" value="<%= user.id %>">
+                            <input type="hidden" name="service user" value="<%= serviceUser._id %>">
+                            <input type="hidden" name="support worker" value="<%= user.id %>">
                         </div>
 
                         <!-- Basic Information Section -->
@@ -467,7 +467,7 @@
                                 <div class="col-md-6 mb-4">
                                     <label for="location" class="form-label">Location</label>
                                     <select class="form-select" id="location" name="location">
-                                        <option value="client_home">Client's Home</option>
+                                        <option value="client_home">Service User's Home</option>
                                         <option value="office">Office</option>
                                         <option value="hospital">Hospital</option>
                                         <option value="community">Community</option>
@@ -506,13 +506,13 @@
                                 <div class="form-text">Be as detailed as possible. This helps the care team understand the situation.</div>
                             </div>
                             
-                            <!-- Client Observations -->
+                            <!-- Service User Observations -->
                             <div class="mb-4">
-                                <label for="observations" class="form-label">Client Observations</label>
+                                <label for="observations" class="form-label">Service User Observations</label>
                                 <textarea class="form-control form-textarea" id="observations" name="observations.notes" 
-                                          placeholder="Note client's mood, behavior, physical condition, or any changes you observed..." 
+                                          placeholder="Note service user's mood, behavior, physical condition, or any changes you observed..." 
                                           rows="4"></textarea>
-                                <div class="form-text">Optional: Document any changes in client's condition or behavior</div>
+                                <div class="form-text">Optional: Document any changes in service user's condition or behavior</div>
                             </div>
                             
                             <!-- Follow-up Actions -->
@@ -561,7 +561,7 @@
                                     <strong>I verify that this interaction record is accurate and complete</strong>
                                 </label>
                                 <div class="form-text">
-                                    As the guardian of <%= client.firstName %> <%= client.lastName %>, I confirm this interaction took place as described.
+                                    As the guardian of <%= serviceUser.firstName %> <%= serviceUser.lastName %>, I confirm this interaction took place as described.
                                 </div>
                             </div>
                         </div>
@@ -597,11 +597,11 @@
                             <div class="site-footer__top-right">
                                 <div class="site-footer__call-and-social">
                                     <div class="site-footer__call">
-                                        <p>Guardian Portal <a href="tel:<%= client.contact.emergencyContact.phone || '123-456-7890' %>">Emergency: <%= client.contact.emergencyContact.phone || '123-456-7890' %></a></p>
+                                        <p>Guardian Portal <a href="tel:<%= serviceUser.contact.emergencyContact.phone || '123-456-7890' %>">Emergency: <%= serviceUser.contact.emergencyContact.phone || '123-456-7890' %></a></p>
                                     </div>
                                     <div class="site-footer__social">
                                         <a href="/guardian/dashboard" title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
-                                        <a href="/guardian/client" title="Client Info"><i class="fas fa-user"></i></a>
+                                        <a href="/guardian/service-user" title="Service User Info"><i class="fas fa-user"></i></a>
                                         <a href="/guardian/interactions" title="Interactions"><i class="fas fa-history"></i></a>
                                     </div>
                                 </div>
@@ -615,22 +615,22 @@
                             <div class="footer-widget__column footer-widget__contact">
                                 <h3 class="footer-widget__title">Contact Care Team</h3>
                                 <p class="footer-widget__contact-text">
-                                    <% if (client.assignedOperator) { %>
-                                        <%= client.assignedOperator.firstName %> <%= client.assignedOperator.lastName %><br>
-                                        Assigned Care Operator
+                                    <% if (serviceUser.assignedSupportWorker) { %>
+                                        <%= serviceUser.assignedSupportWorker.firstName %> <%= serviceUser.assignedSupportWorker.lastName %><br>
+                                        Assigned Care Support Worker
                                     <% } else { %>
                                         Care System Support Team<br>
                                         123 Health Street, NY, USA
                                     <% } %>
                                 </p>
                                 <h5 class="footer-widget__contact-phone-and-email">
-                                    <% if (client.assignedOperator && client.assignedOperator.email) { %>
-                                        <a href="mailto:<%= client.assignedOperator.email %>" class="footer-widget__contact-email"><%= client.assignedOperator.email %></a><br>
+                                    <% if (serviceUser.assignedSupportWorker && serviceUser.assignedSupportWorker.email) { %>
+                                        <a href="mailto:<%= serviceUser.assignedSupportWorker.email %>" class="footer-widget__contact-email"><%= serviceUser.assignedSupportWorker.email %></a><br>
                                     <% } else { %>
                                         <a href="mailto:support@caresystem.com" class="footer-widget__contact-email">support@caresystem.com</a><br>
                                     <% } %>
-                                    <% if (client.assignedOperator && client.assignedOperator.phone) { %>
-                                        <a href="tel:<%= client.assignedOperator.phone %>" class="footer-widget__contact-phone"><%= client.assignedOperator.phone %></a>
+                                    <% if (serviceUser.assignedSupportWorker && serviceUser.assignedSupportWorker.phone) { %>
+                                        <a href="tel:<%= serviceUser.assignedSupportWorker.phone %>" class="footer-widget__contact-phone"><%= serviceUser.assignedSupportWorker.phone %></a>
                                     <% } else { %>
                                         <a href="tel:+1234567890" class="footer-widget__contact-phone">+1 234 567 890</a>
                                     <% } %>
@@ -642,7 +642,7 @@
                                 <h3 class="footer-widget__title">Quick Links</h3>
                                 <ul class="footer-widget__links-list list-unstyled">
                                     <li><a href="/guardian/dashboard">Dashboard</a></li>
-                                    <li><a href="/guardian/client">Client Information</a></li>
+                                    <li><a href="/guardian/service-user">Service User Information</a></li>
                                     <li><a href="/guardian/interactions">Interactions</a></li>
                                     <li><a href="/guardian/documents">Documents</a></li>
                                     <li><a href="/guardian/change-password">Settings</a></li>
@@ -680,7 +680,7 @@
                             <div class="site-footer__copy-right-inner">
                                 <p class="site-footer__copy-right-text">© <%= new Date().getFullYear() %> Care System. All rights reserved.</p>
                                 <p class="site-footer__copy-right-text small mt-2">
-                                    Guardian access for: <%= client.firstName %> <%= client.lastName %>
+                                    Guardian access for: <%= serviceUser.firstName %> <%= serviceUser.lastName %>
                                 </p>
                             </div>
                         </div>
@@ -703,21 +703,21 @@
             <ul class="mobile-nav__contact list-unstyled">
                 <li>
                     <i class="fa fa-envelope"></i>
-                    <a href="mailto:<%= client.assignedOperator ? client.assignedOperator.email : 'support@caresystem.com' %>">
-                        <%= client.assignedOperator ? client.assignedOperator.email : 'support@caresystem.com' %>
+                    <a href="mailto:<%= serviceUser.assignedSupportWorker ? serviceUser.assignedSupportWorker.email : 'support@caresystem.com' %>">
+                        <%= serviceUser.assignedSupportWorker ? serviceUser.assignedSupportWorker.email : 'support@caresystem.com' %>
                     </a>
                 </li>
                 <li>
                     <i class="fa fa-phone-alt"></i>
-                    <a href="tel:<%= client.contact.emergencyContact.phone || '123-456-7890' %>">
-                        <%= client.contact.emergencyContact.phone || '123-456-7890' %>
+                    <a href="tel:<%= serviceUser.contact.emergencyContact.phone || '123-456-7890' %>">
+                        <%= serviceUser.contact.emergencyContact.phone || '123-456-7890' %>
                     </a>
                 </li>
             </ul>
             <div class="mobile-nav__top">
                 <div class="mobile-nav__social">
                     <a href="/guardian/dashboard" class="fas fa-tachometer-alt" title="Dashboard"></a>
-                    <a href="/guardian/client" class="fas fa-user" title="Client"></a>
+                    <a href="/guardian/service-user" class="fas fa-user" title="Service User"></a>
                     <a href="/guardian/interactions" class="fas fa-history" title="Interactions"></a>
                 </div>
             </div>

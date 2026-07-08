@@ -1,17 +1,17 @@
 const mongoose = require('mongoose');
 
 const scheduleSchema = new mongoose.Schema({
-    providerId: {
+    careProviderId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    clientId: {
+    serviceUserId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    operatorId: {
+    supportWorkerId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true

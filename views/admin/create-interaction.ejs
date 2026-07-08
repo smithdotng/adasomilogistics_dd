@@ -130,7 +130,7 @@
             margin-top: 5px;
         }
         
-        .client-operator-info {
+        .service-user-support-worker-info {
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             border-radius: 8px;
             padding: 20px;
@@ -320,8 +320,8 @@
                                 <a href="#" class="mobile-nav__toggler"><i class="fa fa-bars"></i></a>
                                 <ul class="main-menu__list">
                                     <li><a href="/admin/dashboard">Dashboard</a></li>
-                                    <li><a href="/admin/clients">Clients</a></li>
-                                    <li><a href="/admin/operators">Operators</a></li>
+                                    <li><a href="/admin/service-users">Service Users</a></li>
+                                    <li><a href="/admin/support-workers">Support Workers</a></li>
                                     <li class="current"><a href="/admin/interactions">Interactions</a></li>
                                     <li><a href="/admin/reports">Reports</a></li>
                                     <li><a href="/admin/settings">Settings</a></li>
@@ -406,47 +406,47 @@
 
                 <div class="admin-form-card wow fadeInUp" data-wow-delay="200ms">
                     <form action="/admin/interactions" method="POST" id="createInteractionForm" class="needs-validation" novalidate>
-                        <!-- Client & Operator Selection -->
+                        <!-- Service User & Support Worker Selection -->
                         <div class="form-section mb-5">
                             <h4 class="form-section-title">
-                                <i class="fas fa-users me-2"></i>Client & Operator
+                                <i class="fas fa-users me-2"></i>Service User & Support Worker
                             </h4>
                             
                             <div class="row">
                                 <div class="col-md-6 form-row-gap">
-                                    <label for="client" class="form-label required">
-                                        <i class="fas fa-user me-2"></i>Select Client
+                                    <label for="service user" class="form-label required">
+                                        <i class="fas fa-user me-2"></i>Select Service User
                                     </label>
-                                    <select class="form-select" id="client" name="client" required>
-                                        <option value="">-- Select Client --</option>
-                                        <% clients.forEach(client => { %>
-                                            <option value="<%= client._id %>">
-                                                <%= client.firstName %> <%= client.lastName %> 
-                                                <% if (client.referenceId) { %>
-                                                    (ID: <%= client.referenceId %>)
+                                    <select class="form-select" id="service-user" name="service user" required>
+                                        <option value="">-- Select Service User --</option>
+                                        <% serviceUsers.forEach(serviceUser => { %>
+                                            <option value="<%= serviceUser._id %>">
+                                                <%= serviceUser.firstName %> <%= serviceUser.lastName %> 
+                                                <% if (serviceUser.referenceId) { %>
+                                                    (ID: <%= serviceUser.referenceId %>)
                                                 <% } %>
                                             </option>
                                         <% }); %>
                                     </select>
-                                    <div class="form-help-text">The client this interaction is about</div>
-                                    <div class="invalid-feedback">Please select a client</div>
+                                    <div class="form-help-text">The service user this interaction is about</div>
+                                    <div class="invalid-feedback">Please select a service user</div>
                                 </div>
                                 
                                 <div class="col-md-6 form-row-gap">
-                                    <label for="operator" class="form-label required">
-                                        <i class="fas fa-user-md me-2"></i>Select Operator
+                                    <label for="support worker" class="form-label required">
+                                        <i class="fas fa-user-md me-2"></i>Select Support Worker
                                     </label>
-                                    <select class="form-select" id="operator" name="operator" required>
-                                        <option value="">-- Select Operator --</option>
-                                        <% operators.forEach(operator => { %>
-                                            <option value="<%= operator._id %>">
-                                                <%= operator.firstName %> <%= operator.lastName %> 
-                                                (<%= operator.email %>)
+                                    <select class="form-select" id="support-worker" name="support worker" required>
+                                        <option value="">-- Select Support Worker --</option>
+                                        <% supportWorkers.forEach(supportWorker => { %>
+                                            <option value="<%= supportWorker._id %>">
+                                                <%= supportWorker.firstName %> <%= supportWorker.lastName %> 
+                                                (<%= supportWorker.email %>)
                                             </option>
                                         <% }); %>
                                     </select>
-                                    <div class="form-help-text">The operator who performed the interaction</div>
-                                    <div class="invalid-feedback">Please select an operator</div>
+                                    <div class="form-help-text">The support worker who performed the interaction</div>
+                                    <div class="invalid-feedback">Please select an support worker</div>
                                 </div>
                             </div>
                         </div>
@@ -622,7 +622,7 @@
                                         <i class="fas fa-map-marker-alt me-2"></i>Location
                                     </label>
                                     <select class="form-select" id="location" name="location">
-                                        <option value="client_home">Client's Home</option>
+                                        <option value="client_home">Service User's Home</option>
                                         <option value="office">Office / Clinic</option>
                                         <option value="hospital">Hospital</option>
                                         <option value="community">Community Setting</option>
@@ -653,7 +653,7 @@
                             <div class="row mt-4">
                                 <div class="col-md-6 form-row-gap">
                                     <label for="observationsMood" class="form-label">
-                                        <i class="fas fa-smile me-2"></i>Client's Mood
+                                        <i class="fas fa-smile me-2"></i>Service User's Mood
                                     </label>
                                     <select class="form-select" id="observationsMood" name="observations.mood">
                                         <option value="">-- Select Mood --</option>
@@ -679,7 +679,7 @@
                                     <i class="fas fa-clipboard me-2"></i>Additional Observations
                                 </label>
                                 <textarea class="form-control form-textarea" id="observationsNotes" name="observations.notes" 
-                                          placeholder="Any additional observations about the client's behavior, mental state, or other relevant factors..." 
+                                          placeholder="Any additional observations about the service user's behavior, mental state, or other relevant factors..." 
                                           rows="4"></textarea>
                             </div>
                         </div>
@@ -715,7 +715,7 @@
                                     <div class="form-check mb-3">
                                         <input class="form-check-input" type="checkbox" id="verifiedByClient" name="verifiedByClient" value="true">
                                         <label class="form-check-label" for="verifiedByClient">
-                                            Client Verified
+                                            Service User Verified
                                         </label>
                                     </div>
                                 </div>
@@ -789,7 +789,7 @@
                                 <h3 class="footer-widget__title">Care System Admin</h3>
                                 <p class="footer-widget__contact-text">
                                     Interaction Management System<br>
-                                    Create, track, and manage client interactions
+                                    Create, track, and manage service user interactions
                                 </p>
                                 <h5 class="footer-widget__contact-phone-and-email">
                                     <a href="mailto:admin@caresystem.com" class="footer-widget__contact-email">admin@caresystem.com</a><br>
@@ -802,8 +802,8 @@
                                 <h3 class="footer-widget__title">Quick Links</h3>
                                 <ul class="footer-widget__links-list list-unstyled">
                                     <li><a href="/admin/dashboard">Dashboard</a></li>
-                                    <li><a href="/admin/clients">Clients</a></li>
-                                    <li><a href="/admin/operators">Operators</a></li>
+                                    <li><a href="/admin/service-users">Service Users</a></li>
+                                    <li><a href="/admin/support-workers">Support Workers</a></li>
                                     <li><a href="/admin/interactions">Interactions</a></li>
                                     <li><a href="/admin/reports">Reports</a></li>
                                 </ul>
@@ -818,12 +818,12 @@
                                         <span><%= user.firstName %> <%= user.lastName %></span>
                                     </div>
                                     <div class="d-flex justify-content-between mb-2">
-                                        <span>Total Clients:</span>
-                                        <span><%= clients.length %></span>
+                                        <span>Total Service Users:</span>
+                                        <span><%= serviceUsers.length %></span>
                                     </div>
                                     <div class="d-flex justify-content-between mb-2">
-                                        <span>Total Operators:</span>
-                                        <span><%= operators.length %></span>
+                                        <span>Total Support Workers:</span>
+                                        <span><%= supportWorkers.length %></span>
                                     </div>
                                     <div class="d-flex justify-content-between">
                                         <span>Current Time:</span>
@@ -1043,8 +1043,8 @@
                 }
             });
             
-            // Client and operator search enhancement
-            $('#client, #operator').select2({
+            // Service User and support worker search enhancement
+            $('#service user, #support worker').select2({
                 theme: 'bootstrap-5',
                 placeholder: $(this).data('placeholder'),
                 allowClear: true,

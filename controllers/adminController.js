@@ -1,28 +1,28 @@
 const User = require('../models/User');
-const Client = require('../models/Client');
+const ServiceUser = require('../models/ServiceUser');
 const Interaction = require('../models/Interaction');
 const moment = require('moment');
 
 exports.getAdminDashboard = async (req, res) => {
     try {
         // Get statistics
-        const totalClients = await Client.countDocuments();
-        const activeClients = await Client.countDocuments({ status: 'active' });
-        const totalOperators = await User.countDocuments({ role: 'operator', isActive: true });
+        const totalServiceUsers = await ServiceUser.countDocuments();
+        const activeServiceUsers = await ServiceUser.countDocuments({ status: 'active' });
+        const totalOperators = await User.countDocuments({ role: 'support_worker', isActive: true });
         const totalInteractions = await Interaction.countDocuments();
         
         // Get recent activities
         const recentInteractions = await Interaction.find()
-            .populate('client', 'firstName lastName')
-            .populate('operator', 'firstName lastName')
+            .populate('service_user', 'firstName lastName')
+            .populate('support_worker', 'firstName lastName')
             .sort({ createdAt: -1 })
             .limit(10);
         
-        // Get operator performance
-        const operatorStats = await Interaction.aggregate([
+        // Get support worker performance
+        const supportWorkerStats = await Interaction.aggregate([
             {
                 $group: {
-                    _id: '$operator',
+                    _id: '$support worker',
                     totalInteractions: { $sum: 1 }
                 }
             },
@@ -31,16 +31,16 @@ exports.getAdminDashboard = async (req, res) => {
                     from: 'users',
                     localField: '_id',
                     foreignField: '_id',
-                    as: 'operatorInfo'
+                    as: 'supportWorkerInfo'
                 }
             },
-            { $unwind: '$operatorInfo' },
+            { $unwind: '$supportWorkerInfo' },
             { $sort: { totalInteractions: -1 } },
             { $limit: 5 }
         ]);
         
-        // Get client statistics by care level
-        const clientStats = await Client.aggregate([
+        // Get service user statistics by care level
+        const serviceUserStats = await ServiceUser.aggregate([
             {
                 $group: {
                     _id: '$careInfo.careLevel',
@@ -52,14 +52,14 @@ exports.getAdminDashboard = async (req, res) => {
         res.render('admin/dashboard', {
             title: 'Admin Dashboard',
             stats: {
-                totalClients,
-                activeClients,
+                totalServiceUsers,
+                activeServiceUsers,
                 totalOperators,
                 totalInteractions
             },
             recentInteractions,
-            operatorStats,
-            clientStats,
+            supportWorkerStats,
+            serviceUserStats,
             moment: require('moment')
         });
         
@@ -73,7 +73,7 @@ exports.getAdminDashboard = async (req, res) => {
 exports.getOperators = async (req, res) => {
     try {
         const { status, search } = req.query;
-        let query = { role: 'operator' };
+        let query = { role: 'support_worker' };
         
         if (status && status !== 'all') {
             query.isActive = status === 'active';
@@ -87,25 +87,25 @@ exports.getOperators = async (req, res) => {
             ];
         }
         
-        const operators = await User.find(query)
+        const supportWorkers = await User.find(query)
             .select('-password')
             .sort({ createdAt: -1 });
         
         // Get assignment counts
-        const assignmentCounts = await Client.aggregate([
-            { $group: { _id: '$assignedOperator', count: { $sum: 1 } } }
+        const assignmentCounts = await ServiceUser.aggregate([
+            { $group: { _id: '$assignedSupportWorker', count: { $sum: 1 } } }
         ]);
         
-        res.render('admin/operators', {
-            title: 'Manage Operators',
-            operators,
+        res.render('admin/support-workers', {
+            title: 'Manage Support Workers',
+            supportWorkers,
             assignmentCounts,
             moment
         });
         
     } catch (error) {
-        console.error('Get operators error:', error);
-        req.flash('error', 'Error loading operators');
+        console.error('Get support workers error:', error);
+        req.flash('error', 'Error loading support workers');
         res.redirect('/admin/dashboard');
     }
 };

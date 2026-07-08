@@ -36,25 +36,25 @@ const upload = multer({
 router.use(isAuthenticated);
 router.use(hasRole(['guardian']));
 
-// Middleware to verify guardian has access to the client
+// Middleware to verify guardian has access to the service user
 const verifyGuardianAccess = async (req, res, next) => {
     try {
         const user = req.session.user;
         
         if (!user.assignedClient) {
-            req.flash('error', 'No client assigned to your account');
+            req.flash('error', 'No service user assigned to your account');
             return res.redirect('/guardian/dashboard');
         }
         
-        const Client = require('../models/Client');
-        const client = await Client.findById(user.assignedClient);
+        const ServiceUser = require('../models/ServiceUser');
+        const serviceUser = await ServiceUser.findById(user.assignedClient);
         
-        if (!client) {
-            req.flash('error', 'Assigned client not found');
+        if (!serviceUser) {
+            req.flash('error', 'Assigned service user not found');
             return res.redirect('/guardian/dashboard');
         }
         
-        req.client = client; // Attach client to request
+        req.serviceUser = serviceUser; // Attach service user to request
         next();
     } catch (error) {
         console.error('Guardian access verification error:', error);
@@ -63,16 +63,16 @@ const verifyGuardianAccess = async (req, res, next) => {
     }
 };
 
-// GET /guardian/interactions - Guardian view of client's interactions
+// GET /guardian/interactions - Guardian view of service user's interactions
 router.get('/interactions', verifyGuardianAccess, async (req, res) => {
     try {
         const user = req.session.user;
-        const client = req.client;
+        const serviceUser = req.serviceUser;
         
         // Get filter parameters
         const { type, status, startDate, endDate } = req.query;
         
-        let query = { client: client._id };
+        let query = { serviceUser: serviceUser._id };
         
         // Apply filters
         if (type && type !== 'all') {
@@ -94,10 +94,10 @@ router.get('/interactions', verifyGuardianAccess, async (req, res) => {
             query.startTime = { $lte: new Date(endDate + 'T23:59:59.999Z') };
         }
         
-        // Fetch interactions for this client
+        // Fetch interactions for this service user
         const interactions = await require('../models/Interaction').find(query)
-            .populate('client', 'firstName lastName referenceId')
-            .populate('operator', 'firstName lastName')
+            .populate('service_user', 'firstName lastName referenceId')
+            .populate('support_worker', 'firstName lastName')
             .sort({ startTime: -1 });
         
         // Calculate statistics
@@ -132,9 +132,9 @@ router.get('/interactions', verifyGuardianAccess, async (req, res) => {
         });
         
         res.render('guardian/interactions/index', {
-            title: 'Client Interactions',
+            title: 'Service User Interactions',
             interactions,
-            client,
+            serviceUser,
             user,
             type: type || 'all',
             status: status || 'all',
@@ -158,21 +158,21 @@ router.get('/interactions', verifyGuardianAccess, async (req, res) => {
 router.get('/interactions/create', verifyGuardianAccess, async (req, res) => {
     try {
         const user = req.session.user;
-        const client = req.client;
+        const serviceUser = req.serviceUser;
         
-        // Get assigned operator for this client
-        const operator = client.assignedOperator;
+        // Get assigned support worker for this service user
+        const supportWorker = serviceUser.assignedSupportWorker;
         let operatorDetails = null;
         
-        if (operator) {
+        if (supportWorker) {
             const User = require('../models/User');
-            operatorDetails = await User.findById(operator).select('firstName lastName');
+            operatorDetails = await User.findById(supportWorker).select('firstName lastName');
         }
         
         res.render('guardian/interactions/create', {
             title: 'Log Interaction',
-            client,
-            operator: operatorDetails,
+            serviceUser,
+            supportWorker: operatorDetails,
             user,
             moment
         });
@@ -188,7 +188,7 @@ router.get('/interactions/create', verifyGuardianAccess, async (req, res) => {
 router.post('/interactions', verifyGuardianAccess, upload.array('attachments', 5), async (req, res) => {
     try {
         const user = req.session.user;
-        const client = req.client;
+        const serviceUser = req.serviceUser;
         const interactionData = req.body;
         
         // Validate data
@@ -198,8 +198,8 @@ router.post('/interactions', verifyGuardianAccess, upload.array('attachments', 5
         }
         
         // Set required fields
-        interactionData.client = client._id;
-        interactionData.operator = user.id; // Guardian is logging the interaction
+        interactionData.serviceUser = serviceUser._id;
+        interactionData.supportWorker = user.id; // Guardian is logging the interaction
         
         // Set type to a guardian-friendly type
         if (!interactionData.type) {
@@ -264,15 +264,15 @@ router.post('/interactions', verifyGuardianAccess, upload.array('attachments', 5
 router.get('/interactions/:id', verifyGuardianAccess, async (req, res) => {
     try {
         const interactionId = req.params.id;
-        const client = req.client;
+        const serviceUser = req.serviceUser;
         
-        // Find interaction and verify it belongs to this guardian's client
+        // Find interaction and verify it belongs to this guardian's service user
         const interaction = await require('../models/Interaction').findOne({
             _id: interactionId,
-            client: client._id
+            serviceUser: serviceUser._id
         })
-        .populate('client', 'firstName lastName referenceId dateOfBirth medicalInfo')
-        .populate('operator', 'firstName lastName email phone');
+        .populate('service_user', 'firstName lastName referenceId dateOfBirth medicalInfo')
+        .populate('support_worker', 'firstName lastName email phone');
         
         if (!interaction) {
             req.flash('error', 'Interaction not found or unauthorized');
@@ -282,7 +282,7 @@ router.get('/interactions/:id', verifyGuardianAccess, async (req, res) => {
         res.render('guardian/interactions/show', {
             title: `Interaction: ${interaction.title}`,
             interaction,
-            client,
+            serviceUser,
             user: req.session.user,
             moment
         });
@@ -298,13 +298,13 @@ router.get('/interactions/:id', verifyGuardianAccess, async (req, res) => {
 router.get('/interactions/:id/edit', verifyGuardianAccess, async (req, res) => {
     try {
         const interactionId = req.params.id;
-        const client = req.client;
+        const serviceUser = req.serviceUser;
         
-        // Find interaction and verify it belongs to this guardian's client
+        // Find interaction and verify it belongs to this guardian's service user
         const interaction = await require('../models/Interaction').findOne({
             _id: interactionId,
-            client: client._id,
-            operator: req.session.user.id // Guardian can only edit their own interactions
+            serviceUser: serviceUser._id,
+            supportWorker: req.session.user.id // Guardian can only edit their own interactions
         });
         
         if (!interaction) {
@@ -321,7 +321,7 @@ router.get('/interactions/:id/edit', verifyGuardianAccess, async (req, res) => {
         res.render('guardian/interactions/edit', {
             title: `Edit Interaction: ${interaction.title}`,
             interaction,
-            client,
+            serviceUser,
             user: req.session.user,
             moment,
             interactionJSON: JSON.stringify(interaction.toObject())
@@ -338,16 +338,16 @@ router.get('/interactions/:id/edit', verifyGuardianAccess, async (req, res) => {
 router.put('/interactions/:id', verifyGuardianAccess, upload.array('attachments', 5), async (req, res) => {
     try {
         const interactionId = req.params.id;
-        const client = req.client;
+        const serviceUser = req.serviceUser;
         const user = req.session.user;
         const updateData = req.body;
         
-        // Verify interaction exists and belongs to guardian's client
+        // Verify interaction exists and belongs to guardian's service user
         const Interaction = require('../models/Interaction');
         const interaction = await Interaction.findOne({
             _id: interactionId,
-            client: client._id,
-            operator: user.id // Guardian can only update their own interactions
+            serviceUser: serviceUser._id,
+            supportWorker: user.id // Guardian can only update their own interactions
         });
         
         if (!interaction) {
@@ -403,15 +403,15 @@ router.put('/interactions/:id', verifyGuardianAccess, upload.array('attachments'
 router.delete('/interactions/:id', verifyGuardianAccess, async (req, res) => {
     try {
         const interactionId = req.params.id;
-        const client = req.client;
+        const serviceUser = req.serviceUser;
         const user = req.session.user;
         
-        // Verify interaction exists and belongs to guardian's client
+        // Verify interaction exists and belongs to guardian's service user
         const Interaction = require('../models/Interaction');
         const interaction = await Interaction.findOne({
             _id: interactionId,
-            client: client._id,
-            operator: user.id // Guardian can only delete their own interactions
+            serviceUser: serviceUser._id,
+            supportWorker: user.id // Guardian can only delete their own interactions
         });
         
         if (!interaction) {
@@ -440,7 +440,7 @@ router.delete('/interactions/:id', verifyGuardianAccess, async (req, res) => {
 // GET /guardian/interactions/calendar - Guardian view of interactions calendar
 router.get('/interactions/calendar', verifyGuardianAccess, async (req, res) => {
     try {
-        const client = req.client;
+        const serviceUser = req.serviceUser;
         
         // Get interactions for the calendar view (last 30 days and next 30 days)
         const today = new Date();
@@ -450,7 +450,7 @@ router.get('/interactions/calendar', verifyGuardianAccess, async (req, res) => {
         thirtyDaysAhead.setDate(today.getDate() + 30);
         
         const interactions = await require('../models/Interaction').find({
-            client: client._id,
+            serviceUser: serviceUser._id,
             startTime: {
                 $gte: thirtyDaysAgo,
                 $lte: thirtyDaysAhead
@@ -473,7 +473,7 @@ router.get('/interactions/calendar', verifyGuardianAccess, async (req, res) => {
         
         res.render('guardian/interactions/calendar', {
             title: 'Interaction Calendar',
-            client,
+            serviceUser,
             user: req.session.user,
             calendarEvents: JSON.stringify(calendarEvents),
             moment
@@ -489,12 +489,12 @@ router.get('/interactions/calendar', verifyGuardianAccess, async (req, res) => {
 // GET /guardian/interactions/export - Export interactions as CSV
 router.get('/interactions/export', verifyGuardianAccess, async (req, res) => {
     try {
-        const client = req.client;
+        const serviceUser = req.serviceUser;
         
         const interactions = await require('../models/Interaction').find({
-            client: client._id
+            serviceUser: serviceUser._id
         })
-        .populate('operator', 'firstName lastName')
+        .populate('support_worker', 'firstName lastName')
         .sort({ startTime: -1 });
         
         // Convert to CSV
@@ -506,7 +506,7 @@ router.get('/interactions/export', verifyGuardianAccess, async (req, res) => {
             'Time',
             'Title',
             'Type',
-            'Operator',
+            'Support Worker',
             'Status',
             'Duration',
             'Location'
@@ -532,7 +532,7 @@ router.get('/interactions/export', verifyGuardianAccess, async (req, res) => {
                 timeStr,
                 interaction.title,
                 interaction.type.replace('_', ' '),
-                interaction.operator ? `${interaction.operator.firstName} ${interaction.operator.lastName}` : 'N/A',
+                interaction.supportWorker ? `${interaction.supportWorker.firstName} ${interaction.supportWorker.lastName}` : 'N/A',
                 interaction.status,
                 duration,
                 interaction.location || 'N/A'
@@ -546,7 +546,7 @@ router.get('/interactions/export', verifyGuardianAccess, async (req, res) => {
         
         // Set headers for CSV download
         res.setHeader('Content-Type', 'text/csv');
-        res.setHeader('Content-Disposition', `attachment; filename=interactions-${client.firstName}-${client.lastName}-${Date.now()}.csv`);
+        res.setHeader('Content-Disposition', `attachment; filename=interactions-${serviceUser.firstName}-${serviceUser.lastName}-${Date.now()}.csv`);
         
         res.send(csvString);
         

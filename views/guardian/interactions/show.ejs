@@ -261,7 +261,7 @@
             padding: 15px;
         }
         
-        .client-badge {
+        .service-user-badge {
             display: inline-block;
             background: rgba(74, 139, 143, 0.1);
             color: var(--guardian-primary);
@@ -350,7 +350,7 @@
                                 <a href="#" class="mobile-nav__toggler"><i class="fa fa-bars"></i></a>
                                 <ul class="main-menu__list">
                                     <li><a href="/guardian/dashboard">Dashboard</a></li>
-                                    <li><a href="/guardian/client">Client Information</a></li>
+                                    <li><a href="/guardian/service-user">Service User Information</a></li>
                                     <li class="current"><a href="/guardian/interactions">Interactions</a></li>
                                     <li><a href="/guardian/documents">Documents</a></li>
                                     <li><a href="/guardian/change-password">Settings</a></li>
@@ -387,9 +387,9 @@
         <section class="page-header" style="padding: 60px 0 40px;">
             <div class="container">
                 <div class="page-header__inner">
-                    <div class="client-badge mb-3">
+                    <div class="service-user-badge mb-3">
                         <i class="fas fa-user me-2"></i>
-                        <%= client.firstName %> <%= client.lastName %>
+                        <%= serviceUser.firstName %> <%= serviceUser.lastName %>
                     </div>
                     <h2>Interaction Details</h2>
                 </div>
@@ -417,7 +417,7 @@
                                 <a href="/guardian/interactions" class="action-btn action-btn-back">
                                     <i class="fas fa-arrow-left me-2"></i>Back
                                 </a>
-                                <% if (interaction.operator && interaction.operator._id.toString() === user.id && interaction.status === 'draft') { %>
+                                <% if (interaction.supportWorker && interaction.supportWorker._id.toString() === user.id && interaction.status === 'draft') { %>
                                     <a href="/guardian/interactions/<%= interaction._id %>/edit" class="action-btn action-btn-edit">
                                         <i class="fas fa-edit me-2"></i>Edit
                                     </a>
@@ -433,7 +433,7 @@
                 </div>
 
                 <!-- Guardian Verification Notice -->
-                <% if (interaction.operator && interaction.operator._id.toString() === user.id) { %>
+                <% if (interaction.supportWorker && interaction.supportWorker._id.toString() === user.id) { %>
                     <div class="alert alert-info mb-4 wow fadeInUp" data-wow-delay="150ms">
                         <i class="fas fa-user-shield me-2"></i>
                         <strong>You logged this interaction</strong> on <%= moment(interaction.createdAt).format('MMMM D, YYYY [at] h:mm A') %>
@@ -545,10 +545,10 @@
                                     <div class="col-md-6">
                                         <div class="detail-label">Logged By</div>
                                         <div class="detail-value">
-                                            <% if (interaction.operator) { %>
+                                            <% if (interaction.supportWorker) { %>
                                                 <i class="fas fa-user me-2 text-muted"></i>
-                                                <%= interaction.operator.firstName %> <%= interaction.operator.lastName %>
-                                                <% if (interaction.operator._id.toString() === user.id) { %>
+                                                <%= interaction.supportWorker.firstName %> <%= interaction.supportWorker.lastName %>
+                                                <% if (interaction.supportWorker._id.toString() === user.id) { %>
                                                     <span class="badge bg-info ms-2">You</span>
                                                 <% } %>
                                             <% } else { %>
@@ -570,7 +570,7 @@
                             <!-- Observations -->
                             <% if (interaction.observations && interaction.observations.notes) { %>
                             <div class="detail-section">
-                                <div class="detail-label">Client Observations</div>
+                                <div class="detail-label">Service User Observations</div>
                                 <div class="detail-value observation-note">
                                     <i class="fas fa-eye me-2"></i>
                                     <%= interaction.observations.notes %>
@@ -635,36 +635,36 @@
 
                     <!-- Sidebar Information -->
                     <div class="col-lg-4">
-                        <!-- Client Information -->
+                        <!-- Service User Information -->
                         <div class="interaction-detail-card wow fadeInUp" data-wow-delay="300ms">
                             <h5 class="mb-4">
-                                <i class="fas fa-user me-2"></i>Client Information
+                                <i class="fas fa-user me-2"></i>Service User Information
                             </h5>
                             
                             <div class="detail-label">Name</div>
                             <div class="detail-value mb-3">
-                                <strong><%= client.firstName %> <%= client.lastName %></strong>
+                                <strong><%= serviceUser.firstName %> <%= serviceUser.lastName %></strong>
                             </div>
                             
                             <div class="detail-label">Age</div>
                             <div class="detail-value mb-3">
-                                <%= client.age %> years old
+                                <%= serviceUser.age %> years old
                             </div>
                             
                             <div class="detail-label">Care Level</div>
                             <div class="detail-value mb-3">
                                 <span class="badge bg-<%= 
-                                    client.careInfo.careLevel === 'high' ? 'danger' :
-                                    client.careInfo.careLevel === 'medium' ? 'warning' : 'success'
+                                    serviceUser.careInfo.careLevel === 'high' ? 'danger' :
+                                    serviceUser.careInfo.careLevel === 'medium' ? 'warning' : 'success'
                                 %>">
-                                    <%= client.careInfo.careLevel %>
+                                    <%= serviceUser.careInfo.careLevel %>
                                 </span>
                             </div>
                             
-                            <div class="detail-label">Assigned Operator</div>
+                            <div class="detail-label">Assigned Support Worker</div>
                             <div class="detail-value">
-                                <% if (client.assignedOperator) { %>
-                                    <%= client.assignedOperator.firstName %> <%= client.assignedOperator.lastName %>
+                                <% if (serviceUser.assignedSupportWorker) { %>
+                                    <%= serviceUser.assignedSupportWorker.firstName %> <%= serviceUser.assignedSupportWorker.lastName %>
                                 <% } else { %>
                                     <span class="text-muted">Not assigned</span>
                                 <% } %>
@@ -685,8 +685,8 @@
                                     <div class="timeline-content">
                                         <strong>Interaction Started</strong><br>
                                         <small class="text-muted">Logged by 
-                                            <% if (interaction.operator) { %>
-                                                <%= interaction.operator.firstName %> <%= interaction.operator.lastName %>
+                                            <% if (interaction.supportWorker) { %>
+                                                <%= interaction.supportWorker.firstName %> <%= interaction.supportWorker.lastName %>
                                             <% } else { %>
                                                 Guardian
                                             <% } %>
@@ -754,8 +754,8 @@
                                 <a href="/guardian/interactions" class="btn btn-outline-secondary">
                                     <i class="fas fa-list me-2"></i>View All Interactions
                                 </a>
-                                <a href="/guardian/client" class="btn btn-outline-info">
-                                    <i class="fas fa-user me-2"></i>View Client Details
+                                <a href="/guardian/service-user" class="btn btn-outline-info">
+                                    <i class="fas fa-user me-2"></i>View Service User Details
                                 </a>
                                 <a href="/guardian/dashboard" class="btn btn-outline-success">
                                     <i class="fas fa-tachometer-alt me-2"></i>Return to Dashboard
@@ -784,11 +784,11 @@
                             <div class="site-footer__top-right">
                                 <div class="site-footer__call-and-social">
                                     <div class="site-footer__call">
-                                        <p>Guardian Portal <a href="tel:<%= client.contact.emergencyContact.phone || '123-456-7890' %>">Emergency: <%= client.contact.emergencyContact.phone || '123-456-7890' %></a></p>
+                                        <p>Guardian Portal <a href="tel:<%= serviceUser.contact.emergencyContact.phone || '123-456-7890' %>">Emergency: <%= serviceUser.contact.emergencyContact.phone || '123-456-7890' %></a></p>
                                     </div>
                                     <div class="site-footer__social">
                                         <a href="/guardian/dashboard" title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
-                                        <a href="/guardian/client" title="Client Info"><i class="fas fa-user"></i></a>
+                                        <a href="/guardian/service-user" title="Service User Info"><i class="fas fa-user"></i></a>
                                         <a href="/guardian/interactions" title="Interactions"><i class="fas fa-history"></i></a>
                                     </div>
                                 </div>
@@ -802,22 +802,22 @@
                             <div class="footer-widget__column footer-widget__contact">
                                 <h3 class="footer-widget__title">Contact Care Team</h3>
                                 <p class="footer-widget__contact-text">
-                                    <% if (client.assignedOperator) { %>
-                                        <%= client.assignedOperator.firstName %> <%= client.assignedOperator.lastName %><br>
-                                        Assigned Care Operator
+                                    <% if (serviceUser.assignedSupportWorker) { %>
+                                        <%= serviceUser.assignedSupportWorker.firstName %> <%= serviceUser.assignedSupportWorker.lastName %><br>
+                                        Assigned Care Support Worker
                                     <% } else { %>
                                         Care System Support Team<br>
                                         123 Health Street, NY, USA
                                     <% } %>
                                 </p>
                                 <h5 class="footer-widget__contact-phone-and-email">
-                                    <% if (client.assignedOperator && client.assignedOperator.email) { %>
-                                        <a href="mailto:<%= client.assignedOperator.email %>" class="footer-widget__contact-email"><%= client.assignedOperator.email %></a><br>
+                                    <% if (serviceUser.assignedSupportWorker && serviceUser.assignedSupportWorker.email) { %>
+                                        <a href="mailto:<%= serviceUser.assignedSupportWorker.email %>" class="footer-widget__contact-email"><%= serviceUser.assignedSupportWorker.email %></a><br>
                                     <% } else { %>
                                         <a href="mailto:support@caresystem.com" class="footer-widget__contact-email">support@caresystem.com</a><br>
                                     <% } %>
-                                    <% if (client.assignedOperator && client.assignedOperator.phone) { %>
-                                        <a href="tel:<%= client.assignedOperator.phone %>" class="footer-widget__contact-phone"><%= client.assignedOperator.phone %></a>
+                                    <% if (serviceUser.assignedSupportWorker && serviceUser.assignedSupportWorker.phone) { %>
+                                        <a href="tel:<%= serviceUser.assignedSupportWorker.phone %>" class="footer-widget__contact-phone"><%= serviceUser.assignedSupportWorker.phone %></a>
                                     <% } else { %>
                                         <a href="tel:+1234567890" class="footer-widget__contact-phone">+1 234 567 890</a>
                                     <% } %>
@@ -829,7 +829,7 @@
                                 <h3 class="footer-widget__title">Quick Links</h3>
                                 <ul class="footer-widget__links-list list-unstyled">
                                     <li><a href="/guardian/dashboard">Dashboard</a></li>
-                                    <li><a href="/guardian/client">Client Information</a></li>
+                                    <li><a href="/guardian/service-user">Service User Information</a></li>
                                     <li><a href="/guardian/interactions">Interactions</a></li>
                                     <li><a href="/guardian/documents">Documents</a></li>
                                     <li><a href="/guardian/change-password">Settings</a></li>
@@ -872,7 +872,7 @@
                             <div class="site-footer__copy-right-inner">
                                 <p class="site-footer__copy-right-text">© <%= new Date().getFullYear() %> Care System. All rights reserved.</p>
                                 <p class="site-footer__copy-right-text small mt-2">
-                                    Guardian access for: <%= client.firstName %> <%= client.lastName %>
+                                    Guardian access for: <%= serviceUser.firstName %> <%= serviceUser.lastName %>
                                 </p>
                             </div>
                         </div>
@@ -895,21 +895,21 @@
             <ul class="mobile-nav__contact list-unstyled">
                 <li>
                     <i class="fa fa-envelope"></i>
-                    <a href="mailto:<%= client.assignedOperator ? client.assignedOperator.email : 'support@caresystem.com' %>">
-                        <%= client.assignedOperator ? client.assignedOperator.email : 'support@caresystem.com' %>
+                    <a href="mailto:<%= serviceUser.assignedSupportWorker ? serviceUser.assignedSupportWorker.email : 'support@caresystem.com' %>">
+                        <%= serviceUser.assignedSupportWorker ? serviceUser.assignedSupportWorker.email : 'support@caresystem.com' %>
                     </a>
                 </li>
                 <li>
                     <i class="fa fa-phone-alt"></i>
-                    <a href="tel:<%= client.contact.emergencyContact.phone || '123-456-7890' %>">
-                        <%= client.contact.emergencyContact.phone || '123-456-7890' %>
+                    <a href="tel:<%= serviceUser.contact.emergencyContact.phone || '123-456-7890' %>">
+                        <%= serviceUser.contact.emergencyContact.phone || '123-456-7890' %>
                     </a>
                 </li>
             </ul>
             <div class="mobile-nav__top">
                 <div class="mobile-nav__social">
                     <a href="/guardian/dashboard" class="fas fa-tachometer-alt" title="Dashboard"></a>
-                    <a href="/guardian/client" class="fas fa-user" title="Client"></a>
+                    <a href="/guardian/service-user" class="fas fa-user" title="Service User"></a>
                     <a href="/guardian/interactions" class="fas fa-history" title="Interactions"></a>
                 </div>
             </div>

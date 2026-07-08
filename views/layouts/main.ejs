@@ -11,7 +11,7 @@
             Care Management System
         <% } %>
     </title>
-    <meta name="description" content="Comprehensive care service management system for care providers and operators" />
+    <meta name="description" content="Comprehensive care service management system for care providers and support workers" />
 
     <!-- Favicons -->
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-touch-icon.png" />
@@ -65,14 +65,14 @@
                                         <a href="/admin/dashboard">Admin</a>
                                     </li>
                                 <% } %>
-                                <li class="<%= typeof currentPage !== 'undefined' && currentPage === 'clients' ? 'current' : '' %>">
-                                    <a href="/clients">Clients</a>
+                                <li class="<%= typeof currentPage !== 'undefined' && currentPage === 'service-users' ? 'current' : '' %>">
+                                    <a href="/service-users">Service Users</a>
                                 </li>
                                 <li class="<%= typeof currentPage !== 'undefined' && currentPage === 'interactions' ? 'current' : '' %>">
                                     <a href="/interactions">Interactions</a>
                                 </li>
                                 <li class="<%= typeof currentPage !== 'undefined' && currentPage === 'schedule' ? 'current' : '' %>">
-                                    <a href="/operator/schedule">Schedule</a>
+                                    <a href="/support-worker/schedule">Schedule</a>
                                 </li>
                                 <li class="dropdown <%= typeof currentPage !== 'undefined' && currentPage === 'profile' ? 'current' : '' %>">
                                     <a href="#">
@@ -199,9 +199,9 @@
                 <% if (user.role === 'admin') { %>
                     <li><a href="/admin/dashboard">Admin</a></li>
                 <% } %>
-                <li><a href="/clients">Clients</a></li>
+                <li><a href="/service-users">Service Users</a></li>
                 <li><a href="/interactions">Interactions</a></li>
-                <li><a href="/operator/schedule">Schedule</a></li>
+                <li><a href="/support-worker/schedule">Schedule</a></li>
                 <li><a href="/profile">My Profile</a></li>
                 <li><a href="/logout">Logout</a></li>
             </ul>

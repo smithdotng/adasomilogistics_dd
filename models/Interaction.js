@@ -1,17 +1,17 @@
 const mongoose = require('mongoose');
 
 const interactionSchema = new mongoose.Schema({
-    clientId: {
+    serviceUserId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    operatorId: {
+    supportWorkerId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    providerId: {
+    careProviderId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
@@ -197,9 +197,9 @@ const interactionSchema = new mongoose.Schema({
 });
 
 // Indexes for queries
-interactionSchema.index({ clientId: 1, scheduledStart: -1 });
-interactionSchema.index({ operatorId: 1, scheduledStart: -1 });
-interactionSchema.index({ providerId: 1, scheduledStart: -1 });
+interactionSchema.index({ serviceUserId: 1, scheduledStart: -1 });
+interactionSchema.index({ supportWorkerId: 1, scheduledStart: -1 });
+interactionSchema.index({ careProviderId: 1, scheduledStart: -1 });
 interactionSchema.index({ status: 1, scheduledStart: 1 });
 
 module.exports = mongoose.model('Interaction', interactionSchema);

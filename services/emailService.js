@@ -32,12 +32,12 @@ if (!isDevelopment) {
     });
 }
 
-// Send welcome email to new client
-exports.sendClientCredentials = async (email, tempPassword, data) => {
+// Send welcome email to new service user
+exports.sendServiceUserCredentials = async (email, tempPassword, data) => {
     // In development, just log the credentials
     if (isDevelopment || !process.env.EMAIL_USER) {
         console.log('==========================================');
-        console.log('DEVELOPMENT MODE: New Client Account Created');
+        console.log('DEVELOPMENT MODE: New Service User Account Created');
         console.log('Email:', email);
         console.log('Temporary Password:', tempPassword);
         console.log('Login URL:', data.loginUrl);
@@ -71,7 +71,7 @@ exports.sendClientCredentials = async (email, tempPassword, data) => {
                     </div>
                     <div class="content">
                         <h2>Hello ${data.name},</h2>
-                        <p>Your account has been created by ${data.providerName}. You can now login to the Care System using the credentials below:</p>
+                        <p>Your account has been created by ${data.careProviderName}. You can now login to the Care System using the credentials below:</p>
                         
                         <div class="credentials">
                             <p><strong>Email:</strong> ${email}</p>
@@ -100,22 +100,22 @@ exports.sendClientCredentials = async (email, tempPassword, data) => {
     
     try {
         const info = await transporter.sendMail(mailOptions);
-        console.log('Welcome email sent to client:', email);
+        console.log('Welcome email sent to service user:', email);
         console.log('Message ID:', info.messageId);
         return { success: true, messageId: info.messageId };
     } catch (error) {
-        console.error('Error sending welcome email to client:', error);
+        console.error('Error sending welcome email to service user:', error);
         // Don't throw error - we don't want to break the registration flow
-        console.log('Email sending failed but client was created successfully');
+        console.log('Email sending failed but service user was created successfully');
         return { success: false, error: error.message };
     }
 };
 
-// Send welcome email to new operator
-exports.sendOperatorCredentials = async (email, tempPassword, data) => {
+// Send welcome email to new support worker
+exports.sendSupportWorkerCredentials = async (email, tempPassword, data) => {
     if (isDevelopment || !process.env.EMAIL_USER) {
         console.log('==========================================');
-        console.log('DEVELOPMENT MODE: New Operator Account Created');
+        console.log('DEVELOPMENT MODE: New Support Worker Account Created');
         console.log('Email:', email);
         console.log('Temporary Password:', tempPassword);
         console.log('Login URL:', data.loginUrl);
@@ -126,7 +126,7 @@ exports.sendOperatorCredentials = async (email, tempPassword, data) => {
     const mailOptions = {
         from: `"Care System" <${process.env.EMAIL_FROM || 'noreply@caresystem.com'}>`,
         to: email,
-        subject: 'Welcome to Care System - Your Operator Account',
+        subject: 'Welcome to Care System - Your Support Worker Account',
         html: `
             <!DOCTYPE html>
             <html>
@@ -148,7 +148,7 @@ exports.sendOperatorCredentials = async (email, tempPassword, data) => {
                     </div>
                     <div class="content">
                         <h2>Hello ${data.name},</h2>
-                        <p>Your operator account has been created by ${data.providerName}. You can now login to the Care System using the credentials below:</p>
+                        <p>Your support worker account has been created by ${data.careProviderName}. You can now login to the Care System using the credentials below:</p>
                         
                         <div class="credentials">
                             <p><strong>Email:</strong> ${email}</p>
@@ -174,7 +174,7 @@ exports.sendOperatorCredentials = async (email, tempPassword, data) => {
     
     try {
         await transporter.sendMail(mailOptions);
-        console.log('Welcome email sent to operator:', email);
+        console.log('Welcome email sent to support worker:', email);
         return { success: true };
     } catch (error) {
         console.error('Error sending email:', error);
@@ -182,7 +182,7 @@ exports.sendOperatorCredentials = async (email, tempPassword, data) => {
     }
 };
 
-// Send daily summary to provider
+// Send daily summary to care provider
 exports.sendDailySummary = async (email, data) => {
     if (isDevelopment || !process.env.EMAIL_USER) {
         console.log('DEVELOPMENT MODE: Daily summary email skipped for', email);
@@ -215,7 +215,7 @@ exports.sendDailySummary = async (email, data) => {
                         <p>${data.date}</p>
                     </div>
                     <div class="content">
-                        <h2>Hello ${data.providerName},</h2>
+                        <h2>Hello ${data.careProviderName},</h2>
                         <p>Here's your daily summary for ${data.date}:</p>
                         
                         <div class="stats">
@@ -224,12 +224,12 @@ exports.sendDailySummary = async (email, data) => {
                                 <div>Completed Visits</div>
                             </div>
                             <div class="stat-box">
-                                <div class="stat-number">${data.activeOperators}</div>
-                                <div>Active Operators</div>
+                                <div class="stat-number">${data.activeSupportWorkers}</div>
+                                <div>Active Support Workers</div>
                             </div>
                             <div class="stat-box">
-                                <div class="stat-number">${data.clientsSeen}</div>
-                                <div>Clients Seen</div>
+                                <div class="stat-number">${data.serviceUsersSeen}</div>
+                                <div>Service Users Seen</div>
                             </div>
                         </div>
                         

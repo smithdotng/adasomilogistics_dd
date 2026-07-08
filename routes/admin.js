@@ -3,7 +3,7 @@ const router = express.Router();
 const adminController = require('../controllers/adminController');
 const { isAuthenticated, hasRole } = require('../controllers/authController');
 const User = require('../models/User');
-const Client = require('../models/Client');
+const ServiceUser = require('../models/ServiceUser');
 const Interaction = require('../models/Interaction');
 const moment = require('moment');
 const bcrypt = require('bcryptjs');
@@ -15,122 +15,122 @@ router.use(hasRole(['admin']));
 // Admin Dashboard
 router.get('/dashboard', adminController.getAdminDashboard);
 
-// Operator Management
-router.get('/operators', adminController.getOperators);
+// Support Worker Management
+router.get('/support-workers', adminController.getOperators);
 
-// Create Operator Form
-router.get('/operators/create', (req, res) => {
-    res.render('admin/create-operator', { title: 'Create Operator' });
+// Create Support Worker Form
+router.get('/support-workers/create', (req, res) => {
+    res.render('admin/create-supportWorker', { title: 'Create Support Worker' });
 });
 
-// Create Operator
-router.post('/operators', async (req, res) => {
+// Create Support Worker
+router.post('/support-workers', async (req, res) => {
     try {
         const { firstName, lastName, email, password, phone, role } = req.body;
         
         // Check if user already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            req.flash('error', 'Operator with this email already exists');
-            return res.redirect('/admin/operators/create');
+            req.flash('error', 'Support Worker with this email already exists');
+            return res.redirect('/admin/support-workers/create');
         }
         
-        // Create new operator
-        const operator = new User({
+        // Create new support worker
+        const supportWorker = new User({
             firstName,
             lastName,
             email,
             password,
-            role: role || 'operator',
+            role: role || 'support_worker',
             phone,
             isActive: true
         });
         
-        await operator.save();
+        await supportWorker.save();
         
-        req.flash('success', 'Operator created successfully');
-        res.redirect('/admin/operators');
+        req.flash('success', 'Support Worker created successfully');
+        res.redirect('/admin/support-workers');
         
     } catch (error) {
-        console.error('Create operator error:', error);
-        req.flash('error', 'Error creating operator');
-        res.redirect('/admin/operators/create');
+        console.error('Create support worker error:', error);
+        req.flash('error', 'Error creating support worker');
+        res.redirect('/admin/support-workers/create');
     }
 });
 
-// View Operator Details
-router.get('/operators/:id', async (req, res) => {
+// View Support Worker Details
+router.get('/support-workers/:id', async (req, res) => {
     try {
-        const operatorId = req.params.id;
+        const supportWorkerId = req.params.id;
         
-        const operator = await User.findById(operatorId).select('-password');
-        if (!operator) {
-            req.flash('error', 'Operator not found');
-            return res.redirect('/admin/operators');
+        const supportWorker = await User.findById(supportWorkerId).select('-password');
+        if (!supportWorker) {
+            req.flash('error', 'Support Worker not found');
+            return res.redirect('/admin/support-workers');
         }
         
-        // Get operator statistics
-        const assignedClients = await Client.countDocuments({ assignedOperator: operatorId });
-        const totalInteractions = await Interaction.countDocuments({ operator: operatorId });
+        // Get support worker statistics
+        const assignedServiceUsers = await ServiceUser.countDocuments({ assignedSupportWorker: supportWorkerId });
+        const totalInteractions = await Interaction.countDocuments({ supportWorker: supportWorkerId });
         
         // Get recent interactions
-        const recentInteractions = await Interaction.find({ operator: operatorId })
-            .populate('client', 'firstName lastName referenceId')
+        const recentInteractions = await Interaction.find({ supportWorker: supportWorkerId })
+            .populate('service_user', 'firstName lastName referenceId')
             .sort({ createdAt: -1 })
             .limit(10);
         
-        // Get assigned clients
-        const clients = await Client.find({ assignedOperator: operatorId })
+        // Get assigned service users
+        const serviceUsers = await ServiceUser.find({ assignedSupportWorker: supportWorkerId })
             .select('firstName lastName referenceId status')
             .sort({ lastName: 1 })
             .limit(10);
         
-        res.render('admin/operator-detail', {
-            title: `Operator: ${operator.fullName}`,
-            operator,
+        res.render('admin/support-worker-detail', {
+            title: `Support Worker: ${supportWorker.fullName}`,
+            supportWorker,
             stats: {
-                assignedClients,
+                assignedServiceUsers,
                 totalInteractions
             },
             recentInteractions,
-            clients,
+            serviceUsers,
             moment
         });
         
     } catch (error) {
-        console.error('Operator detail error:', error);
-        req.flash('error', 'Error loading operator details');
-        res.redirect('/admin/operators');
+        console.error('Support Worker detail error:', error);
+        req.flash('error', 'Error loading support worker details');
+        res.redirect('/admin/support-workers');
     }
 });
 
-// Edit Operator Form
-router.get('/operators/:id/edit', async (req, res) => {
+// Edit Support Worker Form
+router.get('/support-workers/:id/edit', async (req, res) => {
     try {
-        const operatorId = req.params.id;
+        const supportWorkerId = req.params.id;
         
-        const operator = await User.findById(operatorId).select('-password');
-        if (!operator) {
-            req.flash('error', 'Operator not found');
-            return res.redirect('/admin/operators');
+        const supportWorker = await User.findById(supportWorkerId).select('-password');
+        if (!supportWorker) {
+            req.flash('error', 'Support Worker not found');
+            return res.redirect('/admin/support-workers');
         }
         
-        res.render('admin/edit-operator', {
-            title: `Edit Operator: ${operator.fullName}`,
-            operator
+        res.render('admin/edit-supportWorker', {
+            title: `Edit Support Worker: ${supportWorker.fullName}`,
+            supportWorker
         });
         
     } catch (error) {
-        console.error('Edit operator form error:', error);
+        console.error('Edit support worker form error:', error);
         req.flash('error', 'Error loading edit form');
-        res.redirect('/admin/operators');
+        res.redirect('/admin/support-workers');
     }
 });
 
-// Update Operator
-router.put('/operators/:id', async (req, res) => {
+// Update Support Worker
+router.put('/support-workers/:id', async (req, res) => {
     try {
-        const operatorId = req.params.id;
+        const supportWorkerId = req.params.id;
         const { firstName, lastName, email, phone, role, isActive } = req.body;
         
         const updateData = {
@@ -142,71 +142,71 @@ router.put('/operators/:id', async (req, res) => {
             isActive: isActive === 'on'
         };
         
-        await User.findByIdAndUpdate(operatorId, updateData);
+        await User.findByIdAndUpdate(supportWorkerId, updateData);
         
-        req.flash('success', 'Operator updated successfully');
-        res.redirect(`/admin/operators/${operatorId}`);
+        req.flash('success', 'Support Worker updated successfully');
+        res.redirect(`/admin/support-workers/${supportWorkerId}`);
         
     } catch (error) {
-        console.error('Update operator error:', error);
-        req.flash('error', 'Error updating operator');
-        res.redirect(`/admin/operators/${req.params.id}/edit`);
+        console.error('Update support worker error:', error);
+        req.flash('error', 'Error updating support worker');
+        res.redirect(`/admin/support-workers/${req.params.id}/edit`);
     }
 });
 
-// Delete Operator
-router.delete('/operators/:id', async (req, res) => {
+// Delete Support Worker
+router.delete('/support-workers/:id', async (req, res) => {
     try {
-        const operatorId = req.params.id;
+        const supportWorkerId = req.params.id;
         
-        // Check if operator has assigned clients
-        const assignedClients = await Client.countDocuments({ assignedOperator: operatorId });
+        // Check if support worker has assigned service users
+        const assignedServiceUsers = await ServiceUser.countDocuments({ assignedSupportWorker: supportWorkerId });
         
-        if (assignedClients > 0) {
-            req.flash('error', 'Cannot delete operator with assigned clients. Reassign clients first.');
-            return res.redirect(`/admin/operators/${operatorId}`);
+        if (assignedServiceUsers > 0) {
+            req.flash('error', 'Cannot delete support worker with assigned service users. Reassign service users first.');
+            return res.redirect(`/admin/support-workers/${supportWorkerId}`);
         }
         
-        await User.findByIdAndDelete(operatorId);
+        await User.findByIdAndDelete(supportWorkerId);
         
-        req.flash('success', 'Operator deleted successfully');
-        res.redirect('/admin/operators');
+        req.flash('success', 'Support Worker deleted successfully');
+        res.redirect('/admin/support-workers');
         
     } catch (error) {
-        console.error('Delete operator error:', error);
-        req.flash('error', 'Error deleting operator');
-        res.redirect(`/admin/operators/${req.params.id}`);
+        console.error('Delete support worker error:', error);
+        req.flash('error', 'Error deleting support worker');
+        res.redirect(`/admin/support-workers/${req.params.id}`);
     }
 });
 
-// Reset Operator Password
-router.post('/operators/:id/reset-password', async (req, res) => {
+// Reset Support Worker Password
+router.post('/support-workers/:id/reset-password', async (req, res) => {
     try {
-        const operatorId = req.params.id;
+        const supportWorkerId = req.params.id;
         const { newPassword } = req.body;
         
         if (!newPassword || newPassword.length < 6) {
             req.flash('error', 'Password must be at least 6 characters long');
-            return res.redirect(`/admin/operators/${operatorId}`);
+            return res.redirect(`/admin/support-workers/${supportWorkerId}`);
         }
         
         const hashedPassword = await bcrypt.hash(newPassword, 10);
-        await User.findByIdAndUpdate(operatorId, { password: hashedPassword });
+        await User.findByIdAndUpdate(supportWorkerId, { password: hashedPassword });
         
         req.flash('success', 'Password reset successfully');
-        res.redirect(`/admin/operators/${operatorId}`);
+        res.redirect(`/admin/support-workers/${supportWorkerId}`);
         
     } catch (error) {
         console.error('Reset password error:', error);
         req.flash('error', 'Error resetting password');
-        res.redirect(`/admin/operators/${req.params.id}`);
+        res.redirect(`/admin/support-workers/${req.params.id}`);
     }
 });
 
-// Client Management (Admin view)
-router.get('/clients', async (req, res) => {
+// Service User Management (Admin view)
+router.get('/service-users', async (req, res) => {
     try {
-        const { status, search, operator, careLevel } = req.query;
+        const { status, search, supportWorker, careLevel } = req.query;
         
         let query = {};
         
@@ -214,8 +214,8 @@ router.get('/clients', async (req, res) => {
             query.status = status;
         }
         
-        if (operator && operator !== 'all') {
-            query.assignedOperator = operator;
+        if (supportWorker && supportWorker !== 'all') {
+            query.assignedSupportWorker = supportWorker;
         }
         
         if (careLevel && careLevel !== 'all') {
@@ -232,53 +232,53 @@ router.get('/clients', async (req, res) => {
             ];
         }
         
-        const clients = await Client.find(query)
-            .populate('assignedOperator', 'firstName lastName')
+        const serviceUsers = await ServiceUser.find(query)
+            .populate('assignedSupportWorker', 'firstName lastName')
             .populate('createdBy', 'firstName lastName')
             .sort({ createdAt: -1 });
         
-        const operators = await User.find({ 
-            role: 'operator', 
+        const supportWorkers = await User.find({ 
+            role: 'support_worker', 
             isActive: true 
         }).select('firstName lastName');
         
-        res.render('admin/clients', {
-            title: 'All Clients',
-            clients,
-            operators,
+        res.render('admin/service-users', {
+            title: 'All Service Users',
+            serviceUsers,
+            supportWorkers,
             moment
         });
         
     } catch (error) {
-        console.error('Admin clients error:', error);
-        req.flash('error', 'Error loading clients');
+        console.error('Admin service users error:', error);
+        req.flash('error', 'Error loading service users');
         res.redirect('/admin/dashboard');
     }
 });
 
-// Client Detail (Admin view)
-router.get('/clients/:id', async (req, res) => {
+// Service User Detail (Admin view)
+router.get('/service-users/:id', async (req, res) => {
     try {
-        const clientId = req.params.id;
+        const serviceUserId = req.params.id;
         
-        const client = await Client.findById(clientId)
-            .populate('assignedOperator', 'firstName lastName email phone')
+        const serviceUser = await ServiceUser.findById(serviceUserId)
+            .populate('assignedSupportWorker', 'firstName lastName email phone')
             .populate('createdBy', 'firstName lastName');
         
-        if (!client) {
-            req.flash('error', 'Client not found');
-            return res.redirect('/admin/clients');
+        if (!serviceUser) {
+            req.flash('error', 'Service User not found');
+            return res.redirect('/admin/service-users');
         }
         
-        // Get all interactions for this client
-        const interactions = await Interaction.find({ client: clientId })
-            .populate('operator', 'firstName lastName')
+        // Get all interactions for this service user
+        const interactions = await Interaction.find({ serviceUser: serviceUserId })
+            .populate('support_worker', 'firstName lastName')
             .sort({ startTime: -1 })
             .limit(20);
         
-        // Get client statistics
+        // Get service user statistics
         const interactionStats = await Interaction.aggregate([
-            { $match: { client: client._id } },
+            { $match: { serviceUser: serviceUser._id } },
             { $group: {
                 _id: '$type',
                 count: { $sum: 1 },
@@ -286,25 +286,25 @@ router.get('/clients/:id', async (req, res) => {
             }}
         ]);
         
-        res.render('admin/client-detail', {
-            title: `Client: ${client.fullName}`,
-            client,
+        res.render('admin/service-user-detail', {
+            title: `Service User: ${serviceUser.fullName}`,
+            serviceUser,
             interactions,
             interactionStats,
             moment
         });
         
     } catch (error) {
-        console.error('Admin client detail error:', error);
-        req.flash('error', 'Error loading client details');
-        res.redirect('/admin/clients');
+        console.error('Admin service user detail error:', error);
+        req.flash('error', 'Error loading service user details');
+        res.redirect('/admin/service-users');
     }
 });
 
 // All Interactions (Admin view)
 router.get('/interactions', async (req, res) => {
     try {
-        const { type, startDate, endDate, operator, client } = req.query;
+        const { type, startDate, endDate, supportWorker, serviceUser } = req.query;
         
         let query = {};
         
@@ -312,12 +312,12 @@ router.get('/interactions', async (req, res) => {
             query.type = type;
         }
         
-        if (operator && operator !== 'all') {
-            query.operator = operator;
+        if (supportWorker && supportWorker !== 'all') {
+            query.supportWorker = supportWorker;
         }
         
-        if (client && client !== 'all') {
-            query.client = client;
+        if (serviceUser && serviceUser !== 'all') {
+            query.serviceUser = serviceUser;
         }
         
         if (startDate && endDate) {
@@ -328,17 +328,17 @@ router.get('/interactions', async (req, res) => {
         }
         
         const interactions = await Interaction.find(query)
-            .populate('client', 'firstName lastName referenceId')
-            .populate('operator', 'firstName lastName')
+            .populate('service_user', 'firstName lastName referenceId')
+            .populate('support_worker', 'firstName lastName')
             .sort({ startTime: -1 })
             .limit(50);
         
-        const operators = await User.find({ 
-            role: 'operator', 
+        const supportWorkers = await User.find({ 
+            role: 'support_worker', 
             isActive: true 
         }).select('firstName lastName');
         
-        const clients = await Client.find()
+        const serviceUsers = await ServiceUser.find()
             .select('firstName lastName referenceId')
             .sort({ lastName: 1 })
             .limit(100);
@@ -346,8 +346,8 @@ router.get('/interactions', async (req, res) => {
         res.render('admin/interactions', {
             title: 'All Interactions',
             interactions,
-            operators,
-            clients,
+            supportWorkers,
+            serviceUsers,
             moment
         });
         
@@ -364,8 +364,8 @@ router.get('/interactions/:id', async (req, res) => {
         const interactionId = req.params.id;
         
         const interaction = await Interaction.findById(interactionId)
-            .populate('client', 'firstName lastName referenceId dateOfBirth medicalInfo')
-            .populate('operator', 'firstName lastName email phone');
+            .populate('service_user', 'firstName lastName referenceId dateOfBirth medicalInfo')
+            .populate('support_worker', 'firstName lastName email phone');
         
         if (!interaction) {
             req.flash('error', 'Interaction not found');
@@ -397,7 +397,7 @@ router.get('/reports', async (req, res) => {
         let reportData = {};
         
         if (reportType === 'client_interactions') {
-            // Get client interaction report
+            // Get service user interaction report
             reportData = await Interaction.aggregate([
                 {
                     $match: {
@@ -406,7 +406,7 @@ router.get('/reports', async (req, res) => {
                 },
                 {
                     $group: {
-                        _id: '$client',
+                        _id: '$service user',
                         totalInteractions: { $sum: 1 },
                         avgDuration: { $avg: { $subtract: ['$endTime', '$startTime'] } },
                         byType: { $push: '$type' }
@@ -414,19 +414,19 @@ router.get('/reports', async (req, res) => {
                 },
                 {
                     $lookup: {
-                        from: 'clients',
+                        from: 'service users',
                         localField: '_id',
                         foreignField: '_id',
-                        as: 'clientInfo'
+                        as: 'serviceUserInfo'
                     }
                 },
-                { $unwind: '$clientInfo' },
+                { $unwind: '$serviceUserInfo' },
                 { $sort: { totalInteractions: -1 } }
             ]);
             
             // Transform data
             reportData = reportData.map(item => ({
-                client: `${item.clientInfo.firstName} ${item.clientInfo.lastName}`,
+                serviceUser: `${item.serviceUserInfo.firstName} ${item.serviceUserInfo.lastName}`,
                 totalInteractions: item.totalInteractions,
                 avgDuration: item.avgDuration ? Math.round(item.avgDuration / (1000 * 60)) : 0, // Convert to minutes
                 byType: item.byType.reduce((acc, type) => {
@@ -436,7 +436,7 @@ router.get('/reports', async (req, res) => {
             }));
             
         } else if (reportType === 'operator_performance') {
-            // Get operator performance report
+            // Get support worker performance report
             reportData = await Interaction.aggregate([
                 {
                     $match: {
@@ -445,7 +445,7 @@ router.get('/reports', async (req, res) => {
                 },
                 {
                     $group: {
-                        _id: '$operator',
+                        _id: '$support worker',
                         totalInteractions: { $sum: 1 },
                         totalDuration: { $sum: { $subtract: ['$endTime', '$startTime'] } },
                         completed: { $sum: { $cond: [{ $eq: ['$status', 'completed'] }, 1, 0] } }
@@ -456,24 +456,24 @@ router.get('/reports', async (req, res) => {
                         from: 'users',
                         localField: '_id',
                         foreignField: '_id',
-                        as: 'operatorInfo'
+                        as: 'supportWorkerInfo'
                     }
                 },
-                { $unwind: '$operatorInfo' },
+                { $unwind: '$supportWorkerInfo' },
                 { $sort: { totalInteractions: -1 } }
             ]);
             
             // Transform data
             reportData = reportData.map(item => ({
-                operator: `${item.operatorInfo.firstName} ${item.operatorInfo.lastName}`,
+                supportWorker: `${item.supportWorkerInfo.firstName} ${item.supportWorkerInfo.lastName}`,
                 totalInteractions: item.totalInteractions,
                 totalDuration: item.totalDuration ? Math.round(item.totalDuration / (1000 * 60 * 60)) : 0, // Convert to hours
                 completionRate: item.totalInteractions > 0 ? Math.round((item.completed / item.totalInteractions) * 100) : 0
             }));
             
         } else if (reportType === 'client_care_levels') {
-            // Get client care levels report
-            reportData = await Client.aggregate([
+            // Get service user care levels report
+            reportData = await ServiceUser.aggregate([
                 {
                     $group: {
                         _id: '$careInfo.careLevel',
@@ -492,7 +492,7 @@ router.get('/reports', async (req, res) => {
             }));
         }
         
-        const operators = await User.find({ role: 'operator', isActive: true })
+        const supportWorkers = await User.find({ role: 'support_worker', isActive: true })
             .select('firstName lastName');
         
         res.render('admin/reports', {
@@ -501,7 +501,7 @@ router.get('/reports', async (req, res) => {
             startDate: start.toISOString().split('T')[0],
             endDate: end.toISOString().split('T')[0],
             reportData,
-            operators,
+            supportWorkers,
             moment
         });
         
@@ -521,22 +521,22 @@ router.get('/export/:type', async (req, res) => {
         let data = [];
         let filename = '';
         
-        if (type === 'clients') {
-            const clients = await Client.find()
-                .populate('assignedOperator', 'firstName lastName')
+        if (type === 'service users') {
+            const serviceUsers = await ServiceUser.find()
+                .populate('assignedSupportWorker', 'firstName lastName')
                 .select('-password -documents -medicalInfo -careInfo -guardians -financialInfo');
             
-            data = clients.map(client => ({
-                ReferenceID: client.referenceId,
-                FirstName: client.firstName,
-                LastName: client.lastName,
-                DateOfBirth: client.dateOfBirth ? moment(client.dateOfBirth).format('YYYY-MM-DD') : '',
-                Age: client.age,
-                Status: client.status,
-                AssignedOperator: client.assignedOperator ? `${client.assignedOperator.firstName} ${client.assignedOperator.lastName}` : '',
-                Created: moment(client.createdAt).format('YYYY-MM-DD HH:mm:ss'),
-                Email: client.contact?.email || '',
-                Phone: client.contact?.phone?.primary || ''
+            data = serviceUsers.map(serviceUser => ({
+                ReferenceID: serviceUser.referenceId,
+                FirstName: serviceUser.firstName,
+                LastName: serviceUser.lastName,
+                DateOfBirth: serviceUser.dateOfBirth ? moment(serviceUser.dateOfBirth).format('YYYY-MM-DD') : '',
+                Age: serviceUser.age,
+                Status: serviceUser.status,
+                AssignedOperator: serviceUser.assignedSupportWorker ? `${serviceUser.assignedSupportWorker.firstName} ${serviceUser.assignedSupportWorker.lastName}` : '',
+                Created: moment(serviceUser.createdAt).format('YYYY-MM-DD HH:mm:ss'),
+                Email: serviceUser.contact?.email || '',
+                Phone: serviceUser.contact?.phone?.primary || ''
             }));
             
             filename = `clients_${moment().format('YYYYMMDD_HHmmss')}.csv`;
@@ -551,16 +551,16 @@ router.get('/export/:type', async (req, res) => {
             }
             
             const interactions = await Interaction.find(query)
-                .populate('client', 'firstName lastName referenceId')
-                .populate('operator', 'firstName lastName');
+                .populate('service_user', 'firstName lastName referenceId')
+                .populate('support_worker', 'firstName lastName');
             
             data = interactions.map(interaction => ({
                 ID: interaction._id,
                 Title: interaction.title,
                 Type: interaction.type,
-                Client: interaction.client ? `${interaction.client.firstName} ${interaction.client.lastName}` : '',
-                ClientReference: interaction.client?.referenceId || '',
-                Operator: interaction.operator ? `${interaction.operator.firstName} ${interaction.operator.lastName}` : '',
+                ServiceUser: interaction.serviceUser ? `${interaction.serviceUser.firstName} ${interaction.serviceUser.lastName}` : '',
+                ClientReference: interaction.serviceUser?.referenceId || '',
+                SupportWorker: interaction.supportWorker ? `${interaction.supportWorker.firstName} ${interaction.supportWorker.lastName}` : '',
                 StartTime: moment(interaction.startTime).format('YYYY-MM-DD HH:mm:ss'),
                 EndTime: moment(interaction.endTime).format('YYYY-MM-DD HH:mm:ss'),
                 Duration: interaction.duration ? `${interaction.duration.hours}h ${interaction.duration.minutes}m` : '',
@@ -604,8 +604,8 @@ router.get('/activity', async (req, res) => {
         // For now, we'll show recent interactions as activity log
         // In a production system, you would have a separate Activity model
         const recentActivities = await Interaction.find()
-            .populate('client', 'firstName lastName')
-            .populate('operator', 'firstName lastName')
+            .populate('service_user', 'firstName lastName')
+            .populate('support_worker', 'firstName lastName')
             .sort({ createdAt: -1 })
             .limit(50);
         

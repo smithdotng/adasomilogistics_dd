@@ -17,9 +17,9 @@ const websiteRoutes = require('./routes/website');
 
 // Import routes
 const authRoutes = require('./routes/auth');
-const providerRoutes = require('./routes/provider');
-const operatorRoutes = require('./routes/operator');
-const clientRoutes = require('./routes/client');
+const careProviderRoutes = require('./routes/careProvider');
+const supportWorkerRoutes = require('./routes/supportWorker');
+const serviceUserRoutes = require('./routes/serviceUser');
 const guardianRoutes = require('./routes/guardian');
 const apiRoutes = require('./routes/api');
 const paymentRoutes = require('./routes/paymentRoutes');
@@ -31,8 +31,8 @@ const createUploadDirectories = () => {
     const dirs = [
         'uploads',
         'uploads/cqc',
-        'uploads/operators',
-        'uploads/clients',
+        'uploads/support-workers',
+        'uploads/service-users',
         'uploads/documents',
         'uploads/temp'
     ];
@@ -58,53 +58,53 @@ mongoose.connect(process.env.MONGODB_URI)
             try {
                 const User = require('./models/User');
                 const Interaction = require('./models/Interaction');
-                const providers = await User.find({ 
-                    role: 'service_provider',
-                    'providerInfo.subscription.status': { $in: ['active', 'trial'] }
+                const careProviders = await User.find({ 
+                    role: 'care_provider',
+                    'careProviderInfo.subscription.status': { $in: ['active', 'trial'] }
                 });
                 
-                for (const provider of providers) {
+                for (const careProvider of careProviders) {
                     const today = new Date();
                     today.setHours(0, 0, 0, 0);
                     
                     const completedVisits = await Interaction.countDocuments({
-                        providerId: provider._id,
+                        careProviderId: careProvider._id,
                         status: 'completed',
                         actualEnd: { $gte: today }
                     });
                     
-                    const activeOperators = await User.countDocuments({
-                        role: 'operator',
-                        providerId: provider._id,
+                    const activeSupportWorkers = await User.countDocuments({
+                        role: 'support_worker',
+                        careProviderId: careProvider._id,
                         isActive: true
                     });
                     
-                    const clientsSeen = await Interaction.distinct('clientId', {
-                        providerId: provider._id,
+                    const serviceUsersSeen = await Interaction.distinct('serviceUserId', {
+                        careProviderId: careProvider._id,
                         actualEnd: { $gte: today }
                     });
                     
                     const recentInteractions = await Interaction.find({
-                        providerId: provider._id,
+                        careProviderId: careProvider._id,
                         actualEnd: { $gte: today }
                     })
-                    .populate('clientId', 'firstName lastName')
-                    .populate('operatorId', 'firstName lastName')
+                    .populate('serviceUserId', 'firstName lastName')
+                    .populate('supportWorkerId', 'firstName lastName')
                     .limit(5);
                     
-                    await sendDailySummary(provider.email, {
-                        providerName: provider.providerInfo.companyName,
+                    await sendDailySummary(careProvider.email, {
+                        careProviderName: careProvider.careProviderInfo.companyName,
                         date: moment().format('MMMM D, YYYY'),
                         completedVisits,
-                        activeOperators,
-                        clientsSeen: clientsSeen.length,
+                        activeSupportWorkers,
+                        serviceUsersSeen: serviceUsersSeen.length,
                         recentInteractions: recentInteractions.map(i => ({
                             time: moment(i.actualEnd).format('h:mm A'),
-                            client: i.clientId ? `${i.clientId.firstName || ''} ${i.clientId.lastName || ''}` : 'Unknown',
-                            operator: i.operatorId ? `${i.operatorId.firstName || ''} ${i.operatorId.lastName || ''}` : 'Unknown',
+                            serviceUser: i.serviceUserId ? `${i.serviceUserId.firstName || ''} ${i.serviceUserId.lastName || ''}` : 'Unknown',
+                            supportWorker: i.supportWorkerId ? `${i.supportWorkerId.firstName || ''} ${i.supportWorkerId.lastName || ''}` : 'Unknown',
                             type: i.type || 'Unknown'
                         })),
-                        dashboardUrl: `${process.env.APP_URL || 'http://localhost:3000'}/provider/dashboard`
+                        dashboardUrl: `${process.env.APP_URL || 'http://localhost:3000'}/care-provider/dashboard`
                     });
                 }
             } catch (error) {
@@ -189,12 +189,12 @@ app.get('/', (req, res) => {
             }
             
             switch(req.session.user.role) {
-                case 'service_provider':
-                    return res.redirect('/provider/dashboard');
-                case 'operator':
-                    return res.redirect('/operator/dashboard');
-                case 'client':
-                    return res.redirect('/client/dashboard');
+                case 'care_provider':
+                    return res.redirect('/care-provider/dashboard');
+                case 'support_worker':
+                    return res.redirect('/support-worker/dashboard');
+                case 'service_user':
+                    return res.redirect('/service-user/dashboard');
                 case 'guardian':
                     return res.redirect('/guardian/dashboard');
                 case 'super_admin':
@@ -208,19 +208,40 @@ app.get('/', (req, res) => {
     
     console.log('No user in session, showing landing page');
     res.render('index', { 
-        title: 'CareShed - Complete Care Management Platform for UK Providers'
+        title: 'CareShed - Complete Care Management Platform for UK Care Providers'
     });
 });
 
 // Routes
 app.use('/', authRoutes);
 app.use('/', websiteRoutes);
-app.use('/provider', providerRoutes);
-app.use('/operator', operatorRoutes);
-app.use('/client', clientRoutes);
+app.use('/care-provider', careProviderRoutes);
+app.use('/support-worker', supportWorkerRoutes);
+app.use('/service-user', serviceUserRoutes);
 app.use('/guardian', guardianRoutes);
 app.use('/api', apiRoutes);
-app.use('/provider/payments', paymentRoutes);
+app.use('/care-provider/payments', paymentRoutes);
+
+// Backward-compatible redirects for old role-based URLs
+// (kept so existing bookmarks/emailed links continue to work)
+app.get(['/provider', '/provider/*'], (req, res) => {
+    res.redirect(308, req.originalUrl.replace('/provider', '/care-provider'));
+});
+app.post(['/provider', '/provider/*'], (req, res) => {
+    res.redirect(307, req.originalUrl.replace('/provider', '/care-provider'));
+});
+app.get(['/operator', '/operator/*'], (req, res) => {
+    res.redirect(308, req.originalUrl.replace('/operator', '/support-worker'));
+});
+app.post(['/operator', '/operator/*'], (req, res) => {
+    res.redirect(307, req.originalUrl.replace('/operator', '/support-worker'));
+});
+app.get(['/client', '/client/*'], (req, res) => {
+    res.redirect(308, req.originalUrl.replace('/client', '/service-user'));
+});
+app.post(['/client', '/client/*'], (req, res) => {
+    res.redirect(307, req.originalUrl.replace('/client', '/service-user'));
+});
 
 // Session test route
 app.get('/session-test', (req, res) => {

@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
 const paymentSchema = new mongoose.Schema({
-    operatorId: {
+    supportWorkerId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    providerId: {
+    careProviderId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true

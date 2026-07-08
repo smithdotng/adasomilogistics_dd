@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
 const timesheetSchema = new mongoose.Schema({
-    operatorId: {
+    supportWorkerId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    providerId: {
+    careProviderId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
@@ -27,7 +27,7 @@ const timesheetSchema = new mongoose.Schema({
     // Entries
     entries: [{
         date: Date,
-        clientId: {
+        serviceUserId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
         },

@@ -249,18 +249,18 @@
                                     <li><a href="/dashboard">Dashboard</a></li>
                                     <% if (user.role === 'admin') { %>
                                         <li class="dropdown">
-                                            <a href="#">Clients</a>
+                                            <a href="#">Service Users</a>
                                             <ul>
-                                                <li><a href="/clients">All Clients</a></li>
-                                                <li><a href="/clients/create">Add New Client</a></li>
-                                                <li><a href="/admin/clients">Admin View</a></li>
+                                                <li><a href="/service-users">All Service Users</a></li>
+                                                <li><a href="/service-users/create">Add New Service User</a></li>
+                                                <li><a href="/admin/service-users">Admin View</a></li>
                                             </ul>
                                         </li>
                                         <li class="dropdown">
-                                            <a href="#">Operators</a>
+                                            <a href="#">Support Workers</a>
                                             <ul>
-                                                <li><a href="/admin/operators">Manage Operators</a></li>
-                                                <li><a href="/admin/operators/create">Add Operator</a></li>
+                                                <li><a href="/admin/support-workers">Manage Support Workers</a></li>
+                                                <li><a href="/admin/support-workers/create">Add Support Worker</a></li>
                                             </ul>
                                         </li>
                                         <li class="dropdown current">
@@ -275,10 +275,10 @@
                                         <li><a href="/admin/settings">Settings</a></li>
                                     <% } else { %>
                                         <li class="dropdown">
-                                            <a href="#">Clients</a>
+                                            <a href="#">Service Users</a>
                                             <ul>
-                                                <li><a href="/clients">My Clients</a></li>
-                                                <li><a href="/clients/create">Add Client</a></li>
+                                                <li><a href="/service-users">My Service Users</a></li>
+                                                <li><a href="/service-users/create">Add Service User</a></li>
                                             </ul>
                                         </li>
                                         <li class="dropdown current">
@@ -339,9 +339,9 @@
                         <div class="col-lg-8">
                             <h3 class="mb-3">
                                 <i class="fas fa-plus-circle text-primary me-2"></i>
-                                Log New Client Interaction
+                                Log New Service User Interaction
                             </h3>
-                            <p class="text-muted mb-0">Record details of your interaction with a client. Fill in all required fields marked with *.</p>
+                            <p class="text-muted mb-0">Record details of your interaction with a service user. Fill in all required fields marked with *.</p>
                         </div>
                         <div class="col-lg-4 text-lg-end">
                             <a href="/interactions" class="thm-btn" style="background: #6c757d;">
@@ -385,18 +385,18 @@
                                 </div>
                                 
                                 <div class="col-md-4 mb-4">
-                                    <label for="client" class="form-label required">Client</label>
-                                    <select class="form-select" id="client" name="client" required>
-                                        <option value="">Select a client</option>
-                                        <% clients.forEach(function(client) { %>
-                                            <option value="<%= client._id %>">
-                                                <%= client.firstName %> <%= client.lastName %>
-                                                <% if (client.referenceId) { %> (ID: <%= client.referenceId %>)<% } %>
+                                    <label for="service user" class="form-label required">Service User</label>
+                                    <select class="form-select" id="service-user" name="service user" required>
+                                        <option value="">Select a service user</option>
+                                        <% serviceUsers.forEach(function(serviceUser) { %>
+                                            <option value="<%= serviceUser._id %>">
+                                                <%= serviceUser.firstName %> <%= serviceUser.lastName %>
+                                                <% if (serviceUser.referenceId) { %> (ID: <%= serviceUser.referenceId %>)<% } %>
                                             </option>
                                         <% }); %>
                                     </select>
                                     <div class="invalid-feedback">
-                                        Please select a client.
+                                        Please select a service user.
                                     </div>
                                 </div>
                                 
@@ -477,7 +477,7 @@
                                 <div class="col-md-6 mb-4">
                                     <label for="location" class="form-label">Location</label>
                                     <input type="text" class="form-control" id="location" name="location" 
-                                           placeholder="e.g., Client's Home, Clinic, Remote">
+                                           placeholder="e.g., Service User's Home, Clinic, Remote">
                                 </div>
                                 
                                 <div class="col-md-6 mb-4">
@@ -504,7 +504,7 @@
                             <div class="mb-4">
                                 <label for="description" class="form-label required">Description / Notes</label>
                                 <textarea class="form-control form-textarea" id="description" name="description" 
-                                          placeholder="Provide details about the interaction, observations, client condition, etc." required></textarea>
+                                          placeholder="Provide details about the interaction, observations, service user condition, etc." required></textarea>
                                 <div class="invalid-feedback">
                                     Please provide a description of the interaction.
                                 </div>
@@ -620,7 +620,7 @@
                                 <h3 class="footer-widget__title">Quick Links</h3>
                                 <ul class="footer-widget__links-list list-unstyled">
                                     <li><a href="/dashboard">Dashboard</a></li>
-                                    <li><a href="/clients">Clients</a></li>
+                                    <li><a href="/service-users">Service Users</a></li>
                                     <li><a href="/interactions">Interactions</a></li>
                                     <li><a href="/reports">Reports</a></li>
                                     <li><a href="/profile">Profile</a></li>

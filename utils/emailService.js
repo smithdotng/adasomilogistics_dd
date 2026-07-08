@@ -27,8 +27,8 @@ transporter.verify(function(error, success) {
     }
 });
 
-// Send welcome email to new operator
-exports.sendOperatorCredentials = async (email, tempPassword, data) => {
+// Send welcome email to new support worker
+exports.sendSupportWorkerCredentials = async (email, tempPassword, data) => {
     // Skip email sending if in development mode without proper config
     if (process.env.NODE_ENV === 'development' && !process.env.EMAIL_USER) {
         console.log('DEVELOPMENT MODE: Email sending skipped');
@@ -61,7 +61,7 @@ exports.sendOperatorCredentials = async (email, tempPassword, data) => {
                     </div>
                     <div class="content">
                         <h2>Hello ${data.name},</h2>
-                        <p>Your account has been created by ${data.providerName}. You can now login to the Care System using the credentials below:</p>
+                        <p>Your account has been created by ${data.careProviderName}. You can now login to the Care System using the credentials below:</p>
                         
                         <div class="credentials">
                             <p><strong>Email:</strong> ${email}</p>
@@ -95,7 +95,7 @@ exports.sendOperatorCredentials = async (email, tempPassword, data) => {
     }
 };
 
-// Send daily summary to provider
+// Send daily summary to care provider
 exports.sendDailySummary = async (email, data) => {
     if (process.env.NODE_ENV === 'development' && !process.env.EMAIL_USER) {
         console.log('DEVELOPMENT MODE: Daily summary email skipped for', email);
@@ -128,7 +128,7 @@ exports.sendDailySummary = async (email, data) => {
                         <p>${data.date}</p>
                     </div>
                     <div class="content">
-                        <h2>Hello ${data.providerName},</h2>
+                        <h2>Hello ${data.careProviderName},</h2>
                         <p>Here's your daily summary for ${data.date}:</p>
                         
                         <div class="stats">
@@ -137,12 +137,12 @@ exports.sendDailySummary = async (email, data) => {
                                 <div>Completed Visits</div>
                             </div>
                             <div class="stat-box">
-                                <div class="stat-number">${data.activeOperators}</div>
-                                <div>Active Operators</div>
+                                <div class="stat-number">${data.activeSupportWorkers}</div>
+                                <div>Active Support Workers</div>
                             </div>
                             <div class="stat-box">
-                                <div class="stat-number">${data.clientsSeen}</div>
-                                <div>Clients Seen</div>
+                                <div class="stat-number">${data.serviceUsersSeen}</div>
+                                <div>Service Users Seen</div>
                             </div>
                         </div>
                         

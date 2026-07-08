@@ -17,49 +17,49 @@ exports.isAuthenticated = (req, res, next) => {
     res.redirect('/login');
 };
 
-// Check if user is service provider - FIXED null check
-exports.isProvider = async (req, res, next) => {
+// Check if user is service care provider - FIXED null check
+exports.isCareProvider = async (req, res, next) => {
     try {
-        if (req.session.user && req.session.user.role === 'service_provider') {
-            // Check if provider subscription is active
-            const provider = await User.findById(req.session.user._id);
+        if (req.session.user && req.session.user.role === 'care_provider') {
+            // Check if care provider subscription is active
+            const careProvider = await User.findById(req.session.user._id);
             
-            // Add null check for provider
-            if (!provider) {
-                req.flash('error', 'Provider account not found');
+            // Add null check for care provider
+            if (!careProvider) {
+                req.flash('error', 'Care Provider account not found');
                 return res.redirect('/logout');
             }
             
             // Add null check for subscription
-            if (provider.providerInfo && 
-                provider.providerInfo.subscription && 
-                provider.providerInfo.subscription.status === 'expired') {
+            if (careProvider.careProviderInfo && 
+                careProvider.careProviderInfo.subscription && 
+                careProvider.careProviderInfo.subscription.status === 'expired') {
                 req.flash('error', 'Your subscription has expired. Please renew to continue.');
-                return res.redirect('/provider/settings/billing'); // Fixed redirect path
+                return res.redirect('/care-provider/settings/billing'); // Fixed redirect path
             }
             return next();
         }
         req.flash('error', 'Unauthorized access');
         res.redirect('/dashboard');
     } catch (error) {
-        console.error('isProvider error:', error);
+        console.error('isCareProvider error:', error);
         req.flash('error', 'An error occurred');
         res.redirect('/dashboard');
     }
 };
 
-// Check if user is operator
-exports.isOperator = (req, res, next) => {
-    if (req.session.user && req.session.user.role === 'operator') {
+// Check if user is support worker
+exports.isSupportWorker = (req, res, next) => {
+    if (req.session.user && req.session.user.role === 'support_worker') {
         return next();
     }
     req.flash('error', 'Unauthorized access');
     res.redirect('/dashboard');
 };
 
-// Check if user is client
-exports.isClient = (req, res, next) => {
-    if (req.session.user && req.session.user.role === 'client') {
+// Check if user is service user
+exports.isServiceUser = (req, res, next) => {
+    if (req.session.user && req.session.user.role === 'service_user') {
         return next();
     }
     req.flash('error', 'Unauthorized access');
@@ -75,8 +75,8 @@ exports.isGuardian = (req, res, next) => {
     res.redirect('/dashboard');
 };
 
-// Check if user has access to specific client - FIXED null checks
-exports.canAccessClient = (clientId) => {
+// Check if user has access to specific service user - FIXED null checks
+exports.canAccessServiceUser = (serviceUserId) => {
     return async (req, res, next) => {
         try {
             const user = req.session.user;
@@ -87,56 +87,56 @@ exports.canAccessClient = (clientId) => {
                 return res.redirect('/login');
             }
             
-            const targetClientId = req.params[clientId] || req.body.clientId;
+            const targetServiceUserId = req.params[serviceUserId] || req.body.serviceUserId;
             
-            if (!targetClientId) {
+            if (!targetServiceUserId) {
                 return next();
             }
             
-            // Super admin and provider can access all clients under them
+            // Super admin and care provider can access all service users under them
             if (user.role === 'super_admin') {
                 return next();
             }
             
-            if (user.role === 'service_provider') {
-                const client = await User.findOne({
-                    _id: targetClientId,
-                    providerId: user._id
+            if (user.role === 'care_provider') {
+                const serviceUser = await User.findOne({
+                    _id: targetServiceUserId,
+                    careProviderId: user._id
                 });
-                if (client) return next();
+                if (serviceUser) return next();
             }
             
-            // Operators can only access assigned clients
-            if (user.role === 'operator') {
-                const operator = await User.findById(user._id);
-                if (operator && 
-                    operator.operatorInfo && 
-                    operator.operatorInfo.assignedClients && 
-                    operator.operatorInfo.assignedClients.includes(targetClientId)) {
+            // Support Workers can only access assigned service users
+            if (user.role === 'support_worker') {
+                const supportWorker = await User.findById(user._id);
+                if (supportWorker && 
+                    supportWorker.supportWorkerInfo && 
+                    supportWorker.supportWorkerInfo.assignedServiceUsers && 
+                    supportWorker.supportWorkerInfo.assignedServiceUsers.includes(targetServiceUserId)) {
                     return next();
                 }
             }
             
-            // Guardians can only access monitored clients
+            // Guardians can only access monitored service users
             if (user.role === 'guardian') {
                 const guardian = await User.findById(user._id);
                 if (guardian && 
                     guardian.guardianInfo && 
-                    guardian.guardianInfo.clientsMonitored && 
-                    guardian.guardianInfo.clientsMonitored.includes(targetClientId)) {
+                    guardian.guardianInfo.serviceUsersMonitored && 
+                    guardian.guardianInfo.serviceUsersMonitored.includes(targetServiceUserId)) {
                     return next();
                 }
             }
             
-            // Clients can only access themselves
-            if (user.role === 'client' && user._id.toString() === targetClientId) {
+            // Service Users can only access themselves
+            if (user.role === 'service_user' && user._id.toString() === targetServiceUserId) {
                 return next();
             }
             
-            req.flash('error', 'You do not have permission to access this client');
+            req.flash('error', 'You do not have permission to access this service user');
             res.redirect('/dashboard');
         } catch (error) {
-            console.error('canAccessClient error:', error);
+            console.error('canAccessServiceUser error:', error);
             req.flash('error', 'An error occurred');
             res.redirect('/dashboard');
         }
@@ -153,51 +153,51 @@ exports.checkSubscriptionLimit = (type) => {
                 return res.redirect('/login');
             }
             
-            const providerId = req.session.user.role === 'service_provider' 
+            const careProviderId = req.session.user.role === 'care_provider' 
                 ? req.session.user._id 
-                : req.session.user.providerId;
+                : req.session.user.careProviderId;
             
-            if (!providerId) {
-                req.flash('error', 'Provider information not found');
+            if (!careProviderId) {
+                req.flash('error', 'Care Provider information not found');
                 return res.redirect('/dashboard');
             }
             
-            const provider = await User.findById(providerId);
+            const careProvider = await User.findById(careProviderId);
             
-            if (!provider) {
-                req.flash('error', 'Provider not found');
+            if (!careProvider) {
+                req.flash('error', 'Care Provider not found');
                 return res.redirect('/dashboard');
             }
             
             // Check if subscription exists
-            if (!provider.providerInfo || !provider.providerInfo.subscription) {
+            if (!careProvider.careProviderInfo || !careProvider.careProviderInfo.subscription) {
                 req.flash('error', 'Subscription information not found');
                 return res.redirect('/dashboard');
             }
             
-            const subscription = provider.providerInfo.subscription;
+            const subscription = careProvider.careProviderInfo.subscription;
             
-            if (type === 'operator') {
-                const operatorCount = await User.countDocuments({
-                    role: 'operator',
-                    providerId: providerId
+            if (type === 'support_worker') {
+                const supportWorkerCount = await User.countDocuments({
+                    role: 'support_worker',
+                    careProviderId: careProviderId
                 });
                 
-                if (operatorCount >= subscription.maxOperators) {
-                    req.flash('error', `You have reached your maximum operator limit (${subscription.maxOperators}). Please upgrade your subscription.`);
-                    return res.redirect('/provider/settings/billing'); // Fixed redirect path
+                if (supportWorkerCount >= subscription.maxSupportWorkers) {
+                    req.flash('error', `You have reached your maximum support worker limit (${subscription.maxSupportWorkers}). Please upgrade your subscription.`);
+                    return res.redirect('/care-provider/settings/billing'); // Fixed redirect path
                 }
             }
             
-            if (type === 'client') {
+            if (type === 'service_user') {
                 const clientCount = await User.countDocuments({
-                    role: 'client',
-                    providerId: providerId
+                    role: 'service_user',
+                    careProviderId: careProviderId
                 });
                 
-                if (clientCount >= subscription.maxClients) {
-                    req.flash('error', `You have reached your maximum client limit (${subscription.maxClients}). Please upgrade your subscription.`);
-                    return res.redirect('/provider/settings/billing'); // Fixed redirect path
+                if (clientCount >= subscription.maxServiceUsers) {
+                    req.flash('error', `You have reached your maximum service user limit (${subscription.maxServiceUsers}). Please upgrade your subscription.`);
+                    return res.redirect('/care-provider/settings/billing'); // Fixed redirect path
                 }
             }
             

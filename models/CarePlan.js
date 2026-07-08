@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
 const carePlanSchema = new mongoose.Schema({
-    clientId: {
+    serviceUserId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    providerId: {
+    careProviderId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
@@ -145,12 +145,12 @@ const carePlanSchema = new mongoose.Schema({
     
     // Signatures
     signatures: {
-        client: {
+        serviceUser: {
             signed: { type: Boolean, default: false },
             date: Date,
             signature: String
         },
-        provider: {
+        careProvider: {
             signed: { type: Boolean, default: false },
             date: Date,
             signature: String

@@ -7,19 +7,19 @@ const { toObjectId } = require('../utils/dbHelpers');
 // Get all care plans
 exports.getCarePlans = async (req, res) => {
     try {
-        const providerId = req.session.user.role === 'service_provider' 
+        const careProviderId = req.session.user.role === 'care_provider' 
             ? req.session.user._id 
-            : req.session.user.providerId;
+            : req.session.user.careProviderId;
         
         const { search, status, sort } = req.query;
         
-        let query = { providerId };
+        let query = { careProviderId };
         
         if (search) {
             query.$or = [
                 { title: { $regex: search, $options: 'i' } },
-                { 'clientId.firstName': { $regex: search, $options: 'i' } },
-                { 'clientId.lastName': { $regex: search, $options: 'i' } }
+                { 'serviceUserId.firstName': { $regex: search, $options: 'i' } },
+                { 'serviceUserId.lastName': { $regex: search, $options: 'i' } }
             ];
         }
         
@@ -28,11 +28,11 @@ exports.getCarePlans = async (req, res) => {
         }
         
         let sortOption = { createdAt: -1 };
-        if (sort === 'name') sortOption = { 'clientId.firstName': 1 };
+        if (sort === 'name') sortOption = { 'serviceUserId.firstName': 1 };
         if (sort === 'review') sortOption = { 'reviewSchedule.nextReview': 1 };
         
         const carePlans = await CarePlan.find(query)
-            .populate('clientId', 'firstName lastName clientInfo.nhsNumber')
+            .populate('serviceUserId', 'firstName lastName serviceUserInfo.nhsNumber')
             .populate('createdBy', 'firstName lastName')
             .sort(sortOption);
         
@@ -43,7 +43,7 @@ exports.getCarePlans = async (req, res) => {
             sort: sort || 'newest'
         };
         
-        res.render('provider/care-plans/index', {
+        res.render('careProvider/care-plans/index', {
             title: 'Care Plans',
             user: req.session.user,
             carePlans,
@@ -53,58 +53,58 @@ exports.getCarePlans = async (req, res) => {
     } catch (error) {
         console.error('Error loading care plans:', error);
         req.flash('error', 'Error loading care plans');
-        res.redirect('/provider/dashboard');
+        res.redirect('/care-provider/dashboard');
     }
 };
 
 // Create Care Plan Form
 exports.getCreateCarePlan = async (req, res) => {
     try {
-        const { clientId } = req.params;
-        const providerId = req.session.user.role === 'service_provider' 
+        const { serviceUserId } = req.params;
+        const careProviderId = req.session.user.role === 'care_provider' 
             ? req.session.user._id 
-            : req.session.user.providerId;
+            : req.session.user.careProviderId;
         
-        const client = await User.findOne({
-            _id: clientId,
-            role: 'client',
-            providerId
+        const serviceUser = await User.findOne({
+            _id: serviceUserId,
+            role: 'service_user',
+            careProviderId
         });
         
-        if (!client) {
-            req.flash('error', 'Client not found');
-            return res.redirect('/provider/care-plans');
+        if (!serviceUser) {
+            req.flash('error', 'Service User not found');
+            return res.redirect('/care-provider/care-plans');
         }
         
         // Check if care plan already exists
-        const existingPlan = await CarePlan.findOne({ clientId });
+        const existingPlan = await CarePlan.findOne({ serviceUserId });
         if (existingPlan) {
-            req.flash('info', 'This client already has a care plan. You can edit it instead.');
-            return res.redirect(`/provider/care-plans/${existingPlan._id}/edit`);
+            req.flash('info', 'This service user already has a care plan. You can edit it instead.');
+            return res.redirect(`/care-provider/care-plans/${existingPlan._id}/edit`);
         }
         
-        res.render('provider/care-plans/create', {
+        res.render('careProvider/care-plans/create', {
             title: 'Create Care Plan',
             user: req.session.user,
-            client
+            serviceUser
         });
     } catch (error) {
         console.error('Error loading create care plan form:', error);
         req.flash('error', 'Error loading form');
-        res.redirect('/provider/care-plans');
+        res.redirect('/care-provider/care-plans');
     }
 };
 
 // Create Care Plan
 exports.createCarePlan = async (req, res) => {
     try {
-        const providerId = req.session.user.role === 'service_provider' 
+        const careProviderId = req.session.user.role === 'care_provider' 
             ? req.session.user._id 
-            : req.session.user.providerId;
+            : req.session.user.careProviderId;
         
         const carePlanData = {
-            clientId: req.body.clientId,
-            providerId,
+            serviceUserId: req.body.serviceUserId,
+            careProviderId,
             title: req.body.title,
             status: 'draft',
             
@@ -184,11 +184,11 @@ exports.createCarePlan = async (req, res) => {
         await carePlan.save();
         
         req.flash('success', 'Care plan created successfully');
-        res.redirect(`/provider/care-plans/${carePlan._id}`);
+        res.redirect(`/care-provider/care-plans/${carePlan._id}`);
     } catch (error) {
         console.error('Error creating care plan:', error);
         req.flash('error', 'Error creating care plan');
-        res.redirect(`/provider/care-plans/create/${req.body.clientId}`);
+        res.redirect(`/care-provider/care-plans/create/${req.body.serviceUserId}`);
     }
 };
 
@@ -196,21 +196,21 @@ exports.createCarePlan = async (req, res) => {
 exports.getCarePlanDetails = async (req, res) => {
     try {
         const carePlanId = req.params.id;
-        const providerId = req.session.user.role === 'service_provider' 
+        const careProviderId = req.session.user.role === 'care_provider' 
             ? req.session.user._id 
-            : req.session.user.providerId;
+            : req.session.user.careProviderId;
         
-        const carePlan = await CarePlan.findOne({ _id: carePlanId, providerId })
-            .populate('clientId', 'firstName lastName clientInfo')
+        const carePlan = await CarePlan.findOne({ _id: carePlanId, careProviderId })
+            .populate('serviceUserId', 'firstName lastName serviceUserInfo')
             .populate('createdBy', 'firstName lastName')
             .populate('updatedBy', 'firstName lastName');
         
         if (!carePlan) {
             req.flash('error', 'Care plan not found');
-            return res.redirect('/provider/care-plans');
+            return res.redirect('/care-provider/care-plans');
         }
         
-        res.render('provider/care-plans/show', {
+        res.render('careProvider/care-plans/show', {
             title: 'Care Plan Details',
             user: req.session.user,
             carePlan,
@@ -219,7 +219,7 @@ exports.getCarePlanDetails = async (req, res) => {
     } catch (error) {
         console.error('Error loading care plan:', error);
         req.flash('error', 'Error loading care plan');
-        res.redirect('/provider/care-plans');
+        res.redirect('/care-provider/care-plans');
     }
 };
 
@@ -227,19 +227,19 @@ exports.getCarePlanDetails = async (req, res) => {
 exports.getEditCarePlan = async (req, res) => {
     try {
         const carePlanId = req.params.id;
-        const providerId = req.session.user.role === 'service_provider' 
+        const careProviderId = req.session.user.role === 'care_provider' 
             ? req.session.user._id 
-            : req.session.user.providerId;
+            : req.session.user.careProviderId;
         
-        const carePlan = await CarePlan.findOne({ _id: carePlanId, providerId })
-            .populate('clientId', 'firstName lastName');
+        const carePlan = await CarePlan.findOne({ _id: carePlanId, careProviderId })
+            .populate('serviceUserId', 'firstName lastName');
         
         if (!carePlan) {
             req.flash('error', 'Care plan not found');
-            return res.redirect('/provider/care-plans');
+            return res.redirect('/care-provider/care-plans');
         }
         
-        res.render('provider/care-plans/edit', {
+        res.render('careProvider/care-plans/edit', {
             title: 'Edit Care Plan',
             user: req.session.user,
             carePlan,
@@ -248,7 +248,7 @@ exports.getEditCarePlan = async (req, res) => {
     } catch (error) {
         console.error('Error loading care plan:', error);
         req.flash('error', 'Error loading care plan');
-        res.redirect('/provider/care-plans');
+        res.redirect('/care-provider/care-plans');
     }
 };
 
@@ -256,9 +256,9 @@ exports.getEditCarePlan = async (req, res) => {
 exports.updateCarePlan = async (req, res) => {
     try {
         const carePlanId = req.params.id;
-        const providerId = req.session.user.role === 'service_provider' 
+        const careProviderId = req.session.user.role === 'care_provider' 
             ? req.session.user._id 
-            : req.session.user.providerId;
+            : req.session.user.careProviderId;
         
         const updateData = {
             title: req.body.title,
@@ -274,21 +274,21 @@ exports.updateCarePlan = async (req, res) => {
         };
         
         const carePlan = await CarePlan.findOneAndUpdate(
-            { _id: carePlanId, providerId },
+            { _id: carePlanId, careProviderId },
             updateData,
             { new: true }
         );
         
         if (!carePlan) {
             req.flash('error', 'Care plan not found');
-            return res.redirect('/provider/care-plans');
+            return res.redirect('/care-provider/care-plans');
         }
         
         req.flash('success', 'Care plan updated successfully');
-        res.redirect(`/provider/care-plans/${carePlanId}`);
+        res.redirect(`/care-provider/care-plans/${carePlanId}`);
     } catch (error) {
         console.error('Error updating care plan:', error);
         req.flash('error', 'Error updating care plan');
-        res.redirect(`/provider/care-plans/${req.params.id}/edit`);
+        res.redirect(`/care-provider/care-plans/${req.params.id}/edit`);
     }
 };

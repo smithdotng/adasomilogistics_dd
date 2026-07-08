@@ -62,15 +62,15 @@
             box-shadow: 0px 20px 80px 0px rgba(0, 0, 0, 0.1);
         }
         
-        .dashboard-stats-box.total-clients {
+        .dashboard-stats-box.total-service-users {
             border-left-color: #667eea;
         }
         
-        .dashboard-stats-box.active-clients {
+        .dashboard-stats-box.active-service-users {
             border-left-color: #28a745;
         }
         
-        .dashboard-stats-box.active-operators {
+        .dashboard-stats-box.active-support-workers {
             border-left-color: #17a2b8;
         }
         
@@ -89,17 +89,17 @@
             margin-bottom: 20px;
         }
         
-        .stats-icon.total-clients {
+        .stats-icon.total-service-users {
             background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
             color: white;
         }
         
-        .stats-icon.active-clients {
+        .stats-icon.active-service-users {
             background: linear-gradient(45deg, #28a745 0%, #34d058 100%);
             color: white;
         }
         
-        .stats-icon.active-operators {
+        .stats-icon.active-support-workers {
             background: linear-gradient(45deg, #17a2b8 0%, #20c9d8 100%);
             color: white;
         }
@@ -260,18 +260,18 @@
             background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
         }
         
-        .operator-item {
+        .support-worker-item {
             display: flex;
             align-items: center;
             padding: 15px 0;
             border-bottom: 1px solid #f0f0f0;
         }
         
-        .operator-item:last-child {
+        .support-worker-item:last-child {
             border-bottom: none;
         }
         
-        .operator-avatar {
+        .support-worker-avatar {
             width: 40px;
             height: 40px;
             border-radius: 50%;
@@ -284,19 +284,19 @@
             margin-right: 15px;
         }
         
-        .operator-info h6 {
+        .support-worker-info h6 {
             font-size: 14px;
             margin-bottom: 2px;
             color: #213360;
         }
         
-        .operator-info p {
+        .support-worker-info p {
             font-size: 12px;
             color: #808080;
             margin-bottom: 0;
         }
         
-        .operator-stats {
+        .support-worker-stats {
             margin-left: auto;
             font-weight: 600;
             color: #667eea;
@@ -385,18 +385,18 @@
                                 <ul class="main-menu__list">
                                     <li class="current"><a href="/admin/dashboard">Dashboard</a></li>
                                     <li class="dropdown">
-                                        <a href="#">Clients</a>
+                                        <a href="#">Service Users</a>
                                         <ul>
-                                            <li><a href="/clients">All Clients</a></li>
-                                            <li><a href="/clients/create">Add New Client</a></li>
-                                            <li><a href="/admin/clients">Admin View</a></li>
+                                            <li><a href="/service-users">All Service Users</a></li>
+                                            <li><a href="/service-users/create">Add New Service User</a></li>
+                                            <li><a href="/admin/service-users">Admin View</a></li>
                                         </ul>
                                     </li>
                                     <li class="dropdown">
-                                        <a href="#">Operators</a>
+                                        <a href="#">Support Workers</a>
                                         <ul>
-                                            <li><a href="/admin/operators">Manage Operators</a></li>
-                                            <li><a href="/admin/operators/create">Add Operator</a></li>
+                                            <li><a href="/admin/support-workers">Manage Support Workers</a></li>
+                                            <li><a href="/admin/support-workers/create">Add Support Worker</a></li>
                                         </ul>
                                     </li>
                                     <li class="dropdown">
@@ -466,35 +466,35 @@
                 <!-- Statistics Cards -->
                 <div class="row mb-5">
                     <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="100ms">
-                        <div class="dashboard-stats-box total-clients">
-                            <div class="stats-icon total-clients">
+                        <div class="dashboard-stats-box total-service-users">
+                            <div class="stats-icon total-service-users">
                                 <i class="fas fa-users"></i>
                             </div>
-                            <h3 class="stats-number odometer" data-count="<%= stats.totalClients %>">0</h3>
-                            <p class="stats-label">Total Clients</p>
-                            <p class="stats-subtext"><i class="fas fa-user-check text-success me-1"></i> <%= stats.activeClients %> active</p>
+                            <h3 class="stats-number odometer" data-count="<%= stats.totalServiceUsers %>">0</h3>
+                            <p class="stats-label">Total Service Users</p>
+                            <p class="stats-subtext"><i class="fas fa-user-check text-success me-1"></i> <%= stats.activeServiceUsers %> active</p>
                         </div>
                     </div>
 
                     <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="200ms">
-                        <div class="dashboard-stats-box active-clients">
-                            <div class="stats-icon active-clients">
+                        <div class="dashboard-stats-box active-service-users">
+                            <div class="stats-icon active-service-users">
                                 <i class="fas fa-user-check"></i>
                             </div>
-                            <h3 class="stats-number odometer" data-count="<%= stats.activeClients %>">0</h3>
-                            <p class="stats-label">Active Clients</p>
-                            <p class="stats-subtext"><%= stats.totalClients > 0 ? Math.round((stats.activeClients / stats.totalClients) * 100) : 0 %>% active rate</p>
+                            <h3 class="stats-number odometer" data-count="<%= stats.activeServiceUsers %>">0</h3>
+                            <p class="stats-label">Active Service Users</p>
+                            <p class="stats-subtext"><%= stats.totalServiceUsers > 0 ? Math.round((stats.activeServiceUsers / stats.totalServiceUsers) * 100) : 0 %>% active rate</p>
                         </div>
                     </div>
 
                     <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="300ms">
-                        <div class="dashboard-stats-box active-operators">
-                            <div class="stats-icon active-operators">
+                        <div class="dashboard-stats-box active-support-workers">
+                            <div class="stats-icon active-support-workers">
                                 <i class="fas fa-user-md"></i>
                             </div>
                             <h3 class="stats-number odometer" data-count="<%= stats.totalOperators %>">0</h3>
-                            <p class="stats-label">Active Operators</p>
-                            <p class="stats-subtext"><i class="fas fa-users-cog text-info me-1"></i> <%= operatorStats.length %> performing</p>
+                            <p class="stats-label">Active Support Workers</p>
+                            <p class="stats-subtext"><i class="fas fa-users-cog text-info me-1"></i> <%= supportWorkerStats.length %> performing</p>
                         </div>
                     </div>
 
@@ -520,32 +520,32 @@
                         
                         <div class="row g-4">
                             <div class="col-xl-2 col-lg-4 col-md-6">
-                                <a href="/clients/create" class="quick-action-card wow fadeInUp" data-wow-delay="100ms">
+                                <a href="/service-users/create" class="quick-action-card wow fadeInUp" data-wow-delay="100ms">
                                     <div class="action-icon">
                                         <i class="fas fa-plus"></i>
                                     </div>
-                                    <h5>Add Client</h5>
-                                    <p>Create new client profile</p>
+                                    <h5>Add Service User</h5>
+                                    <p>Create new service user profile</p>
                                 </a>
                             </div>
 
                             <div class="col-xl-2 col-lg-4 col-md-6">
-                                <a href="/admin/operators" class="quick-action-card wow fadeInUp" data-wow-delay="200ms">
+                                <a href="/admin/support-workers" class="quick-action-card wow fadeInUp" data-wow-delay="200ms">
                                     <div class="action-icon">
                                         <i class="fas fa-users-cog"></i>
                                     </div>
-                                    <h5>Manage Operators</h5>
+                                    <h5>Manage Support Workers</h5>
                                     <p>Team & permissions</p>
                                 </a>
                             </div>
 
                             <div class="col-xl-2 col-lg-4 col-md-6">
-                                <a href="/admin/clients" class="quick-action-card wow fadeInUp" data-wow-delay="300ms">
+                                <a href="/admin/service-users" class="quick-action-card wow fadeInUp" data-wow-delay="300ms">
                                     <div class="action-icon">
                                         <i class="fas fa-user-friends"></i>
                                     </div>
-                                    <h5>All Clients</h5>
-                                    <p>Full client directory</p>
+                                    <h5>All Service Users</h5>
+                                    <p>Full service user directory</p>
                                 </a>
                             </div>
 
@@ -589,7 +589,7 @@
                         <div class="recent-activities-card wow fadeInUp" data-wow-delay="100ms">
                             <div class="dashboard-section-title" style="padding: 30px 30px 0;">
                                 <h2>Recent Activities</h2>
-                                <p>Latest interactions across all operators</p>
+                                <p>Latest interactions across all support workers</p>
                             </div>
                             
                             <div class="activities-list">
@@ -612,9 +612,9 @@
                                             <div class="activity-content flex-grow-1">
                                                 <h5><%= interaction.title %></h5>
                                                 <p>
-                                                    <i class="fas fa-user me-1"></i> <%= interaction.client.firstName %> <%= interaction.client.lastName %>
+                                                    <i class="fas fa-user me-1"></i> <%= interaction.serviceUser.firstName %> <%= interaction.serviceUser.lastName %>
                                                     <span class="mx-2">•</span>
-                                                    <i class="fas fa-user-md me-1"></i> <%= interaction.operator.firstName %> <%= interaction.operator.lastName %>
+                                                    <i class="fas fa-user-md me-1"></i> <%= interaction.supportWorker.firstName %> <%= interaction.supportWorker.lastName %>
                                                 </p>
                                             </div>
                                             <div class="activity-time text-end">
@@ -640,7 +640,7 @@
                         </div>
                     </div>
 
-                    <!-- Statistics & Top Operators -->
+                    <!-- Statistics & Top Support Workers -->
                     <div class="col-xl-4">
                         <!-- Care Level Statistics -->
                         <div class="statistics-card wow fadeInUp" data-wow-delay="200ms">
@@ -648,22 +648,22 @@
                                 <h2>Care Level Distribution</h2>
                             </div>
                             
-                            <% if (clientStats.length > 0) { %>
-                                <% clientStats.forEach(stat => { %>
+                            <% if (serviceUserStats.length > 0) { %>
+                                <% serviceUserStats.forEach(stat => { %>
                                 <div class="statistics-item">
                                     <div class="d-flex justify-content-between mb-2">
                                         <h6 class="mb-0 text-capitalize"><%= stat._id || 'Not specified' %></h6>
-                                        <span class="fw-bold"><%= stat.count %> (<%= stats.totalClients > 0 ? Math.round((stat.count / stats.totalClients) * 100) : 0 %>%)</span>
+                                        <span class="fw-bold"><%= stat.count %> (<%= stats.totalServiceUsers > 0 ? Math.round((stat.count / stats.totalServiceUsers) * 100) : 0 %>%)</span>
                                     </div>
                                     <div class="progress">
-                                        <div class="progress-bar" style="width: <%= stats.totalClients > 0 ? (stat.count / stats.totalClients * 100) : 0 %>%"></div>
+                                        <div class="progress-bar" style="width: <%= stats.totalServiceUsers > 0 ? (stat.count / stats.totalServiceUsers * 100) : 0 %>%"></div>
                                     </div>
                                 </div>
                                 <% }); %>
                             <% } else { %>
                                 <div class="empty-state" style="padding: 40px 20px;">
                                     <i class="fas fa-chart-pie"></i>
-                                    <p>No client data available</p>
+                                    <p>No service user data available</p>
                                 </div>
                             <% } %>
                         </div>
@@ -683,7 +683,7 @@
                             <div class="row">
                                 <div class="col-md-3 text-center">
                                     <div class="mb-3">
-                                        <div class="stats-icon total-clients" style="width: 60px; height: 60px; font-size: 24px; margin: 0 auto 10px;">
+                                        <div class="stats-icon total-service-users" style="width: 60px; height: 60px; font-size: 24px; margin: 0 auto 10px;">
                                             <i class="fas fa-calendar-day"></i>
                                         </div>
                                         <h4 class="stats-number" style="font-size: 24px;">0</h4>
@@ -693,7 +693,7 @@
                                 
                                 <div class="col-md-3 text-center">
                                     <div class="mb-3">
-                                        <div class="stats-icon active-clients" style="width: 60px; height: 60px; font-size: 24px; margin: 0 auto 10px;">
+                                        <div class="stats-icon active-service-users" style="width: 60px; height: 60px; font-size: 24px; margin: 0 auto 10px;">
                                             <i class="fas fa-check-circle"></i>
                                         </div>
                                         <h4 class="stats-number" style="font-size: 24px;">0%</h4>
@@ -703,7 +703,7 @@
                                 
                                 <div class="col-md-3 text-center">
                                     <div class="mb-3">
-                                        <div class="stats-icon active-operators" style="width: 60px; height: 60px; font-size: 24px; margin: 0 auto 10px;">
+                                        <div class="stats-icon active-support-workers" style="width: 60px; height: 60px; font-size: 24px; margin: 0 auto 10px;">
                                             <i class="fas fa-clock"></i>
                                         </div>
                                         <h4 class="stats-number" style="font-size: 24px;">0h</h4>
@@ -774,8 +774,8 @@
                                 <h3 class="footer-widget__title">Quick Links</h3>
                                 <ul class="footer-widget__links-list list-unstyled">
                                     <li><a href="/admin/dashboard">Dashboard</a></li>
-                                    <li><a href="/admin/clients">Clients</a></li>
-                                    <li><a href="/admin/operators">Operators</a></li>
+                                    <li><a href="/admin/service-users">Service Users</a></li>
+                                    <li><a href="/admin/support-workers">Support Workers</a></li>
                                     <li><a href="/admin/interactions">Interactions</a></li>
                                     <li><a href="/admin/reports">Reports</a></li>
                                 </ul>

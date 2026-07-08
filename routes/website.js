@@ -7,12 +7,12 @@ router.get('/', (req, res) => {
     // If user is logged in, redirect to their dashboard
     if (req.session.user) {
         switch(req.session.user.role) {
-            case 'service_provider':
-                return res.redirect('/provider/dashboard');
-            case 'operator':
-                return res.redirect('/operator/dashboard');
-            case 'client':
-                return res.redirect('/client/dashboard');
+            case 'care_provider':
+                return res.redirect('/care-provider/dashboard');
+            case 'support_worker':
+                return res.redirect('/support-worker/dashboard');
+            case 'service_user':
+                return res.redirect('/service-user/dashboard');
             case 'guardian':
                 return res.redirect('/guardian/dashboard');
             case 'super_admin':
@@ -23,7 +23,7 @@ router.get('/', (req, res) => {
     }
     
     res.render('index', { 
-        title: 'Care System - Complete Care Management Platform for UK Providers',
+        title: 'Care System - Complete Care Management Platform for UK Care Providers',
         path: '/',
         moment
     });
@@ -32,7 +32,7 @@ router.get('/', (req, res) => {
 // How It Works page
 router.get('/how-it-works', (req, res) => {
     res.render('how-it-works', { 
-        title: 'How It Works - Care Management Platform for UK Providers',
+        title: 'How It Works - Care Management Platform for UK Care Providers',
         path: '/how-it-works',
         moment
     });

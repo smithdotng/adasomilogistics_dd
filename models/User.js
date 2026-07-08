@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['super_admin', 'service_provider', 'operator', 'client', 'guardian', 'family_member'],
+        enum: ['super_admin', 'care_provider', 'support_worker', 'service_user', 'guardian', 'family_member'],
         required: true
     },
     firstName: { type: String, required: true, trim: true },
@@ -31,18 +31,18 @@ const userSchema = new mongoose.Schema({
         country: { type: String, default: 'UK' }
     },
 
-    providerId: {
+    careProviderId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: function() {
-            return this.role !== 'super_admin' && this.role !== 'service_provider';
+            return this.role !== 'super_admin' && this.role !== 'care_provider';
         }
     },
 
     // ────────────────────────────────────────────────
-    // Service Provider specific
+    // Service Care Provider specific
     // ────────────────────────────────────────────────
-    providerInfo: {
+    careProviderInfo: {
         companyName: String,
         companyRegNumber: String,
         cqcLocationId: String,
@@ -51,7 +51,7 @@ const userSchema = new mongoose.Schema({
             enum: ['outstanding', 'good', 'requires-improvement', 'inadequate']
         },
         insuranceDetails: {
-            provider: String,
+            careProvider: String,
             policyNumber: String,
             expiryDate: Date
         },
@@ -71,8 +71,8 @@ const userSchema = new mongoose.Schema({
             },
             startDate: { type: Date, default: Date.now },
             expiryDate: Date,
-            maxOperators: { type: Number, default: 5 },
-            maxClients: { type: Number, default: 20 },
+            maxSupportWorkers: { type: Number, default: 5 },
+            maxServiceUsers: { type: Number, default: 20 },
             features: [String]
         },
         bankDetails: {
@@ -85,9 +85,9 @@ const userSchema = new mongoose.Schema({
     },
 
     // ────────────────────────────────────────────────
-    // Operator (Carer) specific
+    // Support Worker (Carer) specific
     // ────────────────────────────────────────────────
-    operatorInfo: {
+    supportWorkerInfo: {
         employeeId: { type: String, unique: true, sparse: true },
         dateOfBirth: Date,
         nationalInsurance: String,
@@ -105,7 +105,7 @@ const userSchema = new mongoose.Schema({
         }],
         trainingCompleted: [{
             course: String,
-            provider: String,
+            careProvider: String,
             completedDate: Date,
             expiryDate: Date,
             certificateUrl: String,
@@ -121,8 +121,8 @@ const userSchema = new mongoose.Schema({
             endTime: String,
             recurring: { type: Boolean, default: true }
         }],
-        assignedClients: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-        maxClients: { type: Number, default: 5 },
+        assignedServiceUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+        maxServiceUsers: { type: Number, default: 5 },
         hourlyRate: Number,
         travelRadius: Number,
         hasVehicle: { type: Boolean, default: false },
@@ -184,9 +184,9 @@ const userSchema = new mongoose.Schema({
     },
 
     // ────────────────────────────────────────────────
-    // Client (Patient) specific
+    // Service User (Patient) specific
     // ────────────────────────────────────────────────
-    clientInfo: {
+    serviceUserInfo: {
         nhsNumber: String,
         dateOfBirth: Date,
         gender: String,
@@ -235,8 +235,8 @@ const userSchema = new mongoose.Schema({
             }
         }],
 
-        primaryCarer: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-        secondaryCarers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+        primarySupportWorker: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        secondarySupportWorkers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
         carePlan: { type: mongoose.Schema.Types.ObjectId, ref: 'CarePlan' },
 
         emergencyContacts: [{
@@ -293,7 +293,7 @@ const userSchema = new mongoose.Schema({
         isEmergencyContact: { type: Boolean, default: false },
         hasPOA: { type: Boolean, default: false },
         poaType: { type: String, enum: ['health', 'finance', 'both'] },
-        clientsMonitored: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+        serviceUsersMonitored: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
         notificationPreferences: {
             email: { type: Boolean, default: true },
             sms: { type: Boolean, default: false },
@@ -333,10 +333,10 @@ const userSchema = new mongoose.Schema({
 // Indexes
 // ────────────────────────────────────────────────
 userSchema.index({ role: 1 });
-userSchema.index({ providerId: 1 });
-userSchema.index({ 'clientInfo.nhsNumber': 1 });
+userSchema.index({ careProviderId: 1 });
+userSchema.index({ 'serviceUserInfo.nhsNumber': 1 });
 userSchema.index({ role: 1, isActive: 1 });
-userSchema.index({ providerId: 1, role: 1 });
+userSchema.index({ careProviderId: 1, role: 1 });
 userSchema.index({ email: 1 }); // already unique, but explicit index helps
 
 // ────────────────────────────────────────────────
@@ -386,9 +386,9 @@ userSchema.virtual('fullName').get(function() {
 });
 
 userSchema.virtual('age').get(function() {
-    if (this.role !== 'client' || !this.clientInfo?.dateOfBirth) return null;
+    if (this.role !== 'service_user' || !this.serviceUserInfo?.dateOfBirth) return null;
     const today = new Date();
-    const birth = new Date(this.clientInfo.dateOfBirth);
+    const birth = new Date(this.serviceUserInfo.dateOfBirth);
     let age = today.getFullYear() - birth.getFullYear();
     const m = today.getMonth() - birth.getMonth();
     if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;

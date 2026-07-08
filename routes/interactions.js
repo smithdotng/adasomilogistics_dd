@@ -33,7 +33,7 @@ const upload = multer({
 
 // Middleware
 router.use(isAuthenticated);
-router.use(hasRole(['admin', 'operator']));
+router.use(hasRole(['admin', 'support_worker']));
 
 // GET /interactions - Regular user view
 router.get('/', async (req, res) => {
@@ -41,20 +41,20 @@ router.get('/', async (req, res) => {
         const user = req.session.user;
         let query = {};
         
-        // Operators can only see their own interactions
-        if (user.role === 'operator') {
-            query.operator = user.id;
+        // Support Workers can only see their own interactions
+        if (user.role === 'support_worker') {
+            query.supportWorker = user.id;
         }
         
         // Get filter parameters
-        const { type, startDate, endDate, client, status } = req.query;
+        const { type, startDate, endDate, serviceUser, status } = req.query;
         
         if (type && type !== 'all') {
             query.type = type;
         }
         
-        if (client && client !== 'all') {
-            query.client = client;
+        if (serviceUser && serviceUser !== 'all') {
+            query.serviceUser = serviceUser;
         }
         
         if (status && status !== 'all') {
@@ -73,27 +73,27 @@ router.get('/', async (req, res) => {
         }
         
         const interactions = await require('../models/Interaction').find(query)
-            .populate('client', 'firstName lastName referenceId')
-            .populate('operator', 'firstName lastName')
+            .populate('service_user', 'firstName lastName referenceId')
+            .populate('support_worker', 'firstName lastName')
             .sort({ startTime: -1 });
         
-        // Get clients (only assigned clients for operators)
-        let clientQuery = {};
-        if (user.role === 'operator') {
-            clientQuery.assignedOperator = user.id;
+        // Get service users (only assigned service users for support workers)
+        let serviceUserQuery = {};
+        if (user.role === 'support_worker') {
+            serviceUserQuery.assignedSupportWorker = user.id;
         }
         
-        const clients = await require('../models/Client').find(clientQuery)
+        const serviceUsers = await require('../models/ServiceUser').find(serviceUserQuery)
             .select('firstName lastName referenceId')
             .sort({ lastName: 1 });
         
         res.render('interactions/index', {
             title: 'My Interactions',
             interactions,
-            clients,
+            serviceUsers,
             user,
             type: type || 'all',
-            client: client || 'all',
+            serviceUser: serviceUser || 'all',
             status: status || 'all',
             startDate: startDate || '',
             endDate: endDate || '',
@@ -111,19 +111,19 @@ router.get('/', async (req, res) => {
 router.get('/create', async (req, res) => {
     try {
         const user = req.session.user;
-        let clientQuery = {};
+        let serviceUserQuery = {};
         
-        if (user.role === 'operator') {
-            clientQuery.assignedOperator = user.id;
+        if (user.role === 'support_worker') {
+            serviceUserQuery.assignedSupportWorker = user.id;
         }
         
-        const clients = await require('../models/Client').find(clientQuery)
+        const serviceUsers = await require('../models/ServiceUser').find(serviceUserQuery)
             .select('firstName lastName referenceId')
             .sort({ lastName: 1 });
         
         res.render('interactions/create', {
             title: 'Create New Interaction',
-            clients,
+            serviceUsers,
             user
         });
         
@@ -137,19 +137,19 @@ router.get('/create', async (req, res) => {
 
 
 // POST /interactions - Create new interaction
-router.post('/', isAuthenticated, hasRole(['operator', 'admin']), upload.array('attachments', 5), async (req, res) => {
+router.post('/', isAuthenticated, hasRole(['support_worker', 'admin']), upload.array('attachments', 5), async (req, res) => {
     try {
         const user = req.session.user;
         const interactionData = req.body;
         
         // Validate required fields
-        if (!interactionData.title || !interactionData.description || !interactionData.client) {
-            req.flash('error', 'Title, description, and client are required');
+        if (!interactionData.title || !interactionData.description || !interactionData.serviceUser) {
+            req.flash('error', 'Title, description, and service user are required');
             return res.redirect('/interactions/create');
         }
         
-        // Set operator
-        interactionData.operator = user.id;
+        // Set support worker
+        interactionData.supportWorker = user.id;
         
         // Validate and set type
         if (!interactionData.type) {
@@ -272,13 +272,13 @@ router.get('/:id', async (req, res) => {
         const user = req.session.user;
         
         let query = { _id: interactionId };
-        if (user.role === 'operator') {
-            query.operator = user.id;
+        if (user.role === 'support_worker') {
+            query.supportWorker = user.id;
         }
         
         const interaction = await require('../models/Interaction').findOne(query)
-            .populate('client', 'firstName lastName referenceId dateOfBirth medicalInfo')
-            .populate('operator', 'firstName lastName email phone');
+            .populate('service_user', 'firstName lastName referenceId dateOfBirth medicalInfo')
+            .populate('support_worker', 'firstName lastName email phone');
         
         if (!interaction) {
             req.flash('error', 'Interaction not found or unauthorized');
@@ -306,31 +306,31 @@ router.get('/:id/edit', async (req, res) => {
         const user = req.session.user;
         
         let query = { _id: interactionId };
-        if (user.role === 'operator') {
-            query.operator = user.id;
+        if (user.role === 'support_worker') {
+            query.supportWorker = user.id;
         }
         
         const interaction = await require('../models/Interaction').findOne(query)
-            .populate('client', 'firstName lastName');
+            .populate('service_user', 'firstName lastName');
         
         if (!interaction) {
             req.flash('error', 'Interaction not found or unauthorized');
             return res.redirect('/interactions');
         }
         
-        let clientQuery = {};
-        if (user.role === 'operator') {
-            clientQuery.assignedOperator = user.id;
+        let serviceUserQuery = {};
+        if (user.role === 'support_worker') {
+            serviceUserQuery.assignedSupportWorker = user.id;
         }
         
-        const clients = await require('../models/Client').find(clientQuery)
+        const serviceUsers = await require('../models/ServiceUser').find(serviceUserQuery)
             .select('firstName lastName referenceId')
             .sort({ lastName: 1 });
         
         res.render('interactions/edit', {
             title: `Edit Interaction: ${interaction.title}`,
             interaction,
-            clients,
+            serviceUsers,
             user,
             interactionJSON: JSON.stringify(interaction.toObject())
         });
@@ -350,8 +350,8 @@ router.put('/:id', upload.array('attachments', 5), async (req, res) => {
         const updateData = req.body;
         
         let query = { _id: interactionId };
-        if (user.role === 'operator') {
-            query.operator = user.id;
+        if (user.role === 'support_worker') {
+            query.supportWorker = user.id;
         }
         
         const Interaction = require('../models/Interaction');
@@ -402,8 +402,8 @@ router.delete('/:id', async (req, res) => {
         const user = req.session.user;
         
         let query = { _id: interactionId };
-        if (user.role === 'operator') {
-            query.operator = user.id;
+        if (user.role === 'support_worker') {
+            query.supportWorker = user.id;
         }
         
         const Interaction = require('../models/Interaction');

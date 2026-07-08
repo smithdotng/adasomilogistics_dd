@@ -9,9 +9,9 @@ const ExcelJS = require('exceljs');
 // Get reports dashboard
 exports.getReports = async (req, res) => {
     try {
-        const providerId = req.session.user.role === 'service_provider' 
+        const careProviderId = req.session.user.role === 'care_provider' 
             ? req.session.user._id 
-            : req.session.user.providerId;
+            : req.session.user.careProviderId;
         
         const { period, startDate, endDate } = req.query;
         
@@ -42,7 +42,7 @@ exports.getReports = async (req, res) => {
         const interactionStats = await Interaction.aggregate([
             { 
                 $match: { 
-                    providerId: toObjectId(providerId),
+                    careProviderId: toObjectId(careProviderId),
                     ...(Object.keys(dateQuery).length ? { createdAt: dateQuery } : {})
                 }
             },
@@ -60,17 +60,17 @@ exports.getReports = async (req, res) => {
             { $sort: { '_id.date': -1 } }
         ]);
         
-        // Get operator performance
-        const operatorPerformance = await Interaction.aggregate([
+        // Get support worker performance
+        const supportWorkerPerformance = await Interaction.aggregate([
             { 
                 $match: { 
-                    providerId: toObjectId(providerId),
+                    careProviderId: toObjectId(careProviderId),
                     ...(Object.keys(dateQuery).length ? { createdAt: dateQuery } : {})
                 }
             },
             { 
                 $group: {
-                    _id: '$operatorId',
+                    _id: '$supportWorkerId',
                     totalVisits: { $sum: 1 },
                     completedVisits: {
                         $sum: { $cond: [{ $eq: ['$status', 'completed'] }, 1, 0] }
@@ -83,14 +83,14 @@ exports.getReports = async (req, res) => {
                     from: 'users',
                     localField: '_id',
                     foreignField: '_id',
-                    as: 'operator'
+                    as: 'support_worker'
                 }
             },
-            { $unwind: '$operator' },
+            { $unwind: '$support worker' },
             { 
                 $project: {
-                    'operator.firstName': 1,
-                    'operator.lastName': 1,
+                    'support worker.firstName': 1,
+                    'support worker.lastName': 1,
                     totalVisits: 1,
                     completedVisits: 1,
                     totalDuration: 1,
@@ -100,17 +100,17 @@ exports.getReports = async (req, res) => {
             { $sort: { completedVisits: -1 } }
         ]);
         
-        // Get client statistics
-        const clientStats = await Interaction.aggregate([
+        // Get service user statistics
+        const serviceUserStats = await Interaction.aggregate([
             { 
                 $match: { 
-                    providerId: toObjectId(providerId),
+                    careProviderId: toObjectId(careProviderId),
                     ...(Object.keys(dateQuery).length ? { createdAt: dateQuery } : {})
                 }
             },
             { 
                 $group: {
-                    _id: '$clientId',
+                    _id: '$serviceUserId',
                     visitCount: { $sum: 1 }
                 }
             },
@@ -119,15 +119,15 @@ exports.getReports = async (req, res) => {
                     from: 'users',
                     localField: '_id',
                     foreignField: '_id',
-                    as: 'client'
+                    as: 'service_user'
                 }
             },
-            { $unwind: '$client' },
+            { $unwind: '$service user' },
             { 
                 $project: {
-                    'client.firstName': 1,
-                    'client.lastName': 1,
-                    'client.clientInfo.nhsNumber': 1,
+                    'service user.firstName': 1,
+                    'service user.lastName': 1,
+                    'service user.serviceUserInfo.nhsNumber': 1,
                     visitCount: 1
                 }
             },
@@ -135,12 +135,12 @@ exports.getReports = async (req, res) => {
             { $limit: 10 }
         ]);
         
-        res.render('provider/reports/index', {
+        res.render('careProvider/reports/index', {
             title: 'Reports',
             user: req.session.user,
             interactionStats,
-            operatorPerformance,
-            clientStats,
+            supportWorkerPerformance,
+            serviceUserStats,
             period: period || 'month',
             startDate: startDate || '',
             endDate: endDate || '',
@@ -149,16 +149,16 @@ exports.getReports = async (req, res) => {
     } catch (error) {
         console.error('Error loading reports:', error);
         req.flash('error', 'Error loading reports');
-        res.redirect('/provider/dashboard');
+        res.redirect('/care-provider/dashboard');
     }
 };
 
 // Export report
 exports.exportReport = async (req, res) => {
     try {
-        const providerId = req.session.user.role === 'service_provider' 
+        const careProviderId = req.session.user.role === 'care_provider' 
             ? req.session.user._id 
-            : req.session.user.providerId;
+            : req.session.user.careProviderId;
         
         const { type, format, startDate, endDate } = req.query;
         
@@ -176,9 +176,9 @@ exports.exportReport = async (req, res) => {
         
         switch(type) {
             case 'interactions':
-                data = await Interaction.find({ providerId, ...dateQuery })
-                    .populate('clientId', 'firstName lastName')
-                    .populate('operatorId', 'firstName lastName')
+                data = await Interaction.find({ careProviderId, ...dateQuery })
+                    .populate('serviceUserId', 'firstName lastName')
+                    .populate('supportWorkerId', 'firstName lastName')
                     .sort('-createdAt');
                 
                 if (format === 'excel') {
@@ -187,8 +187,8 @@ exports.exportReport = async (req, res) => {
                     
                     worksheet.columns = [
                         { header: 'Date', key: 'date', width: 20 },
-                        { header: 'Client', key: 'client', width: 30 },
-                        { header: 'Operator', key: 'operator', width: 30 },
+                        { header: 'Service User', key: 'service_user', width: 30 },
+                        { header: 'Support Worker', key: 'support_worker', width: 30 },
                         { header: 'Type', key: 'type', width: 20 },
                         { header: 'Status', key: 'status', width: 15 },
                         { header: 'Duration', key: 'duration', width: 15 }
@@ -197,8 +197,8 @@ exports.exportReport = async (req, res) => {
                     data.forEach(interaction => {
                         worksheet.addRow({
                             date: require('moment')(interaction.createdAt).format('YYYY-MM-DD HH:mm'),
-                            client: `${interaction.clientId?.firstName} ${interaction.clientId?.lastName}`,
-                            operator: `${interaction.operatorId?.firstName} ${interaction.operatorId?.lastName}`,
+                            serviceUser: `${interaction.serviceUserId?.firstName} ${interaction.serviceUserId?.lastName}`,
+                            supportWorker: `${interaction.supportWorkerId?.firstName} ${interaction.supportWorkerId?.lastName}`,
                             type: interaction.type,
                             status: interaction.status,
                             duration: interaction.duration
@@ -213,39 +213,39 @@ exports.exportReport = async (req, res) => {
                 }
                 break;
                 
-            case 'operators':
-                data = await User.find({ role: 'operator', providerId })
-                    .select('firstName lastName email operatorInfo')
+            case 'support workers':
+                data = await User.find({ role: 'support_worker', careProviderId })
+                    .select('firstName lastName email supportWorkerInfo')
                     .lean();
                 
                 if (format === 'excel') {
                     workbook = new ExcelJS.Workbook();
-                    worksheet = workbook.addWorksheet('Operators');
+                    worksheet = workbook.addWorksheet('Support Workers');
                     
                     worksheet.columns = [
                         { header: 'Name', key: 'name', width: 30 },
                         { header: 'Email', key: 'email', width: 30 },
                         { header: 'Employee ID', key: 'employeeId', width: 20 },
                         { header: 'Status', key: 'status', width: 15 },
-                        { header: 'Assigned Clients', key: 'clients', width: 15 }
+                        { header: 'Assigned Service Users', key: 'service users', width: 15 }
                     ];
                     
-                    for (const operator of data) {
+                    for (const supportWorker of data) {
                         const clientCount = await User.countDocuments({
-                            'clientInfo.primaryCarer': operator._id
+                            'serviceUserInfo.primarySupportWorker': supportWorker._id
                         });
                         
                         worksheet.addRow({
-                            name: `${operator.firstName} ${operator.lastName}`,
-                            email: operator.email,
-                            employeeId: operator.operatorInfo?.employeeId || 'N/A',
-                            status: operator.operatorInfo?.employmentStatus || 'active',
-                            clients: clientCount
+                            name: `${supportWorker.firstName} ${supportWorker.lastName}`,
+                            email: supportWorker.email,
+                            employeeId: supportWorker.supportWorkerInfo?.employeeId || 'N/A',
+                            status: supportWorker.supportWorkerInfo?.employmentStatus || 'active',
+                            serviceUsers: clientCount
                         });
                     }
                     
                     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-                    res.setHeader('Content-Disposition', `attachment; filename=operators-${Date.now()}.xlsx`);
+                    res.setHeader('Content-Disposition', `attachment; filename=support workers-${Date.now()}.xlsx`);
                     
                     await workbook.xlsx.write(res);
                     res.end();
@@ -254,11 +254,11 @@ exports.exportReport = async (req, res) => {
                 
             default:
                 req.flash('error', 'Invalid report type');
-                res.redirect('/provider/reports');
+                res.redirect('/care-provider/reports');
         }
     } catch (error) {
         console.error('Error exporting report:', error);
         req.flash('error', 'Error exporting report');
-        res.redirect('/provider/reports');
+        res.redirect('/care-provider/reports');
     }
 };

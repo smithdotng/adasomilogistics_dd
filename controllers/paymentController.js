@@ -10,16 +10,16 @@ const PDFDocument = require('pdfkit');
 // Get payment dashboard
 exports.getPaymentDashboard = async (req, res) => {
     try {
-        const providerId = req.session.user._id;
+        const careProviderId = req.session.user._id;
         
         // Get statistics
         const [totalOperators, pendingPayments, totalPaidThisMonth, upcomingPayments] = await Promise.all([
-            User.countDocuments({ role: 'operator', providerId, isActive: true }),
-            Payment.countDocuments({ providerId, status: 'pending' }),
+            User.countDocuments({ role: 'support_worker', careProviderId, isActive: true }),
+            Payment.countDocuments({ careProviderId, status: 'pending' }),
             Payment.aggregate([
                 { 
                     $match: { 
-                        providerId: toObjectId(providerId),
+                        careProviderId: toObjectId(careProviderId),
                         status: 'paid',
                         paidAt: { 
                             $gte: new Date(new Date().setDate(1)), 
@@ -30,35 +30,35 @@ exports.getPaymentDashboard = async (req, res) => {
                 { $group: { _id: null, total: { $sum: '$netPay' } } }
             ]),
             Payment.countDocuments({ 
-                providerId, 
+                careProviderId, 
                 status: 'pending',
                 paymentDate: { $gte: new Date() }
             })
         ]);
         
         // Get recent payments
-        const recentPayments = await Payment.find({ providerId })
-            .populate('operatorId', 'firstName lastName')
+        const recentPayments = await Payment.find({ careProviderId })
+            .populate('supportWorkerId', 'firstName lastName')
             .sort('-createdAt')
             .limit(10);
         
-        // Get operators with payment info
-        const operators = await User.find({ 
-            role: 'operator', 
-            providerId,
+        // Get support workers with payment info
+        const supportWorkers = await User.find({ 
+            role: 'support_worker', 
+            careProviderId,
             isActive: true 
-        }).select('firstName lastName email operatorInfo.paymentInfo');
+        }).select('firstName lastName email supportWorkerInfo.paymentInfo');
         
         // Get pending timesheets
         const pendingTimesheets = await Timesheet.find({ 
-            providerId, 
+            careProviderId, 
             status: 'submitted' 
         })
-        .populate('operatorId', 'firstName lastName')
+        .populate('supportWorkerId', 'firstName lastName')
         .sort('-submittedAt')
         .limit(5);
         
-        res.render('provider/payments/dashboard', {
+        res.render('careProvider/payments/dashboard', {
             title: 'Payroll Dashboard',
             user: req.session.user,
             stats: {
@@ -68,27 +68,27 @@ exports.getPaymentDashboard = async (req, res) => {
                 upcomingPayments
             },
             recentPayments,
-            operators,
+            supportWorkers,
             pendingTimesheets,
             moment: require('moment')
         });
     } catch (error) {
         console.error('Error loading payment dashboard:', error);
         req.flash('error', 'Error loading payment dashboard');
-        res.redirect('/provider/dashboard');
+        res.redirect('/care-provider/dashboard');
     }
 };
 
 // Get timesheet list
 exports.getTimesheets = async (req, res) => {
     try {
-        const providerId = req.session.user._id;
-        const { operator, status, week } = req.query;
+        const careProviderId = req.session.user._id;
+        const { supportWorker, status, week } = req.query;
         
-        let query = { providerId };
+        let query = { careProviderId };
         
-        if (operator && operator !== 'all') {
-            query.operatorId = operator;
+        if (supportWorker && supportWorker !== 'all') {
+            query.supportWorkerId = supportWorker;
         }
         
         if (status && status !== 'all') {
@@ -104,54 +104,54 @@ exports.getTimesheets = async (req, res) => {
         }
         
         const timesheets = await Timesheet.find(query)
-            .populate('operatorId', 'firstName lastName operatorInfo.paymentInfo')
-            .populate('entries.clientId', 'firstName lastName')
+            .populate('supportWorkerId', 'firstName lastName supportWorkerInfo.paymentInfo')
+            .populate('entries.serviceUserId', 'firstName lastName')
             .sort('-periodEnd');
         
-        // Get operators for filter
-        const operators = await User.find({ 
-            role: 'operator', 
-            providerId,
+        // Get support workers for filter
+        const supportWorkers = await User.find({ 
+            role: 'support_worker', 
+            careProviderId,
             isActive: true 
         }).select('firstName lastName');
         
-        res.render('provider/payments/timesheets', {
+        res.render('careProvider/payments/timesheets', {
             title: 'Timesheets',
             user: req.session.user,
             timesheets,
-            operators,
-            filters: { operator, status, week },
+            supportWorkers,
+            filters: { supportWorker, status, week },
             moment: require('moment')
         });
     } catch (error) {
         console.error('Error loading timesheets:', error);
         req.flash('error', 'Error loading timesheets');
-        res.redirect('/provider/payments/dashboard');
+        res.redirect('/care-provider/payments/dashboard');
     }
 };
 
 // Create timesheet from interactions
 exports.createTimesheet = async (req, res) => {
     try {
-        const providerId = req.session.user._id;
-        const { operatorId, periodStart, periodEnd } = req.body;
+        const careProviderId = req.session.user._id;
+        const { supportWorkerId, periodStart, periodEnd } = req.body;
         
-        // Get all interactions for this operator in the period
+        // Get all interactions for this support worker in the period
         const interactions = await Interaction.find({
-            operatorId,
-            providerId,
+            supportWorkerId,
+            careProviderId,
             actualStart: { $gte: new Date(periodStart), $lte: new Date(periodEnd) },
             status: 'completed'
-        }).populate('clientId', 'firstName lastName');
+        }).populate('serviceUserId', 'firstName lastName');
         
         if (interactions.length === 0) {
             req.flash('error', 'No completed interactions found for this period');
-            return res.redirect('/provider/payments/timesheets');
+            return res.redirect('/care-provider/payments/timesheets');
         }
         
-        // Get operator for rate info
-        const operator = await User.findById(operatorId);
-        const baseRate = operator.operatorInfo?.paymentInfo?.payRate || 12.50; // Default rate
+        // Get support worker for rate info
+        const supportWorker = await User.findById(supportWorkerId);
+        const baseRate = supportWorker.supportWorkerInfo?.paymentInfo?.payRate || 12.50; // Default rate
         
         // Create timesheet entries from interactions
         const entries = interactions.map(interaction => {
@@ -159,14 +159,14 @@ exports.createTimesheet = async (req, res) => {
             const date = interaction.actualStart;
             const isWeekend = [0, 6].includes(date.getDay());
             const rate = isWeekend ? 
-                (operator.operatorInfo?.paymentInfo?.weekendRate || baseRate * 1.5) : 
+                (supportWorker.supportWorkerInfo?.paymentInfo?.weekendRate || baseRate * 1.5) : 
                 baseRate;
             
             return {
                 date: interaction.actualStart,
-                clientId: interaction.clientId?._id,
-                clientName: interaction.clientId ? 
-                    `${interaction.clientId.firstName} ${interaction.clientId.lastName}` : 
+                serviceUserId: interaction.serviceUserId?._id,
+                clientName: interaction.serviceUserId ? 
+                    `${interaction.serviceUserId.firstName} ${interaction.serviceUserId.lastName}` : 
                     'Unknown',
                 shiftType: isWeekend ? 'weekend' : 'regular',
                 startTime: interaction.actualStart,
@@ -185,8 +185,8 @@ exports.createTimesheet = async (req, res) => {
         const totalAmount = entries.reduce((sum, e) => sum + e.amount, 0);
         
         const timesheet = new Timesheet({
-            operatorId,
-            providerId,
+            supportWorkerId,
+            careProviderId,
             periodStart: new Date(periodStart),
             periodEnd: new Date(periodEnd),
             weekNumber: moment(periodStart).week(),
@@ -203,11 +203,11 @@ exports.createTimesheet = async (req, res) => {
         await timesheet.save();
         
         req.flash('success', 'Timesheet created successfully');
-        res.redirect(`/provider/payments/timesheets/${timesheet._id}`);
+        res.redirect(`/care-provider/payments/timesheets/${timesheet._id}`);
     } catch (error) {
         console.error('Error creating timesheet:', error);
         req.flash('error', 'Error creating timesheet');
-        res.redirect('/provider/payments/timesheets');
+        res.redirect('/care-provider/payments/timesheets');
     }
 };
 
@@ -215,17 +215,17 @@ exports.createTimesheet = async (req, res) => {
 exports.getTimesheetDetails = async (req, res) => {
     try {
         const timesheet = await Timesheet.findById(req.params.id)
-            .populate('operatorId', 'firstName lastName email operatorInfo.paymentInfo')
-            .populate('entries.clientId', 'firstName lastName')
+            .populate('supportWorkerId', 'firstName lastName email supportWorkerInfo.paymentInfo')
+            .populate('entries.serviceUserId', 'firstName lastName')
             .populate('approvedBy', 'firstName lastName')
             .populate('createdBy', 'firstName lastName');
         
         if (!timesheet) {
             req.flash('error', 'Timesheet not found');
-            return res.redirect('/provider/payments/timesheets');
+            return res.redirect('/care-provider/payments/timesheets');
         }
         
-        res.render('provider/payments/timesheet-details', {
+        res.render('careProvider/payments/timesheet-details', {
             title: 'Timesheet Details',
             user: req.session.user,
             timesheet,
@@ -234,7 +234,7 @@ exports.getTimesheetDetails = async (req, res) => {
     } catch (error) {
         console.error('Error loading timesheet:', error);
         req.flash('error', 'Error loading timesheet');
-        res.redirect('/provider/payments/timesheets');
+        res.redirect('/care-provider/payments/timesheets');
     }
 };
 
@@ -245,7 +245,7 @@ exports.approveTimesheet = async (req, res) => {
         
         if (!timesheet) {
             req.flash('error', 'Timesheet not found');
-            return res.redirect('/provider/payments/timesheets');
+            return res.redirect('/care-provider/payments/timesheets');
         }
         
         timesheet.status = 'approved';
@@ -255,36 +255,36 @@ exports.approveTimesheet = async (req, res) => {
         await timesheet.save();
         
         req.flash('success', 'Timesheet approved successfully');
-        res.redirect(`/provider/payments/timesheets/${timesheet._id}`);
+        res.redirect(`/care-provider/payments/timesheets/${timesheet._id}`);
     } catch (error) {
         console.error('Error approving timesheet:', error);
         req.flash('error', 'Error approving timesheet');
-        res.redirect('/provider/payments/timesheets');
+        res.redirect('/care-provider/payments/timesheets');
     }
 };
 
 // Generate payment from timesheets
 exports.generatePayment = async (req, res) => {
     try {
-        const providerId = req.session.user._id;
-        const { operatorId, timesheetIds, paymentDate } = req.body;
+        const careProviderId = req.session.user._id;
+        const { supportWorkerId, timesheetIds, paymentDate } = req.body;
         
         // Get all selected timesheets
         const timesheets = await Timesheet.find({
             _id: { $in: timesheetIds },
-            operatorId,
-            providerId,
+            supportWorkerId,
+            careProviderId,
             status: 'approved'
         });
         
         if (timesheets.length === 0) {
             req.flash('error', 'No approved timesheets found');
-            return res.redirect('/provider/payments/timesheets');
+            return res.redirect('/care-provider/payments/timesheets');
         }
         
-        // Get operator for payment info
-        const operator = await User.findById(operatorId);
-        const paymentInfo = operator.operatorInfo?.paymentInfo || {};
+        // Get support worker for payment info
+        const supportWorker = await User.findById(supportWorkerId);
+        const paymentInfo = supportWorker.supportWorkerInfo?.paymentInfo || {};
         
         // Calculate gross pay
         const grossPay = timesheets.reduce((sum, t) => sum + t.totalAmount, 0);
@@ -302,8 +302,8 @@ exports.generatePayment = async (req, res) => {
         
         // Create payment
         const payment = new Payment({
-            operatorId,
-            providerId,
+            supportWorkerId,
+            careProviderId,
             paymentDate: new Date(paymentDate),
             paymentPeriod: {
                 start: timesheets[0].periodStart,
@@ -323,9 +323,9 @@ exports.generatePayment = async (req, res) => {
             netPay,
             paymentMethod: paymentInfo.paymentMethod || 'bank_transfer',
             bankDetails: {
-                accountName: operator.operatorInfo?.payrollInfo?.bankAccount || '',
-                accountNumber: operator.operatorInfo?.payrollInfo?.bankAccount || '',
-                sortCode: operator.operatorInfo?.payrollInfo?.sortCode || ''
+                accountName: supportWorker.supportWorkerInfo?.payrollInfo?.bankAccount || '',
+                accountNumber: supportWorker.supportWorkerInfo?.payrollInfo?.bankAccount || '',
+                sortCode: supportWorker.supportWorkerInfo?.payrollInfo?.sortCode || ''
             },
             timesheets: timesheetIds,
             status: 'pending',
@@ -341,11 +341,11 @@ exports.generatePayment = async (req, res) => {
         );
         
         req.flash('success', 'Payment generated successfully');
-        res.redirect(`/provider/payments/${payment._id}`);
+        res.redirect(`/care-provider/payments/${payment._id}`);
     } catch (error) {
         console.error('Error generating payment:', error);
         req.flash('error', 'Error generating payment');
-        res.redirect('/provider/payments/timesheets');
+        res.redirect('/care-provider/payments/timesheets');
     }
 };
 
@@ -391,17 +391,17 @@ function calculateStudentLoan(grossPay, plan) {
 // Export payment report
 exports.exportPaymentReport = async (req, res) => {
     try {
-        const providerId = req.session.user._id;
+        const careProviderId = req.session.user._id;
         const { startDate, endDate, format } = req.query;
         
         const payments = await Payment.find({
-            providerId,
+            careProviderId,
             paymentDate: {
                 $gte: new Date(startDate),
                 $lte: new Date(endDate)
             }
         })
-        .populate('operatorId', 'firstName lastName')
+        .populate('supportWorkerId', 'firstName lastName')
         .sort('-paymentDate');
         
         if (format === 'excel') {
@@ -411,7 +411,7 @@ exports.exportPaymentReport = async (req, res) => {
             worksheet.columns = [
                 { header: 'Payment Date', key: 'date', width: 15 },
                 { header: 'Payment No', key: 'number', width: 15 },
-                { header: 'Operator', key: 'operator', width: 25 },
+                { header: 'Support Worker', key: 'support_worker', width: 25 },
                 { header: 'Gross Pay', key: 'gross', width: 15 },
                 { header: 'Tax', key: 'tax', width: 15 },
                 { header: 'NI', key: 'ni', width: 15 },
@@ -424,7 +424,7 @@ exports.exportPaymentReport = async (req, res) => {
                 worksheet.addRow({
                     date: moment(payment.paymentDate).format('DD/MM/YYYY'),
                     number: payment.paymentNumber,
-                    operator: `${payment.operatorId?.firstName} ${payment.operatorId?.lastName}`,
+                    supportWorker: `${payment.supportWorkerId?.firstName} ${payment.supportWorkerId?.lastName}`,
                     gross: payment.grossPay?.toFixed(2),
                     tax: payment.tax?.toFixed(2),
                     ni: payment.nationalInsurance?.toFixed(2),
@@ -443,6 +443,6 @@ exports.exportPaymentReport = async (req, res) => {
     } catch (error) {
         console.error('Error exporting payment report:', error);
         req.flash('error', 'Error exporting report');
-        res.redirect('/provider/payments/dashboard');
+        res.redirect('/care-provider/payments/dashboard');
     }
 };

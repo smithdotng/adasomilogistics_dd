@@ -375,7 +375,7 @@ userSchema.methods.incLoginAttempts = async function() {
             this.lockUntil = Date.now() + 2 * 60 * 60 * 1000; // 2 hours
         }
     }
-    await this.save();
+    await this.save({ validateModifiedOnly: true });
 };
 
 // ────────────────────────────────────────────────

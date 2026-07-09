@@ -143,9 +143,16 @@ const interactionSchema = new mongoose.Schema({
     }],
     
     // Follow-up
+    // NOTE: each sub-field must be written as `name: { type: X, ... }`. Mongoose
+    // treats an object with a *bare* `type` key (e.g. `type: String`) as a
+    // single SchemaType definition for the whole parent path rather than a
+    // nested subdocument - that previously collapsed this entire block into
+    // one implicitly-always-required String field (`required: Boolean` was
+    // being read as the `required` validator option, and `Boolean` the
+    // constructor is truthy, so every document failed validation).
     followUp: {
-        required: Boolean,
-        type: String,
+        required: { type: Boolean, default: false },
+        type: { type: String },
         dueDate: Date,
         assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
         completedDate: Date,

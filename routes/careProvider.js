@@ -46,6 +46,7 @@ router.post('/support-workers', isAuthenticated, isCareProvider, checkSubscripti
 router.get('/support-workers/:id', isAuthenticated, isCareProvider, careProviderController.getOperatorDetails);
 router.get('/support-workers/:id/edit', isAuthenticated, isCareProvider, careProviderController.getEditOperator);
 router.put('/support-workers/:id', isAuthenticated, isCareProvider, careProviderController.updateOperator);
+router.get('/support-workers/:supportWorkerId/assign-service-users', isAuthenticated, isCareProvider, careProviderController.getAssignServiceUsers);
 router.post('/support-workers/:supportWorkerId/assign-service-users', isAuthenticated, isCareProvider, careProviderController.assignServiceUsers);
 
 // Upload support worker documents

@@ -58,49 +58,45 @@
         .mobile-nav__container ul li a { display: block; padding: 15px 20px; color: white; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
 
         .page-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px 0; color: white; margin-bottom: 30px; }
-        .page-header .header-flex { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 15px; }
         .page-header h1 { margin: 0; font-size: 28px; }
         .page-header .breadcrumb { background: transparent; padding: 0; margin: 10px 0 0; }
         .page-header .breadcrumb a { color: rgba(255,255,255,0.8); text-decoration: none; }
         .page-header .breadcrumb .active { color: white; }
-        .page-header .header-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-        .page-header .header-actions .btn { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.4); }
-        .page-header .header-actions .btn:hover { background: rgba(255,255,255,0.3); }
 
-        .card { background: white; border-radius: 10px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
-        .card h3 { margin: 0 0 20px; font-size: 18px; color: #333; padding-bottom: 12px; border-bottom: 1px solid #f0f0f0; }
+        .form-card { background: white; border-radius: 10px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        .form-card h3 { margin: 0 0 6px; font-size: 20px; color: #333; }
+        .form-card .subtitle { color: #777; margin-bottom: 20px; }
 
-        .profile-summary { display: flex; align-items: center; gap: 20px; margin-bottom: 10px; }
-        .avatar-circle { width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 700; flex-shrink: 0; }
-        .profile-summary h2 { font-size: 22px; margin-bottom: 4px; color: #1e1e1e; }
-        .profile-summary p { color: #666; margin: 0; }
+        .info-box { background: #f8f9fa; border-left: 4px solid #667eea; padding: 15px 20px; border-radius: 5px; margin-bottom: 25px; }
+        .info-box p { margin: 0; color: #666; }
 
-        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: capitalize; }
-        .status-active { background: #d4edda; color: #155724; }
-        .status-probation { background: #fff3cd; color: #856404; }
-        .status-suspended, .status-terminated { background: #f8d7da; color: #721c24; }
-        .status-on_leave { background: #e2e3e5; color: #383d41; }
+        .search-box { position: relative; margin-bottom: 20px; }
+        .search-box input { width: 100%; padding: 12px 15px 12px 42px; border: 2px solid #f0f0f0; border-radius: 8px; font-size: 15px; }
+        .search-box input:focus { border-color: #667eea; outline: none; }
+        .search-box i { position: absolute; left: 15px; top: 14px; color: #aaa; }
 
-        .detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
-        .detail-item .label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: #999; margin-bottom: 4px; }
-        .detail-item .value { font-size: 15px; color: #1e1e1e; font-weight: 500; }
+        .select-all-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f0f0f0; margin-bottom: 10px; }
+        .select-all-row label { font-weight: 500; color: #333; display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        .select-all-row .count { color: #667eea; font-weight: 600; font-size: 14px; }
 
-        .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .stat-box { background: white; border-radius: 10px; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .stat-box .stat-number { font-size: 26px; font-weight: 700; color: #667eea; }
-        .stat-box .stat-label { font-size: 13px; color: #777; text-transform: capitalize; margin-top: 4px; }
+        .service-user-list { max-height: 480px; overflow-y: auto; }
+        .service-user-row { display: flex; align-items: center; gap: 15px; padding: 14px 10px; border-radius: 8px; transition: background 0.2s ease; }
+        .service-user-row:hover { background: #f8f9fa; }
+        .service-user-row input[type="checkbox"] { width: 20px; height: 20px; accent-color: #667eea; flex-shrink: 0; cursor: pointer; }
+        .service-user-row label { flex: 1; cursor: pointer; }
+        .service-user-row .su-name { font-weight: 500; color: #1e1e1e; }
+        .service-user-row .su-meta { font-size: 13px; color: #888; }
+        .service-user-row.already-assigned { background: #f0f4ff; }
+        .already-badge { font-size: 11px; background: #667eea; color: white; padding: 2px 8px; border-radius: 20px; margin-left: 8px; }
 
-        .list-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f4f4f4; }
-        .list-row:last-child { border-bottom: none; }
-        .list-row .name { font-weight: 500; color: #1e1e1e; }
-        .list-row .meta { color: #888; font-size: 13px; }
-        .empty-state { color: #999; text-align: center; padding: 20px 0; }
+        .empty-state { color: #999; text-align: center; padding: 40px 0; }
 
-        .btn { padding: 10px 22px; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-block; }
+        .btn { padding: 12px 30px; border: none; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-block; }
         .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102,126,234,0.4); color: white; }
         .btn-secondary { background: #f0f0f0; color: #333; }
         .btn-secondary:hover { background: #e0e0e0; color: #333; }
+        .button-group { display: flex; gap: 15px; margin-top: 25px; }
 
         .alert { padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; }
         .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
@@ -202,23 +198,12 @@
     <!-- Page Header -->
     <section class="page-header">
         <div class="container">
-            <div class="header-flex">
-                <div>
-                    <h1><%= supportWorker.firstName %> <%= supportWorker.lastName %></h1>
-                    <div class="breadcrumb">
-                        <a href="/care-provider/dashboard">Dashboard</a> /
-                        <a href="/care-provider/support-workers">Support Workers</a> /
-                        <span class="active"><%= supportWorker.firstName %> <%= supportWorker.lastName %></span>
-                    </div>
-                </div>
-                <div class="header-actions">
-                    <a href="/care-provider/support-workers/<%= supportWorker._id %>/assign-service-users" class="btn">
-                        <i class="fas fa-user-plus me-2"></i>Assign Service Users
-                    </a>
-                    <a href="/care-provider/support-workers/<%= supportWorker._id %>/edit" class="btn">
-                        <i class="fas fa-edit me-2"></i>Edit
-                    </a>
-                </div>
+            <h1>Assign Service Users</h1>
+            <div class="breadcrumb">
+                <a href="/care-provider/dashboard">Dashboard</a> /
+                <a href="/care-provider/support-workers">Support Workers</a> /
+                <a href="/care-provider/support-workers/<%= supportWorker._id %>"><%= supportWorker.firstName %> <%= supportWorker.lastName %></a> /
+                <span class="active">Assign Service Users</span>
             </div>
         </div>
     </section>
@@ -233,145 +218,70 @@
                 <div class="alert alert-danger"><i class="fas fa-exclamation-circle me-2"></i><%= error %></div>
             <% } %>
 
-            <!-- Stats -->
-            <div class="stats-row">
-                <div class="stat-box">
-                    <div class="stat-number"><%= todaySchedule.length %></div>
-                    <div class="stat-label">Visits Today</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-number"><%= recentInteractions.length %></div>
-                    <div class="stat-label">Recent Interactions</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-number"><%= supportWorker.supportWorkerInfo?.assignedServiceUsers?.length || 0 %></div>
-                    <div class="stat-label">Assigned Service Users</div>
-                </div>
-                <div class="stat-box">
-                    <% const completed = interactionStats.find(s => s._id === 'completed'); %>
-                    <div class="stat-number"><%= completed ? completed.count : 0 %></div>
-                    <div class="stat-label">Completed (30 days)</div>
-                </div>
+            <div class="info-box">
+                <p><i class="fas fa-info-circle me-2" style="color: #667eea;"></i>
+                    Choose which service users <strong><%= supportWorker.firstName %> <%= supportWorker.lastName %></strong> is responsible for.
+                    Saving this list replaces their current assignments.
+                </p>
             </div>
 
-            <!-- Profile -->
-            <div class="card">
-                <div class="profile-summary">
-                    <div class="avatar-circle"><%= (supportWorker.firstName?.[0] || '') + (supportWorker.lastName?.[0] || '') %></div>
-                    <div>
-                        <h2><%= supportWorker.firstName %> <%= supportWorker.lastName %></h2>
-                        <p>
-                            <span class="status-badge status-<%= supportWorker.supportWorkerInfo?.employmentStatus || 'active' %>">
-                                <%= (supportWorker.supportWorkerInfo?.employmentStatus || 'active').replace('_', ' ') %>
-                            </span>
-                            &nbsp;&middot;&nbsp; <%= supportWorker.isActive ? 'Account active' : 'Account inactive' %>
-                        </p>
-                    </div>
-                </div>
+            <div class="form-card">
+                <h3>Service Users</h3>
+                <p class="subtitle"><%= serviceUsers.length %> active service user<%= serviceUsers.length === 1 ? '' : 's' %> on your account</p>
 
-                <div class="detail-grid mt-3">
-                    <div class="detail-item">
-                        <div class="label">Email</div>
-                        <div class="value"><%= supportWorker.email %></div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="label">Phone</div>
-                        <div class="value"><%= supportWorker.phone || 'Not provided' %></div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="label">Employee ID</div>
-                        <div class="value"><%= supportWorker.supportWorkerInfo?.employeeId || 'N/A' %></div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="label">Contract Type</div>
-                        <div class="value" style="text-transform: capitalize;"><%= (supportWorker.supportWorkerInfo?.contractType || 'N/A').replace('_', ' ') %></div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="label">Hourly Rate</div>
-                        <div class="value"><%= supportWorker.supportWorkerInfo?.hourlyRate ? '£' + supportWorker.supportWorkerInfo.hourlyRate : 'Not set' %></div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="label">DBS Checked</div>
-                        <div class="value"><%= supportWorker.supportWorkerInfo?.dbsChecked ? 'Yes' : 'No / Pending' %></div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="label">Has Vehicle</div>
-                        <div class="value"><%= supportWorker.supportWorkerInfo?.hasVehicle ? 'Yes' : 'No' %></div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="label">Travel Radius</div>
-                        <div class="value"><%= supportWorker.supportWorkerInfo?.travelRadius ? supportWorker.supportWorkerInfo.travelRadius + ' miles' : 'Not set' %></div>
-                    </div>
-                </div>
-            </div>
+                <% if (serviceUsers.length > 0) { %>
+                    <form action="/care-provider/support-workers/<%= supportWorker._id %>/assign-service-users" method="POST" id="assignForm">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" placeholder="Search service users by name...">
+                        </div>
 
-            <!-- Emergency Contact -->
-            <% if (supportWorker.supportWorkerInfo?.emergencyContact?.name) { %>
-                <div class="card">
-                    <h3>Emergency Contact</h3>
-                    <div class="detail-grid">
-                        <div class="detail-item">
-                            <div class="label">Name</div>
-                            <div class="value"><%= supportWorker.supportWorkerInfo.emergencyContact.name %></div>
+                        <div class="select-all-row">
+                            <label>
+                                <input type="checkbox" id="selectAll">
+                                Select all
+                            </label>
+                            <span class="count"><span id="selectedCount"><%= assignedIds.length %></span> selected</span>
                         </div>
-                        <div class="detail-item">
-                            <div class="label">Relationship</div>
-                            <div class="value"><%= supportWorker.supportWorkerInfo.emergencyContact.relationship || 'N/A' %></div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="label">Phone</div>
-                            <div class="value"><%= supportWorker.supportWorkerInfo.emergencyContact.phone || 'N/A' %></div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="label">Email</div>
-                            <div class="value"><%= supportWorker.supportWorkerInfo.emergencyContact.email || 'N/A' %></div>
-                        </div>
-                    </div>
-                </div>
-            <% } %>
 
-            <!-- Assigned Service Users -->
-            <div class="card">
-                <h3>Assigned Service Users</h3>
-                <% if (supportWorker.supportWorkerInfo?.assignedServiceUsers && supportWorker.supportWorkerInfo.assignedServiceUsers.length > 0) { %>
-                    <% supportWorker.supportWorkerInfo.assignedServiceUsers.forEach(su => { %>
-                        <div class="list-row">
-                            <span class="name"><%= su.firstName %> <%= su.lastName %></span>
-                            <span class="meta">NHS: <%= su.serviceUserInfo?.nhsNumber || 'N/A' %></span>
+                        <div class="service-user-list" id="serviceUserList">
+                            <% serviceUsers.forEach(su => { %>
+                                <% const isAssigned = assignedIds.includes(su._id.toString()); %>
+                                <div class="service-user-row <%= isAssigned ? 'already-assigned' : '' %>" data-name="<%= (su.firstName + ' ' + su.lastName).toLowerCase() %>">
+                                    <input type="checkbox" name="serviceUserIds" value="<%= su._id %>"
+                                           id="su-<%= su._id %>" class="su-checkbox" <%= isAssigned ? 'checked' : '' %>>
+                                    <label for="su-<%= su._id %>">
+                                        <span class="su-name">
+                                            <%= su.firstName %> <%= su.lastName %>
+                                            <% if (isAssigned) { %><span class="already-badge">Currently assigned</span><% } %>
+                                        </span><br>
+                                        <span class="su-meta">
+                                            NHS: <%= su.serviceUserInfo?.nhsNumber || 'N/A' %>
+                                            <% if (su.serviceUserInfo?.carePackage?.type) { %>
+                                                &middot; <%= su.serviceUserInfo.carePackage.type.replace('_', ' ') %>
+                                            <% } %>
+                                        </span>
+                                    </label>
+                                </div>
+                            <% }) %>
                         </div>
-                    <% }) %>
+
+                        <div class="button-group">
+                            <a href="/care-provider/support-workers/<%= supportWorker._id %>" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Save Assignments
+                            </button>
+                        </div>
+                    </form>
                 <% } else { %>
-                    <div class="empty-state">No service users assigned yet.</div>
-                <% } %>
-            </div>
-
-            <!-- Today's Schedule -->
-            <div class="card">
-                <h3>Today's Schedule</h3>
-                <% if (todaySchedule.length > 0) { %>
-                    <% todaySchedule.forEach(s => { %>
-                        <div class="list-row">
-                            <span class="name"><%= s.serviceUserId ? s.serviceUserId.firstName + ' ' + s.serviceUserId.lastName : 'Unknown' %></span>
-                            <span class="meta"><%= moment(s.createdAt).format('h:mm A') %></span>
-                        </div>
-                    <% }) %>
-                <% } else { %>
-                    <div class="empty-state">No visits scheduled for today.</div>
-                <% } %>
-            </div>
-
-            <!-- Recent Interactions -->
-            <div class="card">
-                <h3>Recent Interactions</h3>
-                <% if (recentInteractions.length > 0) { %>
-                    <% recentInteractions.slice(0, 10).forEach(i => { %>
-                        <div class="list-row">
-                            <span class="name"><%= i.serviceUserId ? i.serviceUserId.firstName + ' ' + i.serviceUserId.lastName : 'Unknown' %></span>
-                            <span class="meta"><%= i.type || 'Visit' %> &middot; <%= moment(i.createdAt).format('D MMM, h:mm A') %></span>
-                        </div>
-                    <% }) %>
-                <% } else { %>
-                    <div class="empty-state">No interactions logged yet.</div>
+                    <div class="empty-state">
+                        <p>No active service users yet.</p>
+                        <a href="/care-provider/service-users/create" class="btn btn-primary mt-3">
+                            <i class="fas fa-plus me-2"></i>Add a Service User
+                        </a>
+                    </div>
                 <% } %>
             </div>
         </div>
@@ -407,6 +317,38 @@
             if (mobileToggler) mobileToggler.addEventListener('click', function(e) { e.preventDefault(); toggleMenu(true); });
             if (mobileOverlay) mobileOverlay.addEventListener('click', function() { toggleMenu(false); });
             if (mobileClose) mobileClose.addEventListener('click', function(e) { e.preventDefault(); toggleMenu(false); });
+
+            // Search filter
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    const term = this.value.toLowerCase();
+                    document.querySelectorAll('.service-user-row').forEach(row => {
+                        row.style.display = row.dataset.name.includes(term) ? 'flex' : 'none';
+                    });
+                });
+            }
+
+            // Select all
+            const selectAll = document.getElementById('selectAll');
+            const checkboxes = document.querySelectorAll('.su-checkbox');
+            const selectedCount = document.getElementById('selectedCount');
+
+            function updateCount() {
+                const checked = document.querySelectorAll('.su-checkbox:checked').length;
+                selectedCount.textContent = checked;
+                if (selectAll) selectAll.checked = checked === checkboxes.length && checkboxes.length > 0;
+            }
+
+            if (selectAll) {
+                selectAll.addEventListener('change', function() {
+                    checkboxes.forEach(cb => { cb.checked = selectAll.checked; });
+                    updateCount();
+                });
+            }
+
+            checkboxes.forEach(cb => cb.addEventListener('change', updateCount));
+            updateCount();
 
             setTimeout(() => {
                 document.querySelectorAll('.alert').forEach(alert => { alert.style.display = 'none'; });

@@ -376,21 +376,67 @@ exports.updateOperator = async (req, res) => {
     }
 };
 
+// Assign Service Users to Support Worker - Form
+exports.getAssignServiceUsers = async (req, res) => {
+    try {
+        const { supportWorkerId } = req.params;
+        const careProviderId = req.session.user._id;
+
+        const supportWorker = await User.findOne({
+            _id: supportWorkerId,
+            role: 'support_worker',
+            careProviderId
+        });
+
+        if (!supportWorker) {
+            req.flash('error', 'Support Worker not found');
+            return res.redirect('/care-provider/support-workers');
+        }
+
+        const serviceUsers = await User.find({
+            role: 'service_user',
+            careProviderId,
+            isActive: true
+        }).select('firstName lastName serviceUserInfo.nhsNumber serviceUserInfo.carePackage').sort('firstName');
+
+        const assignedIds = (supportWorker.supportWorkerInfo?.assignedServiceUsers || []).map(id => id.toString());
+
+        res.render('careProvider/support-workers/assign', {
+            title: 'Assign Service Users',
+            user: req.session.user,
+            supportWorker,
+            serviceUsers,
+            assignedIds
+        });
+    } catch (error) {
+        console.error('Error loading assign service users form:', error);
+        req.flash('error', 'Error loading service users');
+        res.redirect('/care-provider/support-workers');
+    }
+};
+
 // Assign Service Users to Support Worker
 exports.assignServiceUsers = async (req, res) => {
     try {
         const { supportWorkerId } = req.params;
-        const { serviceUserIds } = req.body;
         const careProviderId = req.session.user._id;
-        
-        const supportWorker = await User.findOne({ _id: supportWorkerId, careProviderId });
-        
-        if (!supportWorker) {
-            return res.status(404).json({ error: 'Support Worker not found' });
+
+        // Checkbox inputs come through as a string (one checked), an array
+        // (multiple checked), or undefined (none checked) - normalize to an array.
+        let serviceUserIds = req.body.serviceUserIds || [];
+        if (!Array.isArray(serviceUserIds)) {
+            serviceUserIds = [serviceUserIds];
         }
-        
+
+        const supportWorker = await User.findOne({ _id: supportWorkerId, careProviderId });
+
+        if (!supportWorker) {
+            req.flash('error', 'Support Worker not found');
+            return res.redirect('/care-provider/support-workers');
+        }
+
         supportWorker.supportWorkerInfo.assignedServiceUsers = serviceUserIds;
-        await supportWorker.save();
+        await supportWorker.save({ validateModifiedOnly: true });
         
         // Update service users with primary carer if not set
         if (serviceUserIds && serviceUserIds.length > 0) {

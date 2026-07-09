@@ -80,7 +80,10 @@ router.post('/login', async (req, res) => {
         user.lockUntil = undefined;
         user.lastLogin = new Date();
         user.lastLoginIp = req.ip;
-        await user.save();
+        // Only validate the fields actually being touched here (login bookkeeping).
+        // A full-document validate() would block login for any account with an
+        // unrelated pre-existing data gap (e.g. a missing careProviderId).
+        await user.save({ validateModifiedOnly: true });
         console.log('User login stats updated');
         
         req.session.user = {
@@ -177,7 +180,7 @@ router.post('/forgot-password', async (req, res) => {
         
         user.passwordResetToken = resetToken;
         user.passwordResetExpires = Date.now() + 3600000;
-        await user.save();
+        await user.save({ validateModifiedOnly: true });
         
         req.flash('success', 'Password reset instructions have been sent to your email');
         res.redirect('/login');

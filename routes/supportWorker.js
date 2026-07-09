@@ -1,11 +1,46 @@
 const express = require('express');
 const router = express.Router();
+const path = require('path');
+const fs = require('fs');
 const { isAuthenticated, isSupportWorker, canAccessServiceUser } = require('../middleware/auth');
 const User = require('../models/User');
 const Interaction = require('../models/Interaction');
 const Schedule = require('../models/Schedule');
 const Timesheet = require('../models/Timesheet');
 const moment = require('moment');
+
+const ALLOWED_PHOTO_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
+
+// Saves any uploaded interaction photos to disk and returns Interaction.attachments entries
+async function saveInteractionPhotos(req, interactionId) {
+    if (!req.files || !req.files.photos) return [];
+
+    const photos = Array.isArray(req.files.photos) ? req.files.photos : [req.files.photos];
+    const uploadDir = path.join(__dirname, '../uploads/interactions');
+    if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+    }
+
+    const attachments = [];
+    for (const photo of photos) {
+        if (!ALLOWED_PHOTO_TYPES.includes(photo.mimetype)) {
+            continue; // silently skip non-image files; form already restricts via accept="image/*"
+        }
+        const ext = path.extname(photo.name) || '';
+        const fileName = `${interactionId}_${Date.now()}_${Math.round(Math.random() * 1e9)}${ext}`;
+        await photo.mv(path.join(uploadDir, fileName));
+        attachments.push({
+            filename: fileName,
+            originalName: photo.name,
+            mimeType: photo.mimetype,
+            size: photo.size,
+            url: `/uploads/interactions/${fileName}`,
+            uploadedBy: req.session.user._id,
+            uploadedAt: new Date()
+        });
+    }
+    return attachments;
+}
 
 // Support Worker Dashboard
 router.get('/dashboard', isAuthenticated, isSupportWorker, async (req, res) => {
@@ -334,9 +369,11 @@ router.post('/interactions', isAuthenticated, isSupportWorker, async (req, res) 
             medications: medications ? JSON.parse(medications) : [],
             createdBy: req.session.user._id
         });
-        
+
+        interaction.attachments = await saveInteractionPhotos(req, interaction._id);
+
         await interaction.save();
-        
+
         req.flash('success', 'Visit logged successfully');
         res.redirect(`/support-worker/interactions/${interaction._id}`);
     } catch (error) {

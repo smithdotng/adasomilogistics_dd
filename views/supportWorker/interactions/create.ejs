@@ -95,6 +95,87 @@
             border-radius: 8px;
             margin-bottom: 30px;
         }
+
+        .photo-upload-box {
+            border: 2px dashed #d8dcf0;
+            border-radius: 10px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #f9faff;
+        }
+
+        .photo-upload-box:hover,
+        .photo-upload-box.dragover {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+
+        .photo-upload-box i {
+            font-size: 32px;
+            color: #667eea;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .photo-upload-box p {
+            margin: 0;
+            color: #555;
+        }
+
+        .photo-upload-box .hint {
+            font-size: 13px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .photo-upload-box input[type="file"] {
+            display: none;
+        }
+
+        .photo-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .photo-preview-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            aspect-ratio: 1 / 1;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .photo-preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .photo-preview-item .file-name {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            font-size: 11px;
+            padding: 3px 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .photo-count {
+            margin-top: 10px;
+            color: #667eea;
+            font-weight: 500;
+            font-size: 14px;
+        }
     </style>
 </head>
 
@@ -128,7 +209,7 @@
 
             <!-- Form -->
             <div class="form-card">
-                <form action="/support-worker/interactions" method="POST" id="interactionForm">
+                <form action="/support-worker/interactions" method="POST" id="interactionForm" enctype="multipart/form-data">
                     <input type="hidden" name="serviceUserId" value="<%= serviceUser._id %>">
 
                     <div class="form-group">
@@ -214,6 +295,19 @@
                         <textarea name="notes" class="form-control" rows="4" placeholder="Any additional observations or notes"></textarea>
                     </div>
 
+                    <h4 class="mt-4">Photos</h4>
+
+                    <div class="form-group">
+                        <label class="photo-upload-box" for="photoInput" id="photoDropZone">
+                            <i class="fas fa-camera"></i>
+                            <p>Click to add photos, or drag and drop</p>
+                            <span class="hint">JPG, PNG, WEBP or HEIC &middot; up to 5MB per photo</span>
+                            <input type="file" name="photos" id="photoInput" accept="image/*" multiple>
+                        </label>
+                        <div class="photo-count" id="photoCount" style="display:none;"></div>
+                        <div class="photo-preview-grid" id="photoPreviewGrid"></div>
+                    </div>
+
                     <div class="button-group">
                         <a href="/support-worker/service-users/<%= serviceUser._id %>" class="btn btn-secondary">Cancel</a>
                         <button type="submit" class="btn btn-primary">Log Visit</button>
@@ -245,6 +339,120 @@
             const endMinutes = String(endTime.getMinutes()).padStart(2, '0');
             
             document.querySelector('input[name="actualEnd"]').value = `${endYear}-${endMonth}-${endDay}T${endHours}:${endMinutes}`;
+
+            // ---- Photo upload: preview, remove, drag & drop ----
+            const photoInput = document.getElementById('photoInput');
+            const photoDropZone = document.getElementById('photoDropZone');
+            const previewGrid = document.getElementById('photoPreviewGrid');
+            const photoCount = document.getElementById('photoCount');
+            const MAX_PHOTO_SIZE = 5 * 1024 * 1024; // 5MB, matches server-side limit
+
+            let selectedFiles = [];
+
+            function refreshInputFiles() {
+                const dataTransfer = new DataTransfer();
+                selectedFiles.forEach(file => dataTransfer.items.add(file));
+                photoInput.files = dataTransfer.files;
+            }
+
+            function renderPreviews() {
+                previewGrid.innerHTML = '';
+
+                if (selectedFiles.length === 0) {
+                    photoCount.style.display = 'none';
+                    return;
+                }
+
+                photoCount.style.display = 'block';
+                photoCount.textContent = selectedFiles.length + ' photo' + (selectedFiles.length === 1 ? '' : 's') + ' selected';
+
+                selectedFiles.forEach((file, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'photo-preview-item';
+
+                    const img = document.createElement('img');
+                    img.alt = file.name;
+                    const reader = new FileReader();
+                    reader.onload = e => { img.src = e.target.result; };
+                    reader.readAsDataURL(file);
+
+                    const removeBtn = document.createElement('button');
+                    removeBtn.type = 'button';
+                    removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+                    removeBtn.title = 'Remove photo';
+                    removeBtn.style.cssText = 'position:absolute;top:4px;right:4px;width:22px;height:22px;border:none;border-radius:50%;background:rgba(0,0,0,0.6);color:white;cursor:pointer;font-size:11px;line-height:1;';
+                    removeBtn.addEventListener('click', function() {
+                        selectedFiles.splice(index, 1);
+                        refreshInputFiles();
+                        renderPreviews();
+                    });
+
+                    const nameTag = document.createElement('div');
+                    nameTag.className = 'file-name';
+                    nameTag.textContent = file.name + (file.size > MAX_PHOTO_SIZE ? ' (too large)' : '');
+                    if (file.size > MAX_PHOTO_SIZE) {
+                        nameTag.style.background = 'rgba(220,53,69,0.85)';
+                    }
+
+                    item.appendChild(img);
+                    item.appendChild(removeBtn);
+                    item.appendChild(nameTag);
+                    previewGrid.appendChild(item);
+                });
+            }
+
+            function addFiles(fileList) {
+                Array.from(fileList).forEach(file => {
+                    if (file.type.startsWith('image/')) {
+                        selectedFiles.push(file);
+                    }
+                });
+                refreshInputFiles();
+                renderPreviews();
+            }
+
+            if (photoInput) {
+                photoInput.addEventListener('click', function(e) {
+                    // Prevent the wrapping <label> from double-triggering the file dialog
+                    e.stopPropagation();
+                });
+
+                photoInput.addEventListener('change', function() {
+                    addFiles(photoInput.files);
+                });
+
+                ['dragenter', 'dragover'].forEach(evt => {
+                    photoDropZone.addEventListener(evt, function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        photoDropZone.classList.add('dragover');
+                    });
+                });
+
+                ['dragleave', 'drop'].forEach(evt => {
+                    photoDropZone.addEventListener(evt, function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        photoDropZone.classList.remove('dragover');
+                    });
+                });
+
+                photoDropZone.addEventListener('drop', function(e) {
+                    if (e.dataTransfer && e.dataTransfer.files) {
+                        addFiles(e.dataTransfer.files);
+                    }
+                });
+            }
+
+            // Warn (but don't block) if any selected photo exceeds the server-side limit
+            const form = document.getElementById('interactionForm');
+            form.addEventListener('submit', function(e) {
+                const oversized = selectedFiles.some(f => f.size > MAX_PHOTO_SIZE);
+                if (oversized) {
+                    e.preventDefault();
+                    alert('One or more photos are larger than 5MB. Please remove or replace them before submitting.');
+                }
+            });
         });
     </script>
 </body>

@@ -34,6 +34,7 @@ const createUploadDirectories = () => {
         'uploads/support-workers',
         'uploads/service-users',
         'uploads/documents',
+        'uploads/interactions',
         'uploads/temp'
     ];
     

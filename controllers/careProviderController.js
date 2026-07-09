@@ -589,3 +589,33 @@ exports.getInteractions = async (req, res) => {
         res.redirect('/care-provider/dashboard');
     }
 };
+
+// Single interaction (visit) detail
+exports.getInteractionDetails = async (req, res) => {
+    try {
+        const careProviderId = req.session.user._id;
+
+        const interaction = await Interaction.findOne({
+            _id: req.params.id,
+            careProviderId
+        })
+            .populate('serviceUserId', 'firstName lastName phone serviceUserInfo.nhsNumber serviceUserInfo.address')
+            .populate('supportWorkerId', 'firstName lastName supportWorkerInfo.employeeId');
+
+        if (!interaction) {
+            req.flash('error', 'Interaction not found');
+            return res.redirect('/care-provider/interactions');
+        }
+
+        res.render('careProvider/interactions/show', {
+            title: 'Visit Details',
+            user: req.session.user,
+            interaction,
+            moment: require('moment')
+        });
+    } catch (error) {
+        console.error('Error loading interaction details:', error);
+        req.flash('error', 'Error loading interaction details');
+        res.redirect('/care-provider/interactions');
+    }
+};

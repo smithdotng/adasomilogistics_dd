@@ -86,6 +86,7 @@ router.delete('/schedule/:id', isAuthenticated, isCareProvider, scheduleControll
 
 // Interactions
 router.get('/interactions', isAuthenticated, isCareProvider, careProviderController.getInteractions);
+router.get('/interactions/:id', isAuthenticated, isCareProvider, careProviderController.getInteractionDetails);
 
 // Reports
 router.get('/reports', isAuthenticated, isCareProvider, reportController.getReports);

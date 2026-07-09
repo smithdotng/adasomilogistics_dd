@@ -58,36 +58,39 @@
         .mobile-nav__container ul li a { display: block; padding: 15px 20px; color: white; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
 
         .page-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px 0; color: white; margin-bottom: 30px; }
-        .page-header h1 { margin: 0; font-size: 28px; }
+        .page-header .header-flex { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 15px; }
+        .page-header h1 { margin: 0; font-size: 26px; }
         .page-header .breadcrumb { background: transparent; padding: 0; margin: 10px 0 0; }
         .page-header .breadcrumb a { color: rgba(255,255,255,0.8); text-decoration: none; }
         .page-header .breadcrumb .active { color: white; }
-        .page-header .filtered-note { margin-top: 10px; font-size: 14px; opacity: 0.9; }
-        .page-header .filtered-note a { color: white; text-decoration: underline; }
+        .page-header .header-actions .btn { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.4); text-decoration: none; padding: 10px 20px; border-radius: 8px; display: inline-block; }
+        .page-header .header-actions .btn:hover { background: rgba(255,255,255,0.3); }
 
-        .filter-bar { background: white; border-radius: 10px; padding: 20px; margin-bottom: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; gap: 15px; flex-wrap: wrap; align-items: center; }
-        .filter-bar .filter-select { padding: 10px 35px 10px 15px; border: 2px solid #f0f0f0; border-radius: 8px; font-size: 15px; min-width: 180px; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236c6c6c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; }
+        .card { background: white; border-radius: 10px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .card h3 { margin: 0 0 20px; font-size: 18px; color: #333; padding-bottom: 12px; border-bottom: 1px solid #f0f0f0; }
 
-        .table-card { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; padding: 15px 10px; color: #333; font-weight: 600; border-bottom: 2px solid #f0f0f0; white-space: nowrap; }
-        td { padding: 15px 10px; border-bottom: 1px solid #f0f0f0; color: #666; }
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background: #f8f9fa; }
-
-        .status-badge { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; text-transform: capitalize; }
+        .status-badge { display: inline-block; padding: 5px 15px; border-radius: 20px; font-size: 13px; font-weight: 600; text-transform: capitalize; }
         .status-completed { background: #d4edda; color: #155724; }
         .status-scheduled { background: #cce5ff; color: #004085; }
         .status-in_progress { background: #fff3cd; color: #856404; }
         .status-cancelled, .status-missed { background: #f8d7da; color: #721c24; }
         .status-rescheduled { background: #e2e3e5; color: #383d41; }
 
-        .type-tag { font-size: 13px; color: #667eea; font-weight: 500; text-transform: capitalize; }
+        .detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+        .detail-item .label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: #999; margin-bottom: 4px; }
+        .detail-item .value { font-size: 15px; color: #1e1e1e; font-weight: 500; }
+        .detail-item .value a { color: #667eea; text-decoration: none; }
 
-        .empty-state { text-align: center; padding: 60px 20px; }
-        .empty-state i { font-size: 60px; color: #e0e0e0; margin-bottom: 20px; }
-        .empty-state h3 { color: #333; margin-bottom: 10px; }
-        .empty-state p { color: #999; margin-bottom: 20px; }
+        .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; }
+        .photo-grid-item { display: block; aspect-ratio: 1 / 1; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .photo-grid-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.2s ease; }
+        .photo-grid-item:hover img { transform: scale(1.05); }
+
+        .empty-state { color: #999; text-align: center; padding: 20px 0; }
+
+        .alert { padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; }
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-danger { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
 
         .site-footer { background: #333; color: white; padding: 30px 0; margin-top: 40px; }
 
@@ -185,17 +188,21 @@
     <!-- Page Header -->
     <section class="page-header">
         <div class="container">
-            <h1>Interactions</h1>
-            <div class="breadcrumb">
-                <a href="/care-provider/dashboard">Dashboard</a> /
-                <span class="active">Interactions</span>
-            </div>
-            <% if (filteredServiceUser) { %>
-                <div class="filtered-note">
-                    Showing visits for <strong><%= filteredServiceUser.firstName %> <%= filteredServiceUser.lastName %></strong>
-                    &nbsp;&middot;&nbsp; <a href="/care-provider/interactions">Clear filter</a>
+            <div class="header-flex">
+                <div>
+                    <h1><%= (interaction.type || '').replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase()) %></h1>
+                    <div class="breadcrumb">
+                        <a href="/care-provider/dashboard">Dashboard</a> /
+                        <a href="/care-provider/interactions">Interactions</a> /
+                        <span class="active">Visit Details</span>
+                    </div>
                 </div>
-            <% } %>
+                <div class="header-actions">
+                    <span class="status-badge status-<%= interaction.status %>">
+                        <%= (interaction.status || '').replace('_', ' ') %>
+                    </span>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -209,79 +216,148 @@
                 <div class="alert alert-danger"><i class="fas fa-exclamation-circle me-2"></i><%= error %></div>
             <% } %>
 
-            <!-- Filter Bar -->
-            <div class="filter-bar">
-                <select class="filter-select" name="status" onchange="window.location.href=this.value">
-                    <option value="/care-provider/interactions?status=all<%= filteredServiceUser ? '&serviceUserId=' + filteredServiceUser._id : '' %>" <%= filters.status === 'all' ? 'selected' : '' %>>All Statuses</option>
-                    <% statusOptions.forEach(s => { %>
-                        <option value="/care-provider/interactions?status=<%= s %><%= filteredServiceUser ? '&serviceUserId=' + filteredServiceUser._id : '' %>" <%= filters.status === s ? 'selected' : '' %>>
-                            <%= s.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase()) %>
-                        </option>
-                    <% }) %>
-                </select>
-
-                <select class="filter-select" name="type" onchange="window.location.href=this.value">
-                    <option value="/care-provider/interactions?type=all<%= filteredServiceUser ? '&serviceUserId=' + filteredServiceUser._id : '' %>" <%= filters.type === 'all' ? 'selected' : '' %>>All Visit Types</option>
-                    <% typeOptions.forEach(t => { %>
-                        <option value="/care-provider/interactions?type=<%= t %><%= filteredServiceUser ? '&serviceUserId=' + filteredServiceUser._id : '' %>" <%= filters.type === t ? 'selected' : '' %>>
-                            <%= t.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase()) %>
-                        </option>
-                    <% }) %>
-                </select>
-            </div>
-
-            <!-- Interactions Table -->
-            <div class="table-card">
-                <% if (interactions && interactions.length > 0) { %>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Date &amp; Time</th>
-                                <th>Service User</th>
-                                <th>Support Worker</th>
-                                <th>Type</th>
-                                <th>Status</th>
-                                <th>Duration</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% interactions.forEach(interaction => { %>
-                                <tr>
-                                    <td><%= interaction.scheduledStart ? moment(interaction.scheduledStart).format('DD/MM/YYYY HH:mm') : 'N/A' %></td>
-                                    <td><strong><%= interaction.serviceUserId ? interaction.serviceUserId.firstName + ' ' + interaction.serviceUserId.lastName : 'Unknown' %></strong></td>
-                                    <td><%= interaction.supportWorkerId ? interaction.supportWorkerId.firstName + ' ' + interaction.supportWorkerId.lastName : 'Unassigned' %></td>
-                                    <td><span class="type-tag"><%= (interaction.type || '').replace('_', ' ') %></span></td>
-                                    <td>
-                                        <span class="status-badge status-<%= interaction.status %>">
-                                            <%= (interaction.status || '').replace('_', ' ') %>
-                                        </span>
-                                    </td>
-                                    <td><%= interaction.duration ? interaction.duration + ' min' : 'N/A' %></td>
-                                    <td>
-                                        <a href="/care-provider/interactions/<%= interaction._id %>" title="View details" style="color: #667eea;">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            <% }) %>
-                        </tbody>
-                    </table>
-                <% } else { %>
-                    <!-- Empty State -->
-                    <div class="empty-state">
-                        <i class="fas fa-comments"></i>
-                        <h3>No Interactions Found</h3>
-                        <p>
-                            <% if (filteredServiceUser) { %>
-                                No visits logged yet for <%= filteredServiceUser.firstName %> <%= filteredServiceUser.lastName %>.
-                            <% } else { %>
-                                Visits logged by your support workers will appear here.
-                            <% } %>
-                        </p>
+            <!-- Visit Overview -->
+            <div class="card">
+                <h3>Visit Overview</h3>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="label">Title</div>
+                        <div class="value"><%= interaction.title || 'Not specified' %></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="label">Service User</div>
+                        <div class="value">
+                            <% if (interaction.serviceUserId) { %>
+                                <a href="/care-provider/service-users/<%= interaction.serviceUserId._id %>">
+                                    <%= interaction.serviceUserId.firstName %> <%= interaction.serviceUserId.lastName %>
+                                </a>
+                            <% } else { %>Unknown<% } %>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="label">Support Worker</div>
+                        <div class="value">
+                            <% if (interaction.supportWorkerId) { %>
+                                <a href="/care-provider/support-workers/<%= interaction.supportWorkerId._id %>">
+                                    <%= interaction.supportWorkerId.firstName %> <%= interaction.supportWorkerId.lastName %>
+                                </a>
+                            <% } else { %>Unassigned<% } %>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="label">Scheduled</div>
+                        <div class="value">
+                            <%= interaction.scheduledStart ? moment(interaction.scheduledStart).format('DD/MM/YYYY HH:mm') : 'N/A' %>
+                            <% if (interaction.scheduledEnd) { %> - <%= moment(interaction.scheduledEnd).format('HH:mm') %><% } %>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="label">Actual Time</div>
+                        <div class="value">
+                            <% if (interaction.actualStart) { %>
+                                <%= moment(interaction.actualStart).format('DD/MM/YYYY HH:mm') %>
+                                <% if (interaction.actualEnd) { %> - <%= moment(interaction.actualEnd).format('HH:mm') %><% } %>
+                            <% } else { %>Not recorded<% } %>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="label">Duration</div>
+                        <div class="value"><%= interaction.duration ? interaction.duration + ' minutes' : 'N/A' %></div>
+                    </div>
+                </div>
+                <% if (interaction.description) { %>
+                    <div class="mt-3">
+                        <div class="detail-item">
+                            <div class="label">Description</div>
+                            <div class="value" style="font-weight: 400;"><%= interaction.description %></div>
+                        </div>
                     </div>
                 <% } %>
             </div>
+
+            <!-- Wellbeing Observations -->
+            <% if (interaction.observations) { %>
+                <div class="card">
+                    <h3>Wellbeing Observations</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <div class="label">Mood</div>
+                            <div class="value" style="text-transform: capitalize;"><%= interaction.observations.wellbeing?.mood || 'Not recorded' %></div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Appetite</div>
+                            <div class="value" style="text-transform: capitalize;"><%= interaction.observations.wellbeing?.appetite || 'Not recorded' %></div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Energy</div>
+                            <div class="value" style="text-transform: capitalize;"><%= (interaction.observations.wellbeing?.energy || 'Not recorded').toString().replace('_', ' ') %></div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Pain Level</div>
+                            <div class="value"><%= interaction.observations.wellbeing?.pain || 0 %> / 10</div>
+                        </div>
+                    </div>
+                    <% if (interaction.observations.notes) { %>
+                        <div class="mt-3">
+                            <div class="detail-item">
+                                <div class="label">Notes</div>
+                                <div class="value" style="font-weight: 400;"><%= interaction.observations.notes %></div>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+            <% } %>
+
+            <!-- Photos -->
+            <% if (interaction.attachments && interaction.attachments.length > 0) { %>
+                <div class="card">
+                    <h3>Photos</h3>
+                    <div class="photo-grid">
+                        <% interaction.attachments.forEach(a => { %>
+                            <a href="<%= a.url %>" target="_blank" class="photo-grid-item">
+                                <img src="<%= a.url %>" alt="<%= a.originalName %>">
+                            </a>
+                        <% }) %>
+                    </div>
+                </div>
+            <% } %>
+
+            <!-- Activities -->
+            <% if (interaction.activities && interaction.activities.length > 0) { %>
+                <div class="card">
+                    <h3>Activities Completed</h3>
+                    <% interaction.activities.forEach(activity => { %>
+                        <div class="detail-item mb-2">
+                            <div class="value" style="font-weight: 400;">
+                                <i class="fas fa-<%= activity.completed ? 'check-circle text-success' : 'circle text-muted' %> me-2"></i>
+                                <%= activity.name %>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } %>
+
+            <!-- Medications -->
+            <% if (interaction.medications && interaction.medications.length > 0) { %>
+                <div class="card">
+                    <h3>Medications Administered</h3>
+                    <% interaction.medications.forEach(med => { %>
+                        <div class="detail-item mb-2">
+                            <div class="value" style="font-weight: 400;">
+                                <%= med.name %> &middot; <%= med.dosage %>
+                                <% if (med.timeGiven) { %> &middot; <%= moment(med.timeGiven).format('HH:mm') %><% } %>
+                                <% if (med.refused) { %> <span class="status-badge status-cancelled">Refused</span><% } %>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } %>
+
+            <% if (!interaction.observations && (!interaction.activities || interaction.activities.length === 0) && (!interaction.medications || interaction.medications.length === 0) && (!interaction.attachments || interaction.attachments.length === 0)) { %>
+                <div class="card">
+                    <div class="empty-state">No further details were recorded for this visit.</div>
+                </div>
+            <% } %>
         </div>
     </section>
 

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %> || Care Management System</title>
+
+    <!-- favicons Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicons/favicon-16x16.png" />
+    <link rel="manifest" href="/assets/images/favicons/site.webmanifest" />
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS Links -->
+    <link rel="stylesheet" href="/assets/vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/sominx-icons/style.css">
+
+    <!-- Custom Styles -->
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Jost', sans-serif; background: #f5f7fb; }
+
+        .main-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 15px 0; position: relative; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .main-menu-wrapper { display: flex; justify-content: space-between; align-items: center; }
+        .main-menu-wrapper__left { display: flex; align-items: center; gap: 30px; }
+        .main-menu-wrapper__logo img { height: 40px; }
+        .main-menu__list { display: flex; list-style: none; margin: 0; padding: 0; gap: 20px; }
+        .main-menu__list > li { position: relative; }
+        .main-menu__list > li > a { color: white; text-decoration: none; font-size: 15px; font-weight: 500; padding: 5px 0; }
+        .main-menu__list .dropdown ul { position: absolute; top: 100%; left: 0; background: white; min-width: 200px; border-radius: 5px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); display: none; padding: 10px 0; }
+        .main-menu__list .dropdown:hover ul { display: block; }
+        .main-menu__list .dropdown ul li { padding: 8px 20px; }
+        .main-menu__list .dropdown ul li a { color: #333; text-decoration: none; }
+        .main-menu-wrapper__right { display: flex; align-items: center; gap: 20px; }
+        .main-menu-wrapper__call { display: flex; align-items: center; gap: 10px; color: white; }
+        .care-provider-badge { background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 20px; font-size: 12px; }
+        .subscription-badge { background: #28a745; padding: 4px 10px; border-radius: 20px; font-size: 12px; margin-left: 5px; }
+        .main-menu-wrapper__logout { color: white; font-size: 18px; }
+        .mobile-nav__toggler { display: none; color: white; font-size: 24px; cursor: pointer; background: rgba(255,255,255,0.2); width: 40px; height: 40px; border-radius: 50%; align-items: center; justify-content: center; }
+        .mobile-nav__wrapper { position: fixed; top: 0; left: -100%; width: 300px; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); z-index: 9999; transition: left 0.3s ease; box-shadow: 2px 0 10px rgba(0,0,0,0.2); overflow-y: auto; }
+        .mobile-nav__wrapper.open { left: 0; }
+        .mobile-nav__overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9998; display: none; }
+        .mobile-nav__overlay.open { display: block; }
+        .mobile-nav__content { padding: 30px 20px; }
+        .mobile-nav__close { position: absolute; top: 20px; right: 20px; color: white; font-size: 24px; cursor: pointer; width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .logo-box { text-align: center; margin: 40px 0 30px; }
+        .logo-box img { max-width: 150px; }
+        .mobile-nav__container ul { list-style: none; padding: 0; margin: 0; }
+        .mobile-nav__container ul li a { display: block; padding: 15px 20px; color: white; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
+
+        .page-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px 0; color: white; margin-bottom: 30px; }
+        .page-header h1 { margin: 0; font-size: 28px; }
+        .page-header .breadcrumb { background: transparent; padding: 0; margin: 10px 0 0; }
+        .page-header .breadcrumb a { color: rgba(255,255,255,0.8); text-decoration: none; }
+        .page-header .breadcrumb .active { color: white; }
+        .page-header .filtered-note { margin-top: 10px; font-size: 14px; opacity: 0.9; }
+        .page-header .filtered-note a { color: white; text-decoration: underline; }
+
+        .filter-bar { background: white; border-radius: 10px; padding: 20px; margin-bottom: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; gap: 15px; flex-wrap: wrap; align-items: center; }
+        .filter-bar .filter-select { padding: 10px 35px 10px 15px; border: 2px solid #f0f0f0; border-radius: 8px; font-size: 15px; min-width: 180px; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236c6c6c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; }
+
+        .table-card { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 15px 10px; color: #333; font-weight: 600; border-bottom: 2px solid #f0f0f0; white-space: nowrap; }
+        td { padding: 15px 10px; border-bottom: 1px solid #f0f0f0; color: #666; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #f8f9fa; }
+
+        .status-badge { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; text-transform: capitalize; }
+        .status-completed { background: #d4edda; color: #155724; }
+        .status-scheduled { background: #cce5ff; color: #004085; }
+        .status-in_progress { background: #fff3cd; color: #856404; }
+        .status-cancelled, .status-missed { background: #f8d7da; color: #721c24; }
+        .status-rescheduled { background: #e2e3e5; color: #383d41; }
+
+        .type-tag { font-size: 13px; color: #667eea; font-weight: 500; text-transform: capitalize; }
+
+        .empty-state { text-align: center; padding: 60px 20px; }
+        .empty-state i { font-size: 60px; color: #e0e0e0; margin-bottom: 20px; }
+        .empty-state h3 { color: #333; margin-bottom: 10px; }
+        .empty-state p { color: #999; margin-bottom: 20px; }
+
+        .site-footer { background: #333; color: white; padding: 30px 0; margin-top: 40px; }
+
+        @media (max-width: 991px) {
+            .main-menu__list { display: none; }
+            .main-menu-wrapper__right { display: none; }
+            .mobile-nav__toggler { display: flex; }
+            .main-menu-wrapper__left { width: 100%; justify-content: space-between; }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container">
+            <div class="main-menu-wrapper">
+                <div class="main-menu-wrapper__left">
+                    <div class="main-menu-wrapper__logo">
+                        <a href="/care-provider/dashboard">
+                            <img src="/assets/images/resources/care-logo-white.png" alt="Care System">
+                        </a>
+                    </div>
+                    <div class="main-menu-wrapper__main-menu">
+                        <a href="#" class="mobile-nav__toggler" id="mobileNavToggler">
+                            <i class="fa fa-bars"></i>
+                        </a>
+                        <ul class="main-menu__list">
+                            <li><a href="/care-provider/dashboard">Dashboard</a></li>
+                            <li class="dropdown">
+                                <a href="#">Support Workers</a>
+                                <ul>
+                                    <li><a href="/care-provider/support-workers">All Support Workers</a></li>
+                                    <li><a href="/care-provider/support-workers/create">Add Support Worker</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#">Service Users</a>
+                                <ul>
+                                    <li><a href="/care-provider/service-users">All Service Users</a></li>
+                                    <li><a href="/care-provider/service-users/create">Add Service User</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="/care-provider/schedule">Schedule</a></li>
+                            <li><a href="/care-provider/interactions" class="current">Interactions</a></li>
+                            <li><a href="/care-provider/reports">Reports</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="main-menu-wrapper__right">
+                    <div class="main-menu-wrapper__call">
+                        <div class="main-menu-wrapper__call-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="main-menu-wrapper__call-number">
+                            <span class="care-provider-badge"><%= user.role.replace('_', ' ') %></span>
+                            <span class="subscription-badge">
+                                <%= user.careProviderInfo.subscription.plan %>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="main-menu-wrapper__search-box">
+                        <a href="/logout" class="main-menu-wrapper__logout" onclick="return confirm('Logout?')">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-nav__overlay" id="mobileNavOverlay"></div>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-nav__wrapper" id="mobileNav">
+        <div class="mobile-nav__content">
+            <span class="mobile-nav__close" id="mobileNavClose"><i class="fa fa-times"></i></span>
+            <div class="logo-box">
+                <img src="/assets/images/resources/care-logo-white.png" alt="Care System">
+            </div>
+            <div class="mobile-nav__container">
+                <ul>
+                    <li><a href="/care-provider/dashboard">Dashboard</a></li>
+                    <li><a href="/care-provider/support-workers">All Support Workers</a></li>
+                    <li><a href="/care-provider/service-users">All Service Users</a></li>
+                    <li><a href="/care-provider/schedule">Schedule</a></li>
+                    <li><a href="/care-provider/interactions">Interactions</a></li>
+                    <li><a href="/care-provider/reports">Reports</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Interactions</h1>
+            <div class="breadcrumb">
+                <a href="/care-provider/dashboard">Dashboard</a> /
+                <span class="active">Interactions</span>
+            </div>
+            <% if (filteredServiceUser) { %>
+                <div class="filtered-note">
+                    Showing visits for <strong><%= filteredServiceUser.firstName %> <%= filteredServiceUser.lastName %></strong>
+                    &nbsp;&middot;&nbsp; <a href="/care-provider/interactions">Clear filter</a>
+                </div>
+            <% } %>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="dashboard-content">
+        <div class="container">
+            <% if (typeof success !== 'undefined' && success && success.length > 0) { %>
+                <div class="alert alert-success"><i class="fas fa-check-circle me-2"></i><%= success %></div>
+            <% } %>
+            <% if (typeof error !== 'undefined' && error && error.length > 0) { %>
+                <div class="alert alert-danger"><i class="fas fa-exclamation-circle me-2"></i><%= error %></div>
+            <% } %>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <select class="filter-select" name="status" onchange="window.location.href=this.value">
+                    <option value="/care-provider/interactions?status=all<%= filteredServiceUser ? '&serviceUserId=' + filteredServiceUser._id : '' %>" <%= filters.status === 'all' ? 'selected' : '' %>>All Statuses</option>
+                    <% statusOptions.forEach(s => { %>
+                        <option value="/care-provider/interactions?status=<%= s %><%= filteredServiceUser ? '&serviceUserId=' + filteredServiceUser._id : '' %>" <%= filters.status === s ? 'selected' : '' %>>
+                            <%= s.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase()) %>
+                        </option>
+                    <% }) %>
+                </select>
+
+                <select class="filter-select" name="type" onchange="window.location.href=this.value">
+                    <option value="/care-provider/interactions?type=all<%= filteredServiceUser ? '&serviceUserId=' + filteredServiceUser._id : '' %>" <%= filters.type === 'all' ? 'selected' : '' %>>All Visit Types</option>
+                    <% typeOptions.forEach(t => { %>
+                        <option value="/care-provider/interactions?type=<%= t %><%= filteredServiceUser ? '&serviceUserId=' + filteredServiceUser._id : '' %>" <%= filters.type === t ? 'selected' : '' %>>
+                            <%= t.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase()) %>
+                        </option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <!-- Interactions Table -->
+            <div class="table-card">
+                <% if (interactions && interactions.length > 0) { %>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date &amp; Time</th>
+                                <th>Service User</th>
+                                <th>Support Worker</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% interactions.forEach(interaction => { %>
+                                <tr>
+                                    <td><%= interaction.scheduledStart ? moment(interaction.scheduledStart).format('DD/MM/YYYY HH:mm') : 'N/A' %></td>
+                                    <td><strong><%= interaction.serviceUserId ? interaction.serviceUserId.firstName + ' ' + interaction.serviceUserId.lastName : 'Unknown' %></strong></td>
+                                    <td><%= interaction.supportWorkerId ? interaction.supportWorkerId.firstName + ' ' + interaction.supportWorkerId.lastName : 'Unassigned' %></td>
+                                    <td><span class="type-tag"><%= (interaction.type || '').replace('_', ' ') %></span></td>
+                                    <td>
+                                        <span class="status-badge status-<%= interaction.status %>">
+                                            <%= (interaction.status || '').replace('_', ' ') %>
+                                        </span>
+                                    </td>
+                                    <td><%= interaction.duration ? interaction.duration + ' min' : 'N/A' %></td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                <% } else { %>
+                    <!-- Empty State -->
+                    <div class="empty-state">
+                        <i class="fas fa-comments"></i>
+                        <h3>No Interactions Found</h3>
+                        <p>
+                            <% if (filteredServiceUser) { %>
+                                No visits logged yet for <%= filteredServiceUser.firstName %> <%= filteredServiceUser.lastName %>.
+                            <% } else { %>
+                                Visits logged by your support workers will appear here.
+                            <% } %>
+                        </p>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container text-center">
+            <p>&copy; <%= new Date().getFullYear() %> Care System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileNav = document.getElementById('mobileNav');
+            const mobileToggler = document.getElementById('mobileNavToggler');
+            const mobileOverlay = document.getElementById('mobileNavOverlay');
+            const mobileClose = document.getElementById('mobileNavClose');
+
+            function toggleMenu(show) {
+                if (show) {
+                    mobileNav.classList.add('open');
+                    mobileOverlay.classList.add('open');
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    mobileNav.classList.remove('open');
+                    mobileOverlay.classList.remove('open');
+                    document.body.style.overflow = '';
+                }
+            }
+
+            if (mobileToggler) mobileToggler.addEventListener('click', function(e) { e.preventDefault(); toggleMenu(true); });
+            if (mobileOverlay) mobileOverlay.addEventListener('click', function() { toggleMenu(false); });
+            if (mobileClose) mobileClose.addEventListener('click', function(e) { e.preventDefault(); toggleMenu(false); });
+
+            setTimeout(() => {
+                document.querySelectorAll('.alert').forEach(alert => { alert.style.display = 'none'; });
+            }, 5000);
+        });
+    </script>
+</body>
+</html>

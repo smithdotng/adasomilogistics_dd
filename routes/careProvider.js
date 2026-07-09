@@ -84,6 +84,9 @@ router.get('/schedule/:id', isAuthenticated, isCareProvider, scheduleController.
 router.put('/schedule/:id', isAuthenticated, isCareProvider, scheduleController.updateSchedule);
 router.delete('/schedule/:id', isAuthenticated, isCareProvider, scheduleController.deleteSchedule);
 
+// Interactions
+router.get('/interactions', isAuthenticated, isCareProvider, careProviderController.getInteractions);
+
 // Reports
 router.get('/reports', isAuthenticated, isCareProvider, reportController.getReports);
 router.get('/reports/export/:type', isAuthenticated, isCareProvider, reportController.exportReport);

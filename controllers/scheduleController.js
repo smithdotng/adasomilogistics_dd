@@ -11,12 +11,15 @@ exports.getSchedule = async (req, res) => {
             ? req.session.user._id 
             : req.session.user.careProviderId;
         
-        const { view, date, supportWorker } = req.query;
+        const { view, date, supportWorker, serviceUserId } = req.query;
         const selectedDate = date ? new Date(date) : new Date();
-        
+
         let query = { careProviderId, isActive: true };
         if (supportWorker && supportWorker !== 'all') {
             query.supportWorkerId = supportWorker;
+        }
+        if (serviceUserId) {
+            query.serviceUserId = serviceUserId;
         }
         
         const schedules = await Schedule.find(query)

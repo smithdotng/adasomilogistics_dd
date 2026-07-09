@@ -1075,7 +1075,7 @@
             <div class="content-card">
                 <h3>
                     Recent Interactions
-                    <a href="/care-provider/interactions?service user=<%= serviceUser._id %>" class="view-all">View All</a>
+                    <a href="/care-provider/interactions?serviceUserId=<%= serviceUser._id %>" class="view-all">View All</a>
                 </h3>
                 <% if (recentInteractions && recentInteractions.length > 0) { %>
                     <% recentInteractions.slice(0, 5).forEach(interaction => { %>
@@ -1104,7 +1104,7 @@
             <div class="content-card">
                 <h3>
                     Upcoming Schedule
-                    <a href="/care-provider/schedule?service user=<%= serviceUser._id %>" class="view-all">View Full Schedule</a>
+                    <a href="/care-provider/schedule?serviceUserId=<%= serviceUser._id %>" class="view-all">View Full Schedule</a>
                 </h3>
                 <% if (upcomingSchedule && upcomingSchedule.length > 0) { %>
                     <% upcomingSchedule.slice(0, 5).forEach(schedule => { %>

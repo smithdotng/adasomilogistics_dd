@@ -125,7 +125,7 @@ exports.getOperators = async (req, res) => {
         
         let sortOption = { createdAt: -1 };
         if (sort === 'name') sortOption = { firstName: 1 };
-        if (sort === 'service users') sortOption = { 'supportWorkerInfo.assignedServiceUsers': -1 };
+        if (sort === 'serviceUsers') sortOption = { 'supportWorkerInfo.assignedServiceUsers': -1 };
         
         const supportWorkers = await User.find(query)
             .populate('supportWorkerInfo.assignedServiceUsers', 'firstName lastName')
@@ -545,5 +545,47 @@ exports.getOperatorDashboard = async (req, res) => {
         console.error('Error loading support worker dashboard:', error);
         req.flash('error', 'Error loading dashboard');
         res.redirect('/');
+    }
+};
+
+// All Interactions (visits) across the care provider's team
+exports.getInteractions = async (req, res) => {
+    try {
+        const careProviderId = req.session.user._id;
+        const { status, type, serviceUserId, supportWorkerId } = req.query;
+
+        const query = { careProviderId };
+        if (status && status !== 'all') query.status = status;
+        if (type && type !== 'all') query.type = type;
+        if (serviceUserId) query.serviceUserId = serviceUserId;
+        if (supportWorkerId) query.supportWorkerId = supportWorkerId;
+
+        const interactions = await Interaction.find(query)
+            .populate('serviceUserId', 'firstName lastName')
+            .populate('supportWorkerId', 'firstName lastName')
+            .sort('-scheduledStart')
+            .limit(100);
+
+        // If filtering to one service user, surface their name for the page header
+        let filteredServiceUser = null;
+        if (serviceUserId) {
+            filteredServiceUser = await User.findOne({ _id: serviceUserId, careProviderId })
+                .select('firstName lastName');
+        }
+
+        res.render('careProvider/interactions/index', {
+            title: 'Interactions',
+            user: req.session.user,
+            interactions,
+            filteredServiceUser,
+            filters: { status: status || 'all', type: type || 'all' },
+            statusOptions: ['scheduled', 'in_progress', 'completed', 'cancelled', 'missed', 'rescheduled'],
+            typeOptions: ['home_visit', 'phone_call', 'video_call', 'medication_administration', 'personal_care', 'meal_preparation', 'companionship', 'appointment_escort', 'emergency', 'assessment', 'review'],
+            moment: require('moment')
+        });
+    } catch (error) {
+        console.error('Error loading interactions:', error);
+        req.flash('error', 'Error loading interactions');
+        res.redirect('/care-provider/dashboard');
     }
 };

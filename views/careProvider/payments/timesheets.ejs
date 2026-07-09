@@ -616,11 +616,11 @@
             <!-- Filter Bar -->
             <div class="filter-bar">
                 <div class="filter-left">
-                    <select class="filter-select" name="support worker" onchange="window.location.href=this.value">
-                        <option value="/care-provider/payments/timesheets?support worker=all">All Support Workers</option>
+                    <select class="filter-select" name="supportWorker" onchange="window.location.href=this.value">
+                        <option value="/care-provider/payments/timesheets?supportWorker=all">All Support Workers</option>
                         <% if (supportWorkers && supportWorkers.length > 0) { %>
                             <% supportWorkers.forEach(op => { %>
-                                <option value="/care-provider/payments/timesheets?support worker=<%= op._id %>" 
+                                <option value="/care-provider/payments/timesheets?supportWorker=<%= op._id %>" 
                                     <%= filters && filters.supportWorker === op._id.toString() ? 'selected' : '' %>>
                                     <%= op.firstName %> <%= op.lastName %>
                                 </option>

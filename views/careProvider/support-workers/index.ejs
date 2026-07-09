@@ -656,7 +656,7 @@
                 <select class="filter-select" name="sort" onchange="window.location.href=this.value">
                     <option value="/care-provider/support-workers?sort=newest">Newest First</option>
                     <option value="/care-provider/support-workers?sort=name" <%= filters.sort === 'name' ? 'selected' : '' %>>Name A-Z</option>
-                    <option value="/care-provider/support-workers?sort=service users" <%= filters.sort === 'service users' ? 'selected' : '' %>>Most Service Users</option>
+                    <option value="/care-provider/support-workers?sort=serviceUsers" <%= filters.sort === 'serviceUsers' ? 'selected' : '' %>>Most Service Users</option>
                 </select>
 
                 <a href="/care-provider/support-workers/create" class="btn-add">

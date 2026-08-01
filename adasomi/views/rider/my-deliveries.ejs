@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('../partials/head', { title: 'My Deliveries' }) %>
+</head>
+<body>
+<%- include('../partials/header') %>
+<%- include('../partials/flash') %>
+
+<main class="page-shell">
+    <div class="container">
+        <p class="section-title mb-1">History</p>
+        <h2 class="mb-4">My Deliveries</h2>
+
+        <div class="card">
+            <div class="card-body">
+                <% if (!orders.length) { %>
+                    <div class="empty-state"><i class="fa-solid fa-motorcycle"></i><p>You haven't taken any deliveries yet.</p></div>
+                <% } else { %>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead><tr><th>Order</th><th>Route</th><th>Payout</th><th>Status</th><th></th></tr></thead>
+                        <tbody>
+                        <% orders.forEach(function(o) { %>
+                            <tr>
+                                <td><%= o.orderNumber %></td>
+                                <td class="small"><%= o.pickupAddress %> → <%= o.dropoffAddress %></td>
+                                <td>₦<%= o.pricing.riderPayout.toLocaleString() %></td>
+                                <td><span class="badge-pill status-<%= o.status %>"><%= o.status.replace(/_/g,' ') %></span></td>
+                                <td><a href="/rider/orders/<%= o._id %>" class="small">View</a></td>
+                            </tr>
+                        <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</main>
+<%- include('../partials/footer') %>
+</body>
+</html>

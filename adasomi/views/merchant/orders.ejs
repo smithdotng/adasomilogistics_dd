@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('../partials/head', { title: 'Orders' }) %>
+</head>
+<body>
+<%- include('../partials/header') %>
+<%- include('../partials/flash') %>
+
+<main class="page-shell">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <h2 class="mb-0">Orders</h2>
+            <a href="/merchant/orders/new" class="btn btn-peach"><i class="fa-solid fa-plus me-2"></i>Dispatch New Order</a>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <% if (!orders.length) { %>
+                    <div class="empty-state"><i class="fa-solid fa-box-open"></i><p>No orders yet.</p></div>
+                <% } else { %>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead><tr><th>Order</th><th>Recipient</th><th>Distance</th><th>Total</th><th>Status</th><th>Created</th><th></th></tr></thead>
+                        <tbody>
+                        <% orders.forEach(function(o) { %>
+                            <tr>
+                                <td><%= o.orderNumber %></td>
+                                <td><%= o.recipientName %></td>
+                                <td><%= o.distanceKm %> km</td>
+                                <td>₦<%= o.pricing.totalValue.toLocaleString() %></td>
+                                <td><span class="badge-pill status-<%= o.status %>"><%= o.status.replace(/_/g,' ') %></span></td>
+                                <td><%= moment(o.createdAt).format('MMM D, h:mm A') %></td>
+                                <td><a href="/merchant/orders/<%= o._id %>" class="small">View</a></td>
+                            </tr>
+                        <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</main>
+<%- include('../partials/footer') %>
+</body>
+</html>

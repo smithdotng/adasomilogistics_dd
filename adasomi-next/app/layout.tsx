@@ -1,16 +1,54 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
+import ServiceWorkerRegister from './ServiceWorkerRegister';
+
+const SITE_URL = 'https://deliveries.adasomilogistics.com';
+const SITE_TITLE = 'Adasomi Logistics Dispatch & Delivery Platform';
+const SITE_DESCRIPTION =
+    'Adasomi Logistics Dispatch & Delivery Platform - multi-party logistics for merchants, riders and public users.';
 
 export const metadata: Metadata = {
+    metadataBase: new URL(SITE_URL),
     title: {
-        default: 'Adasomi Logistics Dispatch & Delivery Platform',
+        default: SITE_TITLE,
         template: '%s | Adasomi'
     },
-    description:
-        'Adasomi Logistics Dispatch & Delivery Platform - multi-party logistics for merchants, riders and public users.',
+    description: SITE_DESCRIPTION,
+    manifest: '/manifest.webmanifest',
     icons: {
-        icon: '/images/logo.png'
+        icon: '/images/logo.png',
+        apple: '/icons/icon-192.png'
+    },
+    appleWebApp: {
+        capable: true,
+        statusBarStyle: 'default',
+        title: 'Adasomi'
+    },
+    openGraph: {
+        type: 'website',
+        url: SITE_URL,
+        siteName: 'Adasomi Logistics',
+        title: SITE_TITLE,
+        description: SITE_DESCRIPTION,
+        images: [
+            {
+                url: '/images/og-image.jpg',
+                width: 1200,
+                height: 1200,
+                alt: 'Adasomi Logistics - fast and reliable'
+            }
+        ]
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: SITE_TITLE,
+        description: SITE_DESCRIPTION,
+        images: ['/images/og-image.jpg']
     }
+};
+
+export const viewport: Viewport = {
+    themeColor: '#2f7dd8'
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -29,6 +67,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <body>
                 {children}
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js" async />
+                <ServiceWorkerRegister />
             </body>
         </html>
     );

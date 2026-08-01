@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('../partials/head', { title: 'Delivery ' + order.orderNumber, includeMap: true }) %>
+</head>
+<body>
+<%- include('../partials/header') %>
+<%- include('../partials/flash') %>
+
+<main class="page-shell">
+    <div class="container">
+        <p class="section-title mb-1">Delivery <%= order.orderNumber %></p>
+        <h2 class="mb-4"><span class="badge-pill status-<%= order.status %>"><%= order.status.replace(/_/g,' ') %></span></h2>
+
+        <div class="row g-4">
+            <div class="col-lg-7">
+                <div class="card mb-4">
+                    <div class="card-header">Route</div>
+                    <div class="card-body">
+                        <div id="tracking-map" class="tracking-map"
+                             data-order-id="<%= order._id %>"
+                             data-pickup='<%- JSON.stringify({lat: order.pickupLat, lng: order.pickupLng}) %>'
+                             data-dropoff='<%- JSON.stringify({lat: order.dropoffLat, lng: order.dropoffLng}) %>'></div>
+                        <div class="row mt-3 text-muted small">
+                            <div class="col-6"><i class="fa-solid fa-circle text-success me-1"></i>Pickup: <%= order.pickupAddress %></div>
+                            <div class="col-6"><i class="fa-solid fa-circle text-danger me-1"></i>Drop-off: <%= order.dropoffAddress %></div>
+                        </div>
+
+                        <% if (order.status === 'assigned' || order.status === 'picked_up') { %>
+                        <div class="mt-3">
+                            <button class="btn btn-outline-peach btn-sm" id="simBtn">
+                                <i class="fa-solid fa-location-crosshairs me-1"></i>Simulate GPS movement to <%= order.status === 'assigned' ? 'pickup' : 'drop-off' %>
+                            </button>
+                            <div class="progress mt-2" style="height:6px;">
+                                <div id="sim-progress" class="progress-bar" style="width:0%; background: var(--thm-gradient);"></div>
+                            </div>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="card mb-4">
+                    <div class="card-header">Recipient</div>
+                    <div class="card-body">
+                        <p class="mb-1"><strong>Name:</strong> <%= order.recipientName %></p>
+                        <p class="mb-1"><strong>Phone:</strong> <%= order.recipientPhone %></p>
+                        <p class="mb-0"><strong>Items:</strong> <%= order.itemsDescription || '—' %></p>
+                    </div>
+                </div>
+
+                <% if (order.status === 'assigned') { %>
+                <div class="card mb-4">
+                    <div class="card-header">Confirm Pickup</div>
+                    <div class="card-body">
+                        <p class="text-muted small">Ask the sender for the 4-digit pickup OTP.</p>
+                        <form action="/rider/orders/<%= order._id %>/verify-pickup" method="POST" class="d-flex gap-2">
+                            <input type="text" class="form-control" name="code" maxlength="4" required placeholder="0000">
+                            <button class="btn btn-peach">Verify</button>
+                        </form>
+                    </div>
+                </div>
+                <% } %>
+
+                <% if (order.status === 'picked_up') { %>
+                <div class="card mb-4">
+                    <div class="card-header">Confirm Delivery</div>
+                    <div class="card-body">
+                        <p class="text-muted small">Ask the recipient for the 4-digit delivery PIN. This releases your payout instantly.</p>
+                        <form action="/rider/orders/<%= order._id %>/verify-delivery" method="POST" class="d-flex gap-2">
+                            <input type="text" class="form-control" name="pin" maxlength="4" required placeholder="0000">
+                            <button class="btn btn-peach">Complete Delivery</button>
+                        </form>
+                    </div>
+                </div>
+                <% } %>
+
+                <% if (order.status === 'completed') { %>
+                <div class="card">
+                    <div class="card-header">Payout</div>
+                    <div class="card-body text-center">
+                        <div class="stat-value mb-1">₦<%= order.pricing.riderPayout.toLocaleString() %></div>
+                        <p class="text-muted small mb-0">Credited to your wallet</p>
+                    </div>
+                </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</main>
+<%- include('../partials/footer', { includeMap: true }) %>
+<script>
+    var simBtn = document.getElementById('simBtn');
+    if (simBtn) {
+        simBtn.addEventListener('click', function () {
+            simBtn.disabled = true;
+            var status = '<%= order.status %>';
+            var from = status === 'assigned'
+                ? { lat: <%= order.pickupLat %> - 0.01, lng: <%= order.pickupLng %> - 0.01 }
+                : { lat: <%= order.pickupLat %>, lng: <%= order.pickupLng %> };
+            var to = status === 'assigned'
+                ? { lat: <%= order.pickupLat %>, lng: <%= order.pickupLng %> }
+                : { lat: <%= order.dropoffLat %>, lng: <%= order.dropoffLng %> };
+            startRiderSimulation('<%= order._id %>', from.lat, from.lng, to.lat, to.lng);
+        });
+    }
+</script>
+</body>
+</html>

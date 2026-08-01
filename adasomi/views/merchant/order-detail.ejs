@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('../partials/head', { title: 'Order ' + order.orderNumber, includeMap: true }) %>
+</head>
+<body>
+<%- include('../partials/header') %>
+<%- include('../partials/flash') %>
+
+<main class="page-shell">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-2">
+            <div>
+                <p class="section-title mb-1">Order <%= order.orderNumber %></p>
+                <h2 class="mb-0">
+                    <span id="live-status-badge" class="badge-pill status-<%= order.status %>"><%= order.status.replace(/_/g,' ') %></span>
+                </h2>
+            </div>
+            <div class="d-flex gap-2">
+                <% if (order.status === 'awaiting_payment') { %>
+                <form action="/merchant/orders/<%= order._id %>/fund-escrow" method="POST">
+                    <button class="btn btn-peach"><i class="fa-solid fa-lock me-2"></i>Fund Escrow (₦<%= order.pricing.totalValue.toLocaleString() %>)</button>
+                </form>
+                <% } %>
+                <% if (['awaiting_payment','awaiting_assignment','assigned'].includes(order.status)) { %>
+                <form action="/merchant/orders/<%= order._id %>/cancel" method="POST" onsubmit="return confirm('Cancel this order?');">
+                    <button class="btn btn-danger-soft">Cancel Order</button>
+                </form>
+                <% } %>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-7">
+                <div class="card mb-4">
+                    <div class="card-header">Live Tracking</div>
+                    <div class="card-body">
+                        <div id="tracking-map" class="tracking-map"
+                             data-order-id="<%= order._id %>"
+                             data-pickup='<%- JSON.stringify({lat: order.pickupLat, lng: order.pickupLng}) %>'
+                             data-dropoff='<%- JSON.stringify({lat: order.dropoffLat, lng: order.dropoffLng}) %>'></div>
+                        <div class="row mt-3 text-muted small">
+                            <div class="col-6"><i class="fa-solid fa-circle text-success me-1"></i>Pickup: <%= order.pickupAddress %></div>
+                            <div class="col-6"><i class="fa-solid fa-circle text-danger me-1"></i>Drop-off: <%= order.dropoffAddress %></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">Timeline</div>
+                    <div class="card-body">
+                        <ul class="timeline">
+                        <% order.timeline.slice().reverse().forEach(function(t) { %>
+                            <li>
+                                <strong><%= t.status.replace(/_/g,' ') %></strong>
+                                <div class="timeline-time"><%= moment(t.at).format('MMM D, h:mm:ss A') %></div>
+                                <div class="text-muted small"><%= t.note %></div>
+                            </li>
+                        <% }) %>
+                        </ul>
+                    </div>
+                </div>
+
+                <% if (!['completed','cancelled'].includes(order.status)) { %>
+                <div class="card">
+                    <div class="card-header">Raise a Dispute</div>
+                    <div class="card-body">
+                        <form action="/merchant/orders/<%= order._id %>/dispute" method="POST">
+                            <textarea class="form-control mb-2" name="reason" rows="2" placeholder="Describe the issue…" required></textarea>
+                            <button class="btn btn-danger-soft" type="submit">Submit to Adasomi Support</button>
+                        </form>
+                    </div>
+                </div>
+                <% } %>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="card mb-4">
+                    <div class="card-header">Pricing Breakdown</div>
+                    <div class="card-body">
+                        <div class="pricing-box">
+                            <div class="row-line"><span>Base Fee</span><span>₦<%= order.pricing.baseFee.toLocaleString() %></span></div>
+                            <div class="row-line"><span>Distance Cost (<%= order.distanceKm %> km)</span><span>₦<%= order.pricing.distanceCost.toLocaleString() %></span></div>
+                            <div class="row-line"><span>Peak Surcharge</span><span>₦<%= order.pricing.peakSurcharge.toLocaleString() %></span></div>
+                            <div class="row-line"><span>Logistics Fee (C_logistics)</span><span>₦<%= order.pricing.logisticsCost.toLocaleString() %></span></div>
+                            <div class="row-line"><span>Item Value (V_items)</span><span>₦<%= order.itemsValue.toLocaleString() %></span></div>
+                            <div class="row-line"><span>Platform Fee</span><span>₦<%= order.pricing.platformFee.toLocaleString() %></span></div>
+                            <div class="row-line"><span>Rider Payout</span><span>₦<%= order.pricing.riderPayout.toLocaleString() %></span></div>
+                            <div class="row-line total"><span>Total (V_total)</span><span>₦<%= order.pricing.totalValue.toLocaleString() %></span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <% if (order.escrow.status === 'held' || order.escrow.status === 'released') { %>
+                <div class="card mb-4">
+                    <div class="card-header">OTP / PIN (relay to sender &amp; recipient)</div>
+                    <div class="card-body text-center">
+                        <p class="text-muted small mb-1">Pickup OTP</p>
+                        <div class="code-pill mb-3"><%= order.otp.pickupCode %></div>
+                        <p class="text-muted small mb-1">Delivery PIN</p>
+                        <div class="code-pill"><%= order.otp.deliveryPin %></div>
+                    </div>
+                </div>
+                <% } %>
+
+                <div class="card">
+                    <div class="card-header">Assignment</div>
+                    <div class="card-body">
+                        <p class="mb-1"><strong>Mode:</strong> <%= order.dispatchMode %></p>
+                        <% if (order.assignedRider) { %>
+                            <p class="mb-1"><strong>Rider:</strong> <%= order.assignedRider.firstName %> <%= order.assignedRider.lastName %></p>
+                            <p class="mb-0"><strong>Phone:</strong> <%= order.assignedRider.phone %></p>
+                        <% } else { %>
+                            <p class="text-muted mb-0">Not yet assigned<% if (order.dispatchMode==='broadcast') { %> — broadcast to <%= order.eligibleRiders.length %> rider(s)<% } %>.</p>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<%- include('../partials/footer', { includeMap: true }) %>
+</body>
+</html>

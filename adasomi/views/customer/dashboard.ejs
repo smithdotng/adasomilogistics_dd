@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('../partials/head', { title: 'My Requests' }) %>
+</head>
+<body>
+<%- include('../partials/header') %>
+<%- include('../partials/flash') %>
+
+<main class="page-shell">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+                <p class="section-title mb-1">Public Dispatch</p>
+                <h2 class="mb-0">Hi <%= user.firstName %>, where are we sending something today?</h2>
+            </div>
+            <a href="/customer/orders/new" class="btn btn-peach"><i class="fa-solid fa-plus me-2"></i>Request a Rider</a>
+        </div>
+
+        <div class="card mb-4">
+            <div class="row g-0 align-items-center">
+                <div class="col-md-4">
+                    <%- include('../partials/illust-parcel') %>
+                </div>
+                <div class="col-md-8">
+                    <div class="p-4">
+                        <h5 class="mb-1">Drop a pin, get a verified rider</h5>
+                        <p class="text-muted mb-0 small">Set your pickup and drop-off on the map, pay the logistics fee up front, and track your rider live until the delivery PIN confirms it's done.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-4">
+                <div class="stat-card gradient">
+                    <div class="stat-icon"><i class="fa-solid fa-box"></i></div>
+                    <div class="stat-value"><%= activeCount %></div>
+                    <div class="stat-label">Active Requests</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">Recent Requests</div>
+            <div class="card-body">
+                <% if (!orders.length) { %>
+                    <div class="empty-state"><i class="fa-solid fa-box-open"></i><p>No delivery requests yet. Request your first rider now.</p></div>
+                <% } else { %>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead><tr><th>Request</th><th>Route</th><th>Fee</th><th>Status</th><th></th></tr></thead>
+                        <tbody>
+                        <% orders.forEach(function(o) { %>
+                            <tr>
+                                <td><%= o.orderNumber %></td>
+                                <td class="small"><%= o.pickupAddress %> → <%= o.dropoffAddress %></td>
+                                <td>₦<%= o.pricing.totalValue.toLocaleString() %></td>
+                                <td><span class="badge-pill status-<%= o.status %>"><%= o.status.replace(/_/g,' ') %></span></td>
+                                <td><a href="/customer/orders/<%= o._id %>" class="small">View</a></td>
+                            </tr>
+                        <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</main>
+<%- include('../partials/footer') %>
+</body>
+</html>

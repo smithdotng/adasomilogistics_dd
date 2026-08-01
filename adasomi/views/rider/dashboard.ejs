@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('../partials/head', { title: 'Rider Dashboard' }) %>
+</head>
+<body>
+<%- include('../partials/header') %>
+<%- include('../partials/flash') %>
+
+<main class="page-shell">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+                <p class="section-title mb-1">Rider</p>
+                <h2 class="mb-0">Welcome back, <%= user.firstName %></h2>
+            </div>
+            <form action="/rider/availability/toggle" method="POST">
+                <button class="btn <%= rider.riderInfo.isAvailable ? 'btn-peach' : 'btn-outline-peach' %>">
+                    <i class="fa-solid fa-power-off me-2"></i><%= rider.riderInfo.isAvailable ? 'Available for Dispatch' : 'Unavailable' %>
+                </button>
+            </form>
+        </div>
+
+        <div class="card mb-4">
+            <div class="row g-0 align-items-center">
+                <div class="col-md-4">
+                    <%- include('../partials/illust-rider-badge') %>
+                </div>
+                <div class="col-md-8">
+                    <div class="p-4">
+                        <h5 class="mb-1">Every trip, paid out fast</h5>
+                        <p class="text-muted mb-0 small">Accept a delivery, confirm pickup with the sender's OTP, then confirm drop-off with the recipient's PIN — your logistics fee lands in your wallet the moment it's verified.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-3 col-6">
+                <div class="stat-card gradient">
+                    <div class="stat-icon"><i class="fa-solid fa-wallet"></i></div>
+                    <div class="stat-value">₦<%= walletBalance.toLocaleString() %></div>
+                    <div class="stat-label">Wallet Balance</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-check-double"></i></div>
+                    <div class="stat-value"><%= verifiedCount %></div>
+                    <div class="stat-label">Verified Operators</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-hourglass-half"></i></div>
+                    <div class="stat-value"><%= pendingCount %></div>
+                    <div class="stat-label">Pending Requests</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-id-badge"></i></div>
+                    <div class="stat-value"><span class="badge-pill status-<%= rider.riderInfo.kycStatus %>"><%= rider.riderInfo.kycStatus.replace(/_/g,' ') %></span></div>
+                    <div class="stat-label">KYC Status</div>
+                </div>
+            </div>
+        </div>
+
+        <% if (activeOrder) { %>
+        <div class="card mb-4" style="border-color: var(--thm-primary);">
+            <div class="card-header">Active Delivery</div>
+            <div class="card-body d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div>
+                    <strong><%= activeOrder.orderNumber %></strong> — <%= activeOrder.pickupAddress %> → <%= activeOrder.dropoffAddress %>
+                    <div><span class="badge-pill status-<%= activeOrder.status %>"><%= activeOrder.status.replace(/_/g,' ') %></span></div>
+                </div>
+                <a href="/rider/orders/<%= activeOrder._id %>" class="btn btn-peach">Continue Delivery</a>
+            </div>
+        </div>
+        <% } %>
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <a href="/rider/orders" class="text-decoration-none">
+                    <div class="role-card">
+                        <div class="role-icon"><i class="fa-solid fa-list-check"></i></div>
+                        <h5>Available Deliveries</h5>
+                        <p class="text-muted mb-0">Browse broadcast orders eligible for your verified fleets.</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6">
+                <a href="/rider/verification" class="text-decoration-none">
+                    <div class="role-card">
+                        <div class="role-icon"><i class="fa-solid fa-building-shield"></i></div>
+                        <h5>Request More Operators</h5>
+                        <p class="text-muted mb-0">Get verified with additional commercial operators.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+<%- include('../partials/footer') %>
+</body>
+</html>

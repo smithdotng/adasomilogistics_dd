@@ -1,0 +1,24 @@
+<% if (typeof success !== 'undefined' && success && success.length > 0) { %>
+<div class="container mt-3">
+    <div class="alert alert-success alert-dismissible fade show alert-auto-hide" role="alert" style="border-radius:10px;border:none;background:#e3f8ea;color:#1f8a52;">
+        <i class="fa-solid fa-circle-check me-2"></i><%= success %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+</div>
+<% } %>
+<% if (typeof error !== 'undefined' && error && error.length > 0) { %>
+<div class="container mt-3">
+    <div class="alert alert-danger alert-dismissible fade show alert-auto-hide" role="alert" style="border-radius:10px;border:none;background:#fdeceb;color:#c8392f;">
+        <i class="fa-solid fa-triangle-exclamation me-2"></i><%= error %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+</div>
+<% } %>
+<% if (typeof info !== 'undefined' && info && info.length > 0) { %>
+<div class="container mt-3">
+    <div class="alert alert-info alert-dismissible fade show alert-auto-hide" role="alert" style="border-radius:10px;border:none;background:#eaf5fb;color:#2b6cd4;">
+        <i class="fa-solid fa-circle-info me-2"></i><%= info %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+</div>
+<% } %>

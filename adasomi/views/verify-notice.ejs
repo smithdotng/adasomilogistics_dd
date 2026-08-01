@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head', { title: 'Verify Your Email' }) %>
+</head>
+<body>
+<div class="auth-wrapper">
+    <div class="container">
+        <div class="auth-card" style="max-width:560px;">
+            <div class="auth-right" style="padding:55px 50px;">
+                <div class="text-center mb-4">
+                    <img src="/images/logo.png" alt="Adasomi Logistics" class="brand-logo mb-3">
+                    <div class="stat-icon mx-auto mb-3" style="width:64px;height:64px;font-size:26px;">
+                        <i class="fa-solid fa-envelope-circle-check"></i>
+                    </div>
+                    <h3 class="mb-2">Check your inbox</h3>
+                    <p class="text-muted mb-0">
+                        We've sent a verification link to
+                        <% if (email) { %><strong><%= email %></strong><% } else { %>your email address<% } %>.
+                        Click it to activate your account, then come back and log in.
+                    </p>
+                </div>
+
+                <%- include('partials/flash') %>
+
+                <form action="/resend-verification" method="POST">
+                    <label class="form-label" for="resend-email">Didn't get it? Resend the link</label>
+                    <div class="d-flex gap-2">
+                        <input type="email" class="form-control" id="resend-email" name="email" value="<%= email %>" required placeholder="you@example.com">
+                        <button type="submit" class="btn btn-peach">Resend</button>
+                    </div>
+                </form>
+
+                <div class="text-center mt-4 text-muted">
+                    <a href="/login">Back to login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script src="/js/app.js"></script>
+</body>
+</html>

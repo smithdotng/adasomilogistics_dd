@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('../partials/head', { title: 'Merchant Dashboard' }) %>
+</head>
+<body>
+<%- include('../partials/header') %>
+<%- include('../partials/flash') %>
+
+<main class="page-shell">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+                <p class="section-title mb-1">Merchant</p>
+                <h2 class="mb-1">Welcome back, <%= user.merchantInfo && user.merchantInfo.businessName ? user.merchantInfo.businessName : user.firstName %></h2>
+                <% if (user.merchantInfo && user.merchantInfo.businessType) {
+                    const typeIcons = { restaurant: 'fa-utensils', food_vendor: 'fa-store', food_processor: 'fa-industry', produce_aggregator: 'fa-carrot' };
+                    const typeLabels = { restaurant: 'Restaurant', food_vendor: 'Food Vendor', food_processor: 'Food Processor', produce_aggregator: 'Produce Aggregator' };
+                %>
+                <span class="business-type-chip"><i class="fa-solid <%= typeIcons[user.merchantInfo.businessType] || 'fa-store' %>"></i><%= typeLabels[user.merchantInfo.businessType] || user.merchantInfo.businessType %></span>
+                <% } %>
+            </div>
+            <a href="/merchant/orders/new" class="btn btn-peach"><i class="fa-solid fa-plus me-2"></i>Dispatch New Order</a>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-3 col-6">
+                <div class="stat-card gradient">
+                    <div class="stat-icon"><i class="fa-solid fa-wallet"></i></div>
+                    <div class="stat-value">₦<%= walletBalance.toLocaleString() %></div>
+                    <div class="stat-label">Wallet Balance</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-motorcycle"></i></div>
+                    <div class="stat-value"><%= fleetCount %></div>
+                    <div class="stat-label">Verified Fleet</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-hourglass-half"></i></div>
+                    <div class="stat-value"><%= pendingRequests %></div>
+                    <div class="stat-label">Pending Requests</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-box"></i></div>
+                    <div class="stat-value"><%= activeOrders %></div>
+                    <div class="stat-label">Active Orders</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                Recent Orders
+                <a href="/merchant/orders" class="small">View all</a>
+            </div>
+            <div class="card-body">
+                <% if (!recentOrders.length) { %>
+                    <div class="empty-state"><i class="fa-solid fa-box-open"></i><p>No orders yet. Dispatch your first delivery to get started.</p></div>
+                <% } else { %>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead><tr><th>Order</th><th>Recipient</th><th>Total</th><th>Status</th><th></th></tr></thead>
+                        <tbody>
+                        <% recentOrders.forEach(function(o) { %>
+                            <tr>
+                                <td><%= o.orderNumber %></td>
+                                <td><%= o.recipientName %></td>
+                                <td>₦<%= o.pricing.totalValue.toLocaleString() %></td>
+                                <td><span class="badge-pill status-<%= o.status %>"><%= o.status.replace(/_/g,' ') %></span></td>
+                                <td><a href="/merchant/orders/<%= o._id %>" class="small">View</a></td>
+                            </tr>
+                        <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</main>
+<%- include('../partials/footer') %>
+</body>
+</html>

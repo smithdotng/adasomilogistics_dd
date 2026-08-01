@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head', { title: title || 'Error' }) %>
+</head>
+<body>
+<%- include('partials/header') %>
+<main class="page-shell">
+    <div class="container text-center py-5">
+        <div class="stat-icon mx-auto mb-3" style="width:70px;height:70px;font-size:32px;">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <h2><%= title || 'Something went wrong' %></h2>
+        <p class="text-muted"><%= message %></p>
+        <a href="/" class="btn btn-peach mt-3">Back to Home</a>
+    </div>
+</main>
+<%- include('partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head', { title: 'Login' }) %>
+</head>
+<body>
+<div class="auth-wrapper">
+    <div class="container">
+        <div class="auth-card">
+            <div class="row g-0">
+                <div class="col-lg-6">
+                    <div class="auth-left">
+                        <h2>Welcome back to Adasomi</h2>
+                        <p>Sign in to dispatch orders, accept deliveries, or track your request in real time.</p>
+                        <ul class="feature-list">
+                            <li><i class="fa-solid fa-check"></i><span>Escrow-secured payments</span></li>
+                            <li><i class="fa-solid fa-check"></i><span>Verified rider fleets</span></li>
+                            <li><i class="fa-solid fa-check"></i><span>Live GPS delivery tracking</span></li>
+                            <li><i class="fa-solid fa-check"></i><span>Instant payout settlement</span></li>
+                        </ul>
+                        <div class="auth-role-badges">
+                            <span class="auth-role-badge">Merchants</span>
+                            <span class="auth-role-badge">Riders</span>
+                            <span class="auth-role-badge">Public Users</span>
+                        </div>
+                        <p class="small mt-2 mb-0" style="opacity:0.85;">Merchants = restaurant owners, food processors, food vendors &amp; produce aggregators.</p>
+
+                        <div class="auth-illust">
+                            <%- include('partials/illust-scooter') %>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="auth-right">
+                        <div class="text-center mb-4">
+                            <img src="/images/logo.png" alt="Adasomi Logistics" class="brand-logo mb-2">
+                            <p class="text-muted">Sign in to your account</p>
+                        </div>
+
+                        <%- include('partials/flash') %>
+
+                        <form action="/login" method="POST">
+                            <div class="mb-3">
+                                <label class="form-label" for="email">Email Address</label>
+                                <input type="email" class="form-control" id="email" name="email" required autofocus placeholder="you@example.com">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="password">Password</label>
+                                <input type="password" class="form-control" id="password" name="password" required placeholder="••••••••">
+                            </div>
+                            <button type="submit" class="btn btn-peach w-100 mt-2">
+                                <i class="fa-solid fa-right-to-bracket me-2"></i>Sign In
+                            </button>
+                        </form>
+
+                        <div class="text-center mt-4 text-muted">
+                            Don't have an account? <a href="/register">Create one</a>
+                        </div>
+                        <div class="text-center mt-2 text-muted small">
+                            Need to verify your email? <a href="/verify-notice">Resend the link</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script src="/js/app.js"></script>
+</body>
+</html>

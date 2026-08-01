@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('../partials/head', { title: 'Admin Dashboard' }) %>
+</head>
+<body>
+<%- include('../partials/header') %>
+<%- include('../partials/flash') %>
+
+<main class="page-shell">
+    <div class="container">
+        <p class="section-title mb-1">Platform Oversight</p>
+        <h2 class="mb-4">Admin Dashboard</h2>
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-3 col-6">
+                <div class="stat-card"><div class="stat-icon"><i class="fa-solid fa-store"></i></div><div class="stat-value"><%= merchantCount %></div><div class="stat-label">Merchants</div></div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card"><div class="stat-icon"><i class="fa-solid fa-motorcycle"></i></div><div class="stat-value"><%= riderCount %></div><div class="stat-label">Riders</div></div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card"><div class="stat-icon"><i class="fa-solid fa-user"></i></div><div class="stat-value"><%= publicUserCount %></div><div class="stat-label">Public Users</div></div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card"><div class="stat-icon"><i class="fa-solid fa-box"></i></div><div class="stat-value"><%= totalOrders %></div><div class="stat-label">Total Orders</div></div>
+            </div>
+        </div>
+
+        <p class="section-title mb-3">Key Performance Indicators</p>
+        <div class="row g-4 mb-4">
+            <div class="col-md-3 col-6">
+                <div class="stat-card gradient">
+                    <div class="stat-icon"><i class="fa-solid fa-stopwatch"></i></div>
+                    <div class="stat-value"><%= avgVerificationHours %>h</div>
+                    <div class="stat-label">Avg Verification Time</div>
+                    <div class="small mt-1" style="opacity:.85;">Target: &lt; 24h</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card gradient">
+                    <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
+                    <div class="stat-value"><%= completionRate %>%</div>
+                    <div class="stat-label">Order Completion Rate</div>
+                    <div class="small mt-1" style="opacity:.85;">Target: &gt; 98%</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card gradient">
+                    <div class="stat-icon"><i class="fa-solid fa-bolt"></i></div>
+                    <div class="stat-value"><%= avgPayoutSeconds %>s</div>
+                    <div class="stat-label">Payout Velocity</div>
+                    <div class="small mt-1" style="opacity:.85;">Target: &lt; 30s</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card gradient">
+                    <div class="stat-icon"><i class="fa-solid fa-gauge-high"></i></div>
+                    <div class="stat-value"><%= riderUtilizationRate %>%</div>
+                    <div class="stat-label">Rider Utilization</div>
+                    <div class="small mt-1" style="opacity:.85;">≥5 trips/week</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-6">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                    <div class="stat-value"><%= openDisputes %></div>
+                    <div class="stat-label">Open Disputes</div>
+                    <a href="/admin/disputes" class="small">Review disputes →</a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-sliders"></i></div>
+                    <div class="stat-value">Pricing</div>
+                    <div class="stat-label">Commission &amp; Fees</div>
+                    <a href="/admin/config" class="small">Adjust configuration →</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                Recent Orders
+                <a href="/admin/orders" class="small">View all</a>
+            </div>
+            <div class="card-body">
+                <% if (!recentOrders.length) { %>
+                    <div class="empty-state"><i class="fa-solid fa-box-open"></i><p>No orders on the platform yet.</p></div>
+                <% } else { %>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead><tr><th>Order</th><th>Type</th><th>Total</th><th>Status</th><th>Created</th></tr></thead>
+                        <tbody>
+                        <% recentOrders.forEach(function(o) { %>
+                            <tr>
+                                <td><%= o.orderNumber %></td>
+                                <td><%= o.type %></td>
+                                <td>₦<%= o.pricing.totalValue.toLocaleString() %></td>
+                                <td><span class="badge-pill status-<%= o.status %>"><%= o.status.replace(/_/g,' ') %></span></td>
+                                <td><%= moment(o.createdAt).format('MMM D, h:mm A') %></td>
+                            </tr>
+                        <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</main>
+<%- include('../partials/footer') %>
+</body>
+</html>

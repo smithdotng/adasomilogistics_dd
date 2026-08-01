@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('../partials/head', { title: 'All Orders' }) %>
+</head>
+<body>
+<%- include('../partials/header') %>
+<%- include('../partials/flash') %>
+
+<main class="page-shell">
+    <div class="container">
+        <p class="section-title mb-1">Platform-wide</p>
+        <h2 class="mb-4">All Orders</h2>
+
+        <div class="card">
+            <div class="card-body">
+                <% if (!orders.length) { %>
+                    <div class="empty-state"><i class="fa-solid fa-box-open"></i><p>No orders yet.</p></div>
+                <% } else { %>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead><tr><th>Order</th><th>Type</th><th>Merchant / Customer</th><th>Rider</th><th>Total</th><th>Status</th></tr></thead>
+                        <tbody>
+                        <% orders.forEach(function(o) { %>
+                            <tr>
+                                <td><%= o.orderNumber %></td>
+                                <td><%= o.type %></td>
+                                <td><%= o.merchant ? (o.merchant.merchantInfo ? o.merchant.merchantInfo.businessName : o.merchant.fullName) : (o.customer ? o.customer.fullName : '—') %></td>
+                                <td><%= o.assignedRider ? o.assignedRider.fullName : '—' %></td>
+                                <td>₦<%= o.pricing.totalValue.toLocaleString() %></td>
+                                <td><span class="badge-pill status-<%= o.status %>"><%= o.status.replace(/_/g,' ') %></span></td>
+                            </tr>
+                        <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</main>
+<%- include('../partials/footer') %>
+</body>
+</html>

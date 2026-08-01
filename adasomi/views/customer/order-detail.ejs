@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('../partials/head', { title: 'Request ' + order.orderNumber, includeMap: true }) %>
+</head>
+<body>
+<%- include('../partials/header') %>
+<%- include('../partials/flash') %>
+
+<main class="page-shell">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-2">
+            <div>
+                <p class="section-title mb-1">Request <%= order.orderNumber %></p>
+                <h2 class="mb-0"><span id="live-status-badge" class="badge-pill status-<%= order.status %>"><%= order.status.replace(/_/g,' ') %></span></h2>
+            </div>
+            <div class="d-flex gap-2">
+                <% if (order.status === 'awaiting_payment') { %>
+                <form action="/customer/orders/<%= order._id %>/fund-escrow" method="POST">
+                    <button class="btn btn-peach"><i class="fa-solid fa-lock me-2"></i>Pay ₦<%= order.pricing.totalValue.toLocaleString() %></button>
+                </form>
+                <% } %>
+                <% if (['awaiting_payment','awaiting_assignment','assigned'].includes(order.status)) { %>
+                <form action="/customer/orders/<%= order._id %>/cancel" method="POST" onsubmit="return confirm('Cancel this request?');">
+                    <button class="btn btn-danger-soft">Cancel</button>
+                </form>
+                <% } %>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-7">
+                <div class="card mb-4">
+                    <div class="card-header">Live Tracking</div>
+                    <div class="card-body">
+                        <div id="tracking-map" class="tracking-map"
+                             data-order-id="<%= order._id %>"
+                             data-pickup='<%- JSON.stringify({lat: order.pickupLat, lng: order.pickupLng}) %>'
+                             data-dropoff='<%- JSON.stringify({lat: order.dropoffLat, lng: order.dropoffLng}) %>'></div>
+                        <div class="row mt-3 text-muted small">
+                            <div class="col-6"><i class="fa-solid fa-circle text-success me-1"></i>Pickup: <%= order.pickupAddress %></div>
+                            <div class="col-6"><i class="fa-solid fa-circle text-danger me-1"></i>Drop-off: <%= order.dropoffAddress %></div>
+                        </div>
+                    </div>
+                </div>
+
+                <% if (!['completed','cancelled'].includes(order.status)) { %>
+                <div class="card">
+                    <div class="card-header">Raise a Dispute</div>
+                    <div class="card-body">
+                        <form action="/customer/orders/<%= order._id %>/dispute" method="POST">
+                            <textarea class="form-control mb-2" name="reason" rows="2" placeholder="Describe the issue…" required></textarea>
+                            <button class="btn btn-danger-soft" type="submit">Submit to Adasomi Support</button>
+                        </form>
+                    </div>
+                </div>
+                <% } %>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="card mb-4">
+                    <div class="card-header">Fee Breakdown</div>
+                    <div class="card-body">
+                        <div class="pricing-box">
+                            <div class="row-line"><span>Base Fee</span><span>₦<%= order.pricing.baseFee.toLocaleString() %></span></div>
+                            <div class="row-line"><span>Distance Cost (<%= order.distanceKm %> km)</span><span>₦<%= order.pricing.distanceCost.toLocaleString() %></span></div>
+                            <div class="row-line"><span>Peak Surcharge</span><span>₦<%= order.pricing.peakSurcharge.toLocaleString() %></span></div>
+                            <div class="row-line total"><span>Total Paid</span><span>₦<%= order.pricing.totalValue.toLocaleString() %></span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <% if (order.escrow.status === 'held' || order.escrow.status === 'released') { %>
+                <div class="card mb-4">
+                    <div class="card-header">OTP / PIN (share with rider &amp; recipient)</div>
+                    <div class="card-body text-center">
+                        <p class="text-muted small mb-1">Give this to the rider at pickup</p>
+                        <div class="code-pill mb-3"><%= order.otp.pickupCode %></div>
+                        <p class="text-muted small mb-1">Give this to the recipient at delivery</p>
+                        <div class="code-pill"><%= order.otp.deliveryPin %></div>
+                    </div>
+                </div>
+                <% } %>
+
+                <div class="card">
+                    <div class="card-header">Rider</div>
+                    <div class="card-body">
+                        <% if (order.assignedRider) { %>
+                            <p class="mb-1"><strong><%= order.assignedRider.firstName %> <%= order.assignedRider.lastName %></strong></p>
+                            <p class="mb-0 text-muted"><%= order.assignedRider.phone %> · <%= order.assignedRider.riderInfo ? order.assignedRider.riderInfo.vehicleType.replace(/_/g,' ') : '' %></p>
+                        <% } else { %>
+                            <p class="text-muted mb-0">Searching for a nearby verified rider…</p>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<%- include('../partials/footer', { includeMap: true }) %>
+</body>
+</html>

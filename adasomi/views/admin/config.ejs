@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('../partials/head', { title: 'Platform Configuration' }) %>
+</head>
+<body>
+<%- include('../partials/header') %>
+<%- include('../partials/flash') %>
+
+<main class="page-shell">
+    <div class="container">
+        <p class="section-title mb-1">Pricing Engine</p>
+        <h2 class="mb-4">Platform Configuration</h2>
+
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="card">
+                    <div class="card-header">Commission &amp; Fee Settings</div>
+                    <div class="card-body">
+                        <form action="/admin/config" method="POST">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Base Fee (₦)</label>
+                                    <input type="number" step="0.01" class="form-control" name="baseFee" value="<%= config.baseFee %>" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Per-KM Rate (₦)</label>
+                                    <input type="number" step="0.01" class="form-control" name="perKmRate" value="<%= config.perKmRate %>" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Peak Surcharge (₦)</label>
+                                    <input type="number" step="0.01" class="form-control" name="peakSurcharge" value="<%= config.peakSurcharge %>" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Platform Commission Rate</label>
+                                    <input type="number" step="0.01" min="0" max="1" class="form-control" name="platformCommissionRate" value="<%= config.platformCommissionRate %>" required>
+                                    <div class="form-text">e.g. 0.15 = 15% of the logistics fee</div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-peach mt-4"><i class="fa-solid fa-floppy-disk me-2"></i>Save Configuration</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="card">
+                    <div class="card-header">Peak Windows (meal-time surcharge)</div>
+                    <div class="card-body">
+                        <ul class="list-unstyled mb-0">
+                        <% config.peakWindows.forEach(function(w) { %>
+                            <li class="mb-2"><i class="fa-solid fa-clock me-2 text-muted"></i><%= w.startHour %>:00 – <%= w.endHour %>:00</li>
+                        <% }) %>
+                        </ul>
+                        <p class="text-muted small mt-3 mb-0">Peak windows are fixed for this prototype; extend the PlatformConfig model to make them editable.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<%- include('../partials/footer') %>
+</body>
+</html>

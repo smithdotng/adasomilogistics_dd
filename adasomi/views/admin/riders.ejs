@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('../partials/head', { title: 'Rider KYC Audit' }) %>
+</head>
+<body>
+<%- include('../partials/header') %>
+<%- include('../partials/flash') %>
+
+<main class="page-shell">
+    <div class="container">
+        <p class="section-title mb-1">Compliance</p>
+        <h2 class="mb-4">Rider KYC Audit</h2>
+
+        <div class="card">
+            <div class="card-body">
+                <% if (!riders.length) { %>
+                    <div class="empty-state"><i class="fa-solid fa-id-card"></i><p>No riders registered yet.</p></div>
+                <% } else { %>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead><tr><th>Rider</th><th>Vehicle</th><th>Verified Operators</th><th>KYC Status</th><th>Update</th></tr></thead>
+                        <tbody>
+                        <% riders.forEach(function(r) { %>
+                            <tr>
+                                <td><%= r.firstName %> <%= r.lastName %><br><small class="text-muted"><%= r.email %></small></td>
+                                <td><%= r.riderInfo ? r.riderInfo.vehicleType.replace(/_/g,' ') + ' · ' + r.riderInfo.vehiclePlate : '—' %></td>
+                                <td><%= countsMap[r._id.toString()] || 0 %></td>
+                                <td><span class="badge-pill status-<%= r.riderInfo ? r.riderInfo.kycStatus : 'submitted' %>"><%= r.riderInfo ? r.riderInfo.kycStatus.replace(/_/g,' ') : 'submitted' %></span></td>
+                                <td>
+                                    <form action="/admin/riders/kyc" method="POST" class="d-flex gap-2">
+                                        <input type="hidden" name="riderId" value="<%= r._id %>">
+                                        <select name="kycStatus" class="form-select form-select-sm">
+                                            <option value="submitted">Submitted</option>
+                                            <option value="under_review">Under Review</option>
+                                            <option value="verified">Verified</option>
+                                            <option value="rejected">Rejected</option>
+                                        </select>
+                                        <button class="btn btn-outline-peach btn-sm">Save</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</main>
+<%- include('../partials/footer') %>
+</body>
+</html>

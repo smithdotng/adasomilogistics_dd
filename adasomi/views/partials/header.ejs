@@ -1,0 +1,50 @@
+<header class="app-header">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="Adasomi Logistics" class="navbar-logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#appNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="appNav">
+                <% if (typeof user !== 'undefined' && user) { %>
+                <ul class="navbar-nav me-auto">
+                    <% if (user.role === 'merchant') { %>
+                        <li class="nav-item"><a class="nav-link <%= currentPage==='dashboard'?'active':'' %>" href="/merchant/dashboard">Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link <%= currentPage==='riders'?'active':'' %>" href="/merchant/riders">Fleet &amp; Riders</a></li>
+                        <li class="nav-item"><a class="nav-link <%= currentPage==='orders'?'active':'' %>" href="/merchant/orders">Orders</a></li>
+                        <li class="nav-item"><a class="nav-link <%= currentPage==='wallet'?'active':'' %>" href="/merchant/wallet">Wallet</a></li>
+                    <% } else if (user.role === 'rider') { %>
+                        <li class="nav-item"><a class="nav-link <%= currentPage==='dashboard'?'active':'' %>" href="/rider/dashboard">Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link <%= currentPage==='verification'?'active':'' %>" href="/rider/verification">Verification</a></li>
+                        <li class="nav-item"><a class="nav-link <%= currentPage==='orders'?'active':'' %>" href="/rider/orders">Available Deliveries</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/rider/my-deliveries">My Deliveries</a></li>
+                        <li class="nav-item"><a class="nav-link <%= currentPage==='wallet'?'active':'' %>" href="/rider/wallet">Wallet</a></li>
+                    <% } else if (user.role === 'public_user') { %>
+                        <li class="nav-item"><a class="nav-link <%= currentPage==='dashboard'?'active':'' %>" href="/customer/dashboard">My Requests</a></li>
+                        <li class="nav-item"><a class="nav-link <%= currentPage==='new-order'?'active':'' %>" href="/customer/orders/new">Request a Rider</a></li>
+                    <% } else if (user.role === 'admin') { %>
+                        <li class="nav-item"><a class="nav-link <%= currentPage==='dashboard'?'active':'' %>" href="/admin/dashboard">Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link <%= currentPage==='riders'?'active':'' %>" href="/admin/riders">Rider KYC</a></li>
+                        <li class="nav-item"><a class="nav-link <%= currentPage==='orders'?'active':'' %>" href="/admin/orders">Orders</a></li>
+                        <li class="nav-item"><a class="nav-link <%= currentPage==='disputes'?'active':'' %>" href="/admin/disputes">Disputes</a></li>
+                        <li class="nav-item"><a class="nav-link <%= currentPage==='config'?'active':'' %>" href="/admin/config">Config</a></li>
+                    <% } %>
+                </ul>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="role-chip"><%= user.role.replace('_',' ') %></span>
+                    <span class="text-muted small d-none d-md-inline"><%= user.fullName %></span>
+                    <a href="/logout" class="btn btn-outline-peach btn-sm"><i class="fa-solid fa-right-from-bracket me-1"></i>Logout</a>
+                </div>
+                <% } else { %>
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+                    <li class="nav-item"><a class="nav-link" href="/how-it-works">How It Works</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+                    <li class="nav-item"><a class="btn btn-peach btn-sm" href="/register">Get Started</a></li>
+                </ul>
+                <% } %>
+            </div>
+        </div>
+    </nav>
+</header>

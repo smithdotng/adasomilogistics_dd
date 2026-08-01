@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('../partials/head', { title: 'Dispatch New Order', includeMap: true }) %>
+</head>
+<body>
+<%- include('../partials/header') %>
+<%- include('../partials/flash') %>
+
+<main class="page-shell">
+    <div class="container">
+        <p class="section-title mb-1">New Dispatch</p>
+        <h2 class="mb-4">Create an order</h2>
+
+        <form action="/merchant/orders" method="POST">
+            <div class="row g-4">
+                <div class="col-lg-7">
+                    <div class="card mb-4">
+                        <div class="card-header">Pickup &amp; Drop-off</div>
+                        <div class="card-body">
+                            <p id="map-instruction" class="text-muted small">Click the map to set the <strong>pickup</strong> point, then click again for the <strong>drop-off</strong> point.</p>
+                            <div id="order-map" class="tracking-map mb-3" data-config='<%- JSON.stringify({baseFee: config.baseFee, perKmRate: config.perKmRate, peakSurcharge: config.peakSurcharge, peakWindows: config.peakWindows}) %>'></div>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Pickup Address</label>
+                                    <input type="text" class="form-control" name="pickupAddress" required placeholder="e.g. 12 Allen Avenue, Ikeja">
+                                    <input type="hidden" id="pickupLat" name="pickupLat" required>
+                                    <input type="hidden" id="pickupLng" name="pickupLng" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Drop-off Address</label>
+                                    <input type="text" class="form-control" name="dropoffAddress" required placeholder="e.g. 4 Admiralty Way, Lekki">
+                                    <input type="hidden" id="dropoffLat" name="dropoffLat" required>
+                                    <input type="hidden" id="dropoffLng" name="dropoffLng" required>
+                                </div>
+                            </div>
+                            <div class="mt-3 text-muted small">Distance: <strong id="distancePreview">—</strong></div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header">Order &amp; Recipient Details</div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Recipient Name</label>
+                                    <input type="text" class="form-control" name="recipientName" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Recipient Phone</label>
+                                    <input type="text" class="form-control" name="recipientPhone" required>
+                                </div>
+                                <div class="col-md-8">
+                                    <label class="form-label">Items Description</label>
+                                    <input type="text" class="form-control" name="itemsDescription" placeholder="e.g. 3x Jollof rice packs">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Item Value (₦)</label>
+                                    <input type="number" min="0" step="0.01" class="form-control" id="itemsValue" name="itemsValue" value="0" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">Dispatch Mode</div>
+                        <div class="card-body">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="dispatchMode" id="mode-broadcast" value="broadcast" checked>
+                                <label class="form-check-label" for="mode-broadcast">Broadcast to entire verified fleet (first-come, first-served)</label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" name="dispatchMode" id="mode-manual" value="manual">
+                                <label class="form-check-label" for="mode-manual">Assign directly to a specific rider</label>
+                            </div>
+                            <select class="form-select d-none" id="assignedRiderId" name="assignedRiderId">
+                                <option value="">Select a verified rider…</option>
+                                <% fleet.forEach(function(l) { %>
+                                    <option value="<%= l.rider._id %>"><%= l.rider.firstName %> <%= l.rider.lastName %> (<%= l.rider.riderInfo ? l.rider.riderInfo.vehicleType.replace(/_/g,' ') : '' %>)</option>
+                                <% }) %>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="card" style="position:sticky; top:90px;">
+                        <div class="card-header">Pricing Preview</div>
+                        <div class="card-body">
+                            <div id="pricingPreview" class="pricing-box d-none">
+                                <div class="row-line"><span>Base Fee</span><span id="pv-baseFee">—</span></div>
+                                <div class="row-line"><span>Distance Cost</span><span id="pv-distanceCost">—</span></div>
+                                <div class="row-line"><span>Peak Surcharge</span><span id="pv-peakSurcharge">—</span></div>
+                                <div class="row-line"><span>Logistics Fee</span><span id="pv-logisticsCost">—</span></div>
+                                <div class="row-line"><span>Item Value</span><span id="pv-itemsValue">—</span></div>
+                                <div class="row-line total"><span>Total (V_total)</span><span id="pv-total">—</span></div>
+                            </div>
+                            <p class="text-muted small mt-3 mb-0">Set the pickup &amp; drop-off points to see the live estimate.</p>
+                            <button type="submit" class="btn btn-peach w-100 mt-4"><i class="fa-solid fa-truck-fast me-2"></i>Create Order</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+<%- include('../partials/footer', { includeMap: true }) %>
+<script>
+    document.getElementById('mode-manual').addEventListener('change', function () {
+        document.getElementById('assignedRiderId').classList.toggle('d-none', !this.checked);
+    });
+    document.getElementById('mode-broadcast').addEventListener('change', function () {
+        document.getElementById('assignedRiderId').classList.toggle('d-none', this.checked);
+    });
+</script>
+</body>
+</html>

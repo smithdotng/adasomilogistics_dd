@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head', { title: 'Create Account' }) %>
+</head>
+<body>
+<div class="auth-wrapper">
+    <div class="container">
+        <div class="auth-card" style="max-width:1100px;">
+            <div class="row g-0">
+                <div class="col-lg-5">
+                    <div class="auth-left">
+                        <h2>Join the Adasomi network</h2>
+                        <p>Whichever seat you take — merchant, rider, or everyday sender — you're plugged into one escrow-secured dispatch engine.</p>
+                        <ul class="feature-list">
+                            <li><i class="fa-solid fa-store"></i><span>Merchants (restaurants, food processors, food vendors &amp; produce aggregators) manage a verified fleet</span></li>
+                            <li><i class="fa-solid fa-motorcycle"></i><span>Riders get verified &amp; get paid fast</span></li>
+                            <li><i class="fa-solid fa-user"></i><span>Public users dispatch on demand</span></li>
+                        </ul>
+                        <div class="auth-illust">
+                            <%- include('partials/illust-scooter') %>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="auth-right">
+                        <div class="text-center mb-4">
+                            <img src="/images/logo.png" alt="Adasomi Logistics" class="brand-logo mb-2">
+                            <p class="text-muted">Create your account</p>
+                        </div>
+
+                        <%- include('partials/flash') %>
+
+                        <form action="/register" method="POST" id="registerForm">
+                            <label class="form-label d-block">I am registering as</label>
+                            <div class="btn-group w-100 mb-4" role="group">
+                                <input type="radio" class="btn-check" name="role" id="role-merchant" value="merchant" autocomplete="off" checked>
+                                <label class="btn btn-outline-peach" for="role-merchant"><i class="fa-solid fa-store me-1"></i>Merchant</label>
+
+                                <input type="radio" class="btn-check" name="role" id="role-rider" value="rider" autocomplete="off">
+                                <label class="btn btn-outline-peach" for="role-rider"><i class="fa-solid fa-motorcycle me-1"></i>Rider</label>
+
+                                <input type="radio" class="btn-check" name="role" id="role-public" value="public_user" autocomplete="off">
+                                <label class="btn btn-outline-peach" for="role-public"><i class="fa-solid fa-user me-1"></i>Public User</label>
+                            </div>
+
+                            <p id="role-hint-merchant" class="text-muted small mb-4">A <strong>Merchant</strong> account is for any commercial operator — a <strong>restaurant owner</strong>, <strong>food processor</strong>, <strong>food vendor</strong>, or <strong>produce aggregator</strong> — that wants to onboard and dispatch its own verified rider fleet.</p>
+                            <p id="role-hint-rider" class="text-muted small mb-4 d-none">A <strong>Rider</strong> account is for independent delivery riders who get verified by one or more merchants and earn payouts per completed trip.</p>
+                            <p id="role-hint-public" class="text-muted small mb-4 d-none">A <strong>Public User</strong> account is for anyone who just needs a one-off pickup and delivery, no business account required.</p>
+
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">First Name</label>
+                                    <input type="text" class="form-control" name="firstName" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" name="lastName" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Email Address</label>
+                                    <input type="email" class="form-control" name="email" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Phone Number</label>
+                                    <input type="text" class="form-control" name="phone" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Password</label>
+                                    <input type="password" class="form-control" name="password" required minlength="8">
+                                    <div class="form-text">At least 8 characters.</div>
+                                </div>
+                            </div>
+
+                            <!-- Merchant fields -->
+                            <div id="merchant-fields" class="mt-4">
+                                <p class="section-title">Business details</p>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Business Name</label>
+                                        <input type="text" class="form-control" name="businessName">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Business Type</label>
+                                        <select class="form-select" name="businessType">
+                                            <option value="food_processor">Food Processor</option>
+                                            <option value="food_vendor">Food Vendor</option>
+                                            <option value="restaurant">Restaurant</option>
+                                            <option value="produce_aggregator">Produce Aggregator</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Business Address</label>
+                                        <input type="text" class="form-control" name="address">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Rider fields -->
+                            <div id="rider-fields" class="mt-4 d-none">
+                                <p class="section-title">KYC &amp; vehicle details</p>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Driver's License Number</label>
+                                        <input type="text" class="form-control" name="licenseNumber">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Vehicle Type</label>
+                                        <select class="form-select" name="vehicleType">
+                                            <option value="dispatch_bike">Dispatch Bike</option>
+                                            <option value="bicycle">Bicycle</option>
+                                            <option value="car">Car</option>
+                                            <option value="van">Van</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Vehicle Plate Number</label>
+                                        <input type="text" class="form-control" name="vehiclePlate">
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Additional KYC Notes</label>
+                                        <textarea class="form-control" name="kycNotes" rows="2" placeholder="e.g. document reference numbers"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-peach w-100 mt-4">
+                                <i class="fa-solid fa-user-plus me-2"></i>Create Account
+                            </button>
+                        </form>
+
+                        <div class="text-center mt-4 text-muted">
+                            Already have an account? <a href="/login">Sign in</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script src="/js/app.js"></script>
+<script>
+    const merchantFields = document.getElementById('merchant-fields');
+    const riderFields = document.getElementById('rider-fields');
+    const roleHints = {
+        merchant: document.getElementById('role-hint-merchant'),
+        rider: document.getElementById('role-hint-rider'),
+        public_user: document.getElementById('role-hint-public')
+    };
+    document.querySelectorAll('input[name="role"]').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            merchantFields.classList.toggle('d-none', this.value !== 'merchant');
+            riderFields.classList.toggle('d-none', this.value !== 'rider');
+            Object.keys(roleHints).forEach(function (key) {
+                roleHints[key].classList.toggle('d-none', key !== radio.value);
+            });
+        });
+    });
+</script>
+</body>
+</html>

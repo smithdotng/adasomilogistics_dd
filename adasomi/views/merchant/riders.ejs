@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('../partials/head', { title: 'Fleet & Riders' }) %>
+</head>
+<body>
+<%- include('../partials/header') %>
+<%- include('../partials/flash') %>
+
+<main class="page-shell">
+    <div class="container">
+        <p class="section-title mb-1">Fleet Governance</p>
+        <h2 class="mb-4">Riders &amp; Verification</h2>
+
+        <div class="card mb-4">
+            <div class="card-header">Search &amp; invite a registered rider</div>
+            <div class="card-body">
+                <form action="/merchant/riders/search" method="GET" class="d-flex gap-2 mb-3">
+                    <input type="text" class="form-control" name="q" value="<%= searchQuery %>" placeholder="Search by name or email">
+                    <button class="btn btn-outline-peach" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </form>
+                <% if (searchResults && searchResults.length) { %>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead><tr><th>Name</th><th>Email</th><th>Vehicle</th><th>KYC</th><th></th></tr></thead>
+                        <tbody>
+                        <% searchResults.forEach(function(r) { %>
+                            <tr>
+                                <td><%= r.firstName %> <%= r.lastName %></td>
+                                <td><%= r.email %></td>
+                                <td><%= r.riderInfo ? r.riderInfo.vehicleType.replace(/_/g,' ') : '—' %></td>
+                                <td><span class="badge-pill status-<%= r.riderInfo ? r.riderInfo.kycStatus : 'submitted' %>"><%= r.riderInfo ? r.riderInfo.kycStatus.replace(/_/g,' ') : 'submitted' %></span></td>
+                                <td>
+                                    <form action="/merchant/riders/invite" method="POST">
+                                        <input type="hidden" name="riderId" value="<%= r._id %>">
+                                        <button class="btn btn-peach btn-sm" type="submit">Add to Fleet</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+                <% } else if (searchQuery) { %>
+                    <p class="text-muted mb-0">No riders found matching "<%= searchQuery %>".</p>
+                <% } %>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">Pending Verification Requests (<%= pending.length %>)</div>
+            <div class="card-body">
+                <% if (!pending.length) { %>
+                    <div class="empty-state py-3"><i class="fa-solid fa-inbox"></i><p class="mb-0">No pending requests.</p></div>
+                <% } else { %>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead><tr><th>Rider</th><th>Vehicle</th><th>Requested</th><th></th></tr></thead>
+                        <tbody>
+                        <% pending.forEach(function(l) { %>
+                            <tr>
+                                <td><%= l.rider.firstName %> <%= l.rider.lastName %><br><small class="text-muted"><%= l.rider.email %></small></td>
+                                <td><%= l.rider.riderInfo ? l.rider.riderInfo.vehicleType.replace(/_/g,' ') : '—' %> · <%= l.rider.riderInfo ? l.rider.riderInfo.vehiclePlate : '' %></td>
+                                <td><%= moment(l.requestedAt).fromNow() %></td>
+                                <td class="d-flex gap-2">
+                                    <form action="/merchant/riders/decide" method="POST">
+                                        <input type="hidden" name="listingId" value="<%= l._id %>">
+                                        <input type="hidden" name="decision" value="approve">
+                                        <button class="btn btn-peach btn-sm" type="submit">Approve</button>
+                                    </form>
+                                    <form action="/merchant/riders/decide" method="POST">
+                                        <input type="hidden" name="listingId" value="<%= l._id %>">
+                                        <input type="hidden" name="decision" value="reject">
+                                        <button class="btn btn-danger-soft btn-sm" type="submit">Reject</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+                <% } %>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">Verified Fleet (<%= fleet.length %>)</div>
+            <div class="card-body">
+                <% if (!fleet.length) { %>
+                    <div class="empty-state py-3"><i class="fa-solid fa-motorcycle"></i><p class="mb-0">No verified riders yet.</p></div>
+                <% } else { %>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead><tr><th>Rider</th><th>Phone</th><th>Vehicle</th><th>Verified Since</th></tr></thead>
+                        <tbody>
+                        <% fleet.forEach(function(l) { %>
+                            <tr>
+                                <td><%= l.rider.firstName %> <%= l.rider.lastName %></td>
+                                <td><%= l.rider.phone %></td>
+                                <td><%= l.rider.riderInfo ? l.rider.riderInfo.vehicleType.replace(/_/g,' ') : '—' %></td>
+                                <td><%= moment(l.decidedAt).format('MMM D, YYYY') %></td>
+                            </tr>
+                        <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</main>
+<%- include('../partials/footer') %>
+</body>
+</html>

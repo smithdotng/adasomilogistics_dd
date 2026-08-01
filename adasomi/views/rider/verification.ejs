@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('../partials/head', { title: 'Operator Verification' }) %>
+</head>
+<body>
+<%- include('../partials/header') %>
+<%- include('../partials/flash') %>
+
+<main class="page-shell">
+    <div class="container">
+        <p class="section-title mb-1">Fleet Verification</p>
+        <h2 class="mb-4">Get listed with commercial operators</h2>
+
+        <div class="card mb-4">
+            <div class="card-header">Search operators</div>
+            <div class="card-body">
+                <form action="/rider/verification" method="GET" class="d-flex gap-2 mb-3">
+                    <input type="text" class="form-control" name="q" value="<%= searchQuery %>" placeholder="Search by business name or email">
+                    <button class="btn btn-outline-peach" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </form>
+                <% if (searchResults && searchResults.length) { %>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead><tr><th>Business</th><th>Type</th><th>Email</th><th></th></tr></thead>
+                        <tbody>
+                        <% searchResults.forEach(function(m) { %>
+                            <tr>
+                                <td><%= m.merchantInfo ? m.merchantInfo.businessName : m.fullName %></td>
+                                <td><%= m.merchantInfo ? m.merchantInfo.businessType.replace(/_/g,' ') : '—' %></td>
+                                <td><%= m.email %></td>
+                                <td>
+                                    <form action="/rider/verification/request" method="POST">
+                                        <input type="hidden" name="merchantId" value="<%= m._id %>">
+                                        <button class="btn btn-peach btn-sm" type="submit">Request Listing</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+                <% } else if (searchQuery) { %>
+                    <p class="text-muted mb-0">No operators found matching "<%= searchQuery %>".</p>
+                <% } %>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">My Listings</div>
+            <div class="card-body">
+                <% if (!listings.length) { %>
+                    <div class="empty-state"><i class="fa-solid fa-building-shield"></i><p>You haven't requested any operators yet.</p></div>
+                <% } else { %>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead><tr><th>Operator</th><th>Status</th><th>Requested</th></tr></thead>
+                        <tbody>
+                        <% listings.forEach(function(l) { %>
+                            <tr>
+                                <td><%= l.merchant.merchantInfo ? l.merchant.merchantInfo.businessName : l.merchant.fullName %></td>
+                                <td><span class="badge-pill status-<%= l.status %>"><%= l.status %></span></td>
+                                <td><%= moment(l.requestedAt).fromNow() %></td>
+                            </tr>
+                        <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</main>
+<%- include('../partials/footer') %>
+</body>
+</html>

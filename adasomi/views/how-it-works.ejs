@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head', { title: 'How It Works' }) %>
+</head>
+<body>
+<%- include('partials/header') %>
+<%- include('partials/flash') %>
+
+<section class="hero-peach">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <h1>How Adasomi moves an order from click to doorstep.</h1>
+                <p class="lead">One pricing engine, one escrow vault, three kinds of riders and merchants working together in real time.</p>
+            </div>
+            <div class="col-lg-5 d-none d-lg-block">
+                <%- include('partials/illust-scooter') %>
+            </div>
+        </div>
+    </div>
+</section>
+
+<main class="page-shell">
+    <div class="container">
+        <p class="section-title">Rider onboarding &amp; verification</p>
+        <div class="row g-4 mb-5">
+            <div class="col-md-4">
+                <div class="role-card"><div class="role-icon"><i class="fa-solid fa-id-card"></i></div><h6>1. Sign Up</h6><p class="text-muted small">Rider registers and submits identity &amp; vehicle details.</p></div>
+            </div>
+            <div class="col-md-4">
+                <div class="role-card"><div class="role-icon"><i class="fa-solid fa-paper-plane"></i></div><h6>2. Verification Request</h6><p class="text-muted small">Rider requests listing with one or more operators.</p></div>
+            </div>
+            <div class="col-md-4">
+                <div class="role-card"><div class="role-icon"><i class="fa-solid fa-check-double"></i></div><h6>3. Merchant Approval</h6><p class="text-muted small">Operator reviews and approves into their fleet.</p></div>
+            </div>
+        </div>
+
+        <p class="section-title">Pricing engine</p>
+        <div class="pricing-box mb-5">
+            <p class="mb-2"><strong>C_logistics</strong> = Base Fee + (Distance km × Per-KM Rate) + Peak Surcharge</p>
+            <p class="mb-0"><strong>V_total</strong> = V_items + C_logistics</p>
+        </div>
+
+        <p class="section-title">Roles</p>
+        <div class="table-responsive">
+            <table class="table">
+                <thead><tr><th>Role</th><th>Key Capabilities</th></tr></thead>
+                <tbody>
+                    <tr><td>Merchants <span class="text-muted">(Commercial Operators)</span></td><td>Restaurant owners, food processors, food vendors &amp; produce aggregators — create merchant accounts, verify &amp; list riders, dispatch orders, fund/bill orders.</td></tr>
+                    <tr><td>Public Users</td><td>Request direct dispatch, select riders, pay logistics fees up front.</td></tr>
+                    <tr><td>Riders</td><td>Register independently, submit KYC, get verified, execute deliveries.</td></tr>
+                    <tr><td>System Administrator</td><td>Dispute resolution, KYC audit, commission configuration, oversight.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="/register" class="btn btn-peach btn-lg">Create your account</a>
+        </div>
+    </div>
+</main>
+<%- include('partials/footer') %>
+</body>
+</html>

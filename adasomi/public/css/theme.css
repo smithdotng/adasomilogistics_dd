@@ -1,0 +1,538 @@
+/* ===========================================================
+   Adasomi Logistics Dispatch & Delivery Platform
+   Blue Theme Design System
+   =========================================================== */
+
+:root {
+    --thm-primary: #2f7dd8;
+    --thm-primary-dark: #1c5aa8;
+    --thm-primary-light: #8fc3ff;
+    --thm-gradient: linear-gradient(135deg, #8fc3ff 0%, #2f7dd8 100%);
+    --thm-secondary: #1c2b3a;
+    --thm-gray: #64748b;
+    --thm-bg: #f5f9ff;
+    --thm-bg-soft: #e9f2fd;
+    --thm-card-border: #cfe3fa;
+    --thm-success: #2fa66a;
+    --thm-danger: #e2544a;
+    --thm-warning: #f0a63c;
+    --thm-info: #0891b2;
+    --thm-white: #ffffff;
+    --thm-leaf: #6fa96a;
+    --thm-leaf-light: #cfe8c6;
+    --thm-sky: #5aa9c9;
+    --thm-sky-light: #cfe9f2;
+    --thm-choc: #8a5a3b;
+    --thm-radius: 14px;
+    --thm-shadow: 0 8px 24px rgba(28, 90, 168, 0.08);
+}
+
+* { box-sizing: border-box; }
+
+body {
+    font-family: 'Jost', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: var(--thm-bg);
+    color: var(--thm-secondary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-size: 16px;
+}
+
+main { flex: 1; }
+
+a { color: var(--thm-primary-dark); text-decoration: none; }
+a:hover { color: var(--thm-primary); }
+
+h1, h2, h3, h4, h5, h6 { color: var(--thm-secondary); font-weight: 600; }
+
+/* ---------- Top Navigation ---------- */
+.app-header {
+    background: var(--thm-white);
+    border-bottom: 1px solid var(--thm-card-border);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.app-header .navbar-brand {
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--thm-primary-dark) !important;
+    letter-spacing: 0.5px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.navbar-logo {
+    height: 40px;
+    width: auto;
+    display: block;
+}
+
+.brand-logo {
+    height: 48px;
+    width: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.brand-logo-chip {
+    display: inline-flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 8px;
+    padding: 6px 10px;
+}
+
+.app-header .navbar-brand .brand-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--thm-gradient);
+    margin-right: 6px;
+}
+
+.app-header .nav-link {
+    color: var(--thm-secondary) !important;
+    font-weight: 500;
+    padding: 0.75rem 1rem !important;
+    border-bottom: 3px solid transparent;
+}
+
+.app-header .nav-link.active,
+.app-header .nav-link:hover {
+    color: var(--thm-primary-dark) !important;
+    border-bottom-color: var(--thm-primary);
+}
+
+.role-chip {
+    background: var(--thm-bg-soft);
+    color: var(--thm-primary-dark);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ---------- Buttons ---------- */
+.btn-peach {
+    background: var(--thm-gradient);
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 0.65rem 1.5rem;
+    transition: all 0.25s ease;
+}
+
+.btn-peach:hover {
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(47, 125, 216, 0.35);
+}
+
+.btn-outline-peach {
+    background: transparent;
+    border: 2px solid var(--thm-primary);
+    color: var(--thm-primary-dark);
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 0.55rem 1.4rem;
+}
+
+.btn-outline-peach:hover {
+    background: var(--thm-primary);
+    color: #fff;
+}
+
+.btn-danger-soft {
+    background: #fdeceb;
+    color: var(--thm-danger);
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    padding: 0.5rem 1.2rem;
+}
+
+/* ---------- Cards ---------- */
+.card {
+    border: 1px solid var(--thm-card-border);
+    border-radius: var(--thm-radius);
+    box-shadow: var(--thm-shadow);
+    overflow: hidden;
+}
+
+.card-header {
+    background: var(--thm-white);
+    border-bottom: 1px solid var(--thm-card-border);
+    border-radius: var(--thm-radius) var(--thm-radius) 0 0 !important;
+    font-weight: 600;
+}
+
+.stat-card {
+    border-radius: var(--thm-radius);
+    padding: 1.5rem;
+    background: var(--thm-white);
+    border: 1px solid var(--thm-card-border);
+    box-shadow: var(--thm-shadow);
+    height: 100%;
+}
+
+.stat-card .stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: var(--thm-bg-soft);
+    color: var(--thm-primary-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin-bottom: 12px;
+}
+
+.stat-card .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--thm-secondary);
+}
+
+.stat-card .stat-label {
+    color: var(--thm-gray);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-card.gradient {
+    background: var(--thm-gradient);
+    color: #fff;
+    border: none;
+}
+
+.stat-card.gradient .stat-value,
+.stat-card.gradient .stat-label { color: #fff; }
+
+.stat-card.gradient .stat-icon {
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+}
+
+/* ---------- Badges / Status Pills ---------- */
+.badge-pill {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status-awaiting_payment, .status-pending { background: #fdf1e0; color: #b9770e; }
+.status-awaiting_assignment { background: #e9f2fd; color: var(--thm-primary-dark); }
+.status-assigned { background: #e8f0fd; color: #2b6cd4; }
+.status-picked_up { background: #eef2ff; color: #5a55d9; }
+.status-delivered { background: #e7f8ef; color: #1f8a52; }
+.status-completed, .status-approved, .status-verified { background: #e3f8ea; color: var(--thm-success); }
+.status-cancelled, .status-rejected { background: #fdeceb; color: var(--thm-danger); }
+.status-disputed { background: #fdeceb; color: var(--thm-danger); }
+.status-submitted, .status-under_review { background: #eef2f7; color: #556; }
+
+/* ---------- Forms ---------- */
+.form-label { font-weight: 500; color: var(--thm-secondary); }
+
+.form-control, .form-select {
+    border: 2px solid #d7e6f5;
+    border-radius: 10px;
+    padding: 0.6rem 0.9rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--thm-primary);
+    box-shadow: 0 0 0 0.2rem rgba(47, 125, 216, 0.15);
+}
+
+.section-title {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--thm-primary-dark);
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+/* ---------- Tables ---------- */
+.table thead th {
+    border-top: none;
+    border-bottom: 2px solid var(--thm-card-border);
+    color: var(--thm-gray);
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.table td { vertical-align: middle; }
+
+/* ---------- Timeline ---------- */
+.timeline { list-style: none; padding-left: 0; margin: 0; }
+
+.timeline li {
+    position: relative;
+    padding: 0 0 1.25rem 2rem;
+    border-left: 2px solid var(--thm-card-border);
+}
+
+.timeline li:last-child { border-left-color: transparent; padding-bottom: 0; }
+
+.timeline li::before {
+    content: '';
+    position: absolute;
+    left: -7px;
+    top: 2px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--thm-primary);
+}
+
+.timeline .timeline-time {
+    font-size: 12px;
+    color: var(--thm-gray);
+}
+
+/* ---------- Pricing Breakdown ---------- */
+.pricing-box {
+    background: var(--thm-bg-soft);
+    border-radius: var(--thm-radius);
+    padding: 1.25rem 1.5rem;
+}
+
+.pricing-box .row-line {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.35rem 0;
+    color: var(--thm-gray);
+}
+
+.pricing-box .row-line.total {
+    border-top: 2px dashed #f2cdb1;
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+    font-weight: 700;
+    color: var(--thm-secondary);
+    font-size: 18px;
+}
+
+/* ---------- Auth Split Card ---------- */
+.auth-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background: var(--thm-gradient);
+    padding: 30px 0;
+}
+
+.auth-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(80, 40, 20, 0.25);
+    overflow: hidden;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.auth-left {
+    background: var(--thm-gradient);
+    padding: 60px 40px;
+    color: #fff;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.auth-left h2 { color: #fff; font-weight: 700; font-size: 30px; margin-bottom: 18px; }
+.auth-left p { opacity: 0.95; line-height: 1.6; }
+
+.auth-left .feature-list { list-style: none; padding: 0; margin: 20px 0 0; }
+.auth-left .feature-list li { display: flex; align-items: center; margin-bottom: 14px; }
+.auth-left .feature-list li i {
+    width: 30px; height: 30px; background: rgba(255,255,255,0.22);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 13px; margin-right: 12px; flex-shrink: 0;
+}
+
+.auth-right { padding: 55px 50px; }
+
+.auth-role-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.auth-role-badge {
+    padding: 4px 12px; background: rgba(255,255,255,0.2); color: #fff;
+    border-radius: 20px; font-size: 12px; font-weight: 600;
+}
+
+@media (max-width: 767px) {
+    .auth-left { display: none; }
+    .auth-right { padding: 40px 25px; }
+}
+
+/* ---------- Landing Page ---------- */
+.hero-peach {
+    background: var(--thm-gradient);
+    color: #fff;
+    padding: 90px 0 110px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-peach::after {
+    content: '';
+    position: absolute;
+    bottom: -80px;
+    right: -80px;
+    width: 320px;
+    height: 320px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 50%;
+}
+
+.hero-peach h1 { color: #fff; font-weight: 700; font-size: 46px; }
+.hero-peach p.lead { opacity: 0.95; font-size: 18px; }
+
+.role-card {
+    background: #fff;
+    border: 1px solid var(--thm-card-border);
+    border-radius: var(--thm-radius);
+    padding: 2rem;
+    height: 100%;
+    box-shadow: var(--thm-shadow);
+    transition: transform 0.2s ease;
+    overflow: hidden;
+}
+
+.role-card:has(.illust-banner) {
+    padding: 0;
+}
+
+.role-card:hover { transform: translateY(-4px); }
+
+.role-card .role-icon {
+    width: 56px; height: 56px; border-radius: 14px;
+    background: var(--thm-bg-soft); color: var(--thm-primary-dark);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; margin-bottom: 1rem;
+}
+
+.flow-step {
+    text-align: center;
+    padding: 1.5rem 1rem;
+}
+
+.flow-step .flow-number {
+    width: 46px; height: 46px; border-radius: 50%;
+    background: var(--thm-gradient); color: #fff; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1rem;
+}
+
+/* ---------- Sidebar-free page shell ---------- */
+.page-shell { padding: 2rem 0 3rem; }
+
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--thm-gray);
+}
+
+.empty-state i { font-size: 42px; color: var(--thm-primary-light); margin-bottom: 1rem; }
+
+/* ---------- Map ---------- */
+.tracking-map {
+    width: 100%;
+    height: 360px;
+    border-radius: var(--thm-radius);
+    overflow: hidden;
+    border: 1px solid var(--thm-card-border);
+}
+
+/* ---------- Illustrations ---------- */
+.hero-illust {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-illust svg {
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.illust-banner {
+    width: 100%;
+    height: 150px;
+    overflow: hidden;
+    background: var(--thm-bg-soft);
+}
+
+.illust-banner svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.role-card .role-card-body { padding: 1.5rem 2rem 2rem; }
+
+.auth-illust svg {
+    width: 100%;
+    max-width: 300px;
+    display: block;
+    margin: 1.5rem auto 0;
+}
+
+.business-type-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--thm-bg-soft);
+    color: var(--thm-primary-dark);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* ---------- Footer ---------- */
+.app-footer {
+    background: var(--thm-secondary);
+    color: #d8c9bd;
+    padding: 1.75rem 0;
+    margin-top: auto;
+}
+
+.app-footer a { color: #ffcdb0; }
+
+/* ---------- Misc ---------- */
+.code-pill {
+    display: inline-block;
+    font-family: 'Courier New', monospace;
+    font-size: 22px;
+    letter-spacing: 6px;
+    background: var(--thm-bg-soft);
+    color: var(--thm-primary-dark);
+    padding: 8px 18px;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+.divider-label {
+    text-align: center;
+    color: var(--thm-gray);
+    font-size: 13px;
+    margin: 1.5rem 0;
+    position: relative;
+}

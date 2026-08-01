@@ -1,0 +1,39 @@
+{
+  "name": "adasomi-dispatch-platform-next",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Adasomi Logistics Dispatch & Delivery Platform - Next.js port",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "seed": "tsx seed/seed.ts",
+    "create-admin": "tsx seed/createAdmin.ts",
+    "verify-existing-accounts": "tsx seed/verifyExistingAccounts.ts"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^16.4.5",
+    "iron-session": "^8.0.4",
+    "leaflet": "^1.9.4",
+    "moment": "^2.29.4",
+    "mongoose": "^8.23.0",
+    "next": "^15.0.3",
+    "nodemailer": "^6.9.15",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "vercel": "^58.4.4",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/leaflet": "^1.9.12",
+    "@types/node": "^20.14.10",
+    "@types/nodemailer": "^6.4.16",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "tsx": "^4.19.1",
+    "typescript": "^5.5.4"
+  }
+}

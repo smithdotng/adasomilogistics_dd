@@ -50,7 +50,17 @@ export default function OrderMap({ config, itemsValue = 0, showItemsValueInBreak
         import('leaflet').then((L) => {
             if (cancelled || !mapContainerRef.current || mapRef.current) return;
 
-            const map = L.map(mapContainerRef.current).setView([6.5244, 3.3792], 12); // default: Lagos
+            // Next.js/webpack breaks Leaflet's default marker icon URL resolution,
+            // causing it to request e.g. /merchant/orders/marker-icon.png relative
+            // to the current route instead of the actual asset. Point at the CDN copy instead.
+            delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })._getIconUrl;
+            L.Icon.Default.mergeOptions({
+                iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+                iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+                shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png'
+            });
+
+            const map = L.map(mapContainerRef.current).setView([9.0765, 7.3986], 12); // default: Abuja
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; OpenStreetMap contributors'
             }).addTo(map);

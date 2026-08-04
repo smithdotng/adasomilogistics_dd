@@ -1,6 +1,6 @@
 'use server';
 
-import { redirect } from 'next/navigation';
+import { redirect, unstable_rethrow } from 'next/navigation';
 import { connectDB } from '@/lib/db';
 import { requireRole } from '@/lib/session';
 import { RiderListing } from '@/models/RiderListing';
@@ -66,6 +66,7 @@ export async function createCustomerOrderAction(formData: FormData): Promise<voi
 
         redirect(`/customer/orders/${order._id}`);
     } catch (e) {
+        unstable_rethrow(e);
         err('/customer/orders/new', `Could not create request: ${(e as Error).message}`);
     }
 }
@@ -82,6 +83,7 @@ export async function customerFundEscrowAction(formData: FormData): Promise<void
         await orderService.fundEscrow(order);
         ok(`/customer/orders/${order._id}`, `Payment of ₦${order.pricing.totalValue.toLocaleString()} confirmed. Searching for a nearby rider.`);
     } catch (e) {
+        unstable_rethrow(e);
         err('/customer/dashboard', `Could not confirm payment: ${(e as Error).message}`);
     }
 }
@@ -121,6 +123,7 @@ export async function customerRaiseDisputeAction(formData: FormData): Promise<vo
         await order.save();
         ok(`/customer/orders/${orderId}`, 'Dispute submitted to Adasomi support.');
     } catch (e) {
+        unstable_rethrow(e);
         err(`/customer/orders/${orderId}`, `Could not raise dispute: ${(e as Error).message}`);
     }
 }

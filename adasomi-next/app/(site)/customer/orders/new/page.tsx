@@ -30,7 +30,7 @@ export default async function CustomerNewOrderPage({
                         baseFee: config.baseFee,
                         perKmRate: config.perKmRate,
                         peakSurcharge: config.peakSurcharge,
-                        peakWindows: config.peakWindows
+                        peakWindows: config.peakWindows.map((w) => ({ startHour: w.startHour, endHour: w.endHour }))
                     }}
                 />
             </div>

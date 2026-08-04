@@ -1,6 +1,6 @@
 'use server';
 
-import { redirect } from 'next/navigation';
+import { redirect, unstable_rethrow } from 'next/navigation';
 import { connectDB } from '@/lib/db';
 import { requireRole } from '@/lib/session';
 import { User } from '@/models/User';
@@ -24,6 +24,7 @@ export async function decideKycAction(formData: FormData): Promise<void> {
         await User.findByIdAndUpdate(riderId, { 'riderInfo.kycStatus': kycStatus });
         ok('/admin/riders', 'KYC status updated.');
     } catch (e) {
+        unstable_rethrow(e);
         err('/admin/riders', `Could not update KYC status: ${(e as Error).message}`);
     }
 }
@@ -46,6 +47,7 @@ export async function resolveDisputeAction(formData: FormData): Promise<void> {
         await dispute.save();
         ok('/admin/disputes', 'Dispute updated.');
     } catch (e) {
+        unstable_rethrow(e);
         err('/admin/disputes', `Could not update dispute: ${(e as Error).message}`);
     }
 }
@@ -69,6 +71,7 @@ export async function updateConfigAction(formData: FormData): Promise<void> {
         await config.save();
         ok('/admin/config', 'Platform configuration updated.');
     } catch (e) {
+        unstable_rethrow(e);
         err('/admin/config', `Could not update configuration: ${(e as Error).message}`);
     }
 }

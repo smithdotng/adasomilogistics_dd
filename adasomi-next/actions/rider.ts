@@ -1,6 +1,6 @@
 'use server';
 
-import { redirect } from 'next/navigation';
+import { redirect, unstable_rethrow } from 'next/navigation';
 import { connectDB } from '@/lib/db';
 import { requireRole, getSession } from '@/lib/session';
 import { User } from '@/models/User';
@@ -53,6 +53,7 @@ export async function requestListingAction(formData: FormData): Promise<void> {
         );
         ok('/rider/verification', 'Verification request sent to operator.');
     } catch (e) {
+        unstable_rethrow(e);
         err('/rider/verification', `Could not send request: ${(e as Error).message}`);
     }
 }
@@ -77,6 +78,7 @@ export async function acceptOrderAction(formData: FormData): Promise<void> {
         await order.save();
         ok(`/rider/orders/${order._id}`, 'Delivery accepted. Head to pickup.');
     } catch (e) {
+        unstable_rethrow(e);
         err('/rider/orders', `Could not accept order: ${(e as Error).message}`);
     }
 }
@@ -94,6 +96,7 @@ export async function verifyPickupAction(formData: FormData): Promise<void> {
         await orderService.verifyPickupOtp(order, code);
         ok(`/rider/orders/${orderId}`, 'Pickup confirmed. En route to drop-off.');
     } catch (e) {
+        unstable_rethrow(e);
         err(`/rider/orders/${orderId}`, (e as Error).message);
     }
 }
@@ -111,6 +114,7 @@ export async function verifyDeliveryAction(formData: FormData): Promise<void> {
         await orderService.verifyDeliveryPin(order, pin);
         ok(`/rider/orders/${orderId}`, `Delivery completed. ₦${order.pricing.riderPayout.toLocaleString()} credited to your wallet.`);
     } catch (e) {
+        unstable_rethrow(e);
         err(`/rider/orders/${orderId}`, (e as Error).message);
     }
 }

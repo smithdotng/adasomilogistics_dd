@@ -1,6 +1,6 @@
 'use server';
 
-import { redirect } from 'next/navigation';
+import { redirect, unstable_rethrow } from 'next/navigation';
 import { connectDB } from '@/lib/db';
 import { requireRole } from '@/lib/session';
 import { User } from '@/models/User';
@@ -33,6 +33,7 @@ export async function inviteRiderAction(formData: FormData): Promise<void> {
         );
         ok('/merchant/riders', 'Rider added to your fleet.');
     } catch (e) {
+        unstable_rethrow(e);
         err('/merchant/riders', `Could not add rider: ${(e as Error).message}`);
     }
 }
@@ -104,6 +105,7 @@ export async function createOrderAction(formData: FormData): Promise<void> {
 
         redirect(`/merchant/orders/${order._id}`);
     } catch (e) {
+        unstable_rethrow(e);
         err('/merchant/orders/new', `Could not create order: ${(e as Error).message}`);
     }
 }
@@ -125,6 +127,7 @@ export async function fundEscrowAction(formData: FormData): Promise<void> {
         }
         ok(`/merchant/orders/${order._id}`, `Escrow funded (₦${order.pricing.totalValue.toLocaleString()}). Dispatch is now live.`);
     } catch (e) {
+        unstable_rethrow(e);
         err('/merchant/orders', `Could not fund escrow: ${(e as Error).message}`);
     }
 }
@@ -164,6 +167,7 @@ export async function raiseDisputeAction(formData: FormData): Promise<void> {
         await order.save();
         ok(`/merchant/orders/${orderId}`, 'Dispute submitted to Adasomi support.');
     } catch (e) {
+        unstable_rethrow(e);
         err(`/merchant/orders/${orderId}`, `Could not raise dispute: ${(e as Error).message}`);
     }
 }
